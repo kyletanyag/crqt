@@ -2,7 +2,7 @@
 
 ### Before you Start
 Make sure you have the following downloaded:
-- Node.js
+- [Node.js](https://nodejs.org/en/)
 
 
 ## Project setup
