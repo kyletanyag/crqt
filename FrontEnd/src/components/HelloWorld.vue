@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { get } from '../api'
 export default {
   name: 'HelloWorld',
   props: {
