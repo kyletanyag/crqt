@@ -1,6 +1,12 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <h2> Test for API! You should see a list of movies below: </h2>
+    <ul class="list-group pb-2">
+      <li v-for="m in movies" :key="m.title"> 
+        Title: {{ m.title }}, Rating: {{ m.rating }}
+      </li>
+    </ul>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
       check out the
@@ -31,9 +37,22 @@
 </template>
 
 <script>
-import { get } from '../api'
+import { ref } from 'vue';
+import { get } from '../api';
 export default {
   name: 'HelloWorld',
+
+  data() {
+
+    const movies = ref([]);
+
+    get('movies').then((d) => { console.log(d); movies.value = d.movies});
+
+    return {
+      movies,
+    };
+  },
+
   props: {
     msg: String
   }
