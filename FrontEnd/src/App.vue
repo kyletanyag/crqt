@@ -2,7 +2,7 @@
     <div class="row">
         <header class="col">
             <nav class="navbar navbar-expand navbar-light bg-light mt-3 mb-3">
-                <strong class="mr-3">CRQT</strong>
+                <strong class="mr-3">CRQT -new</strong>
                 <button class="navbar-toggler"
                         type="button"
                         data-toggle="collapse"
