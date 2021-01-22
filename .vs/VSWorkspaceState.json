@@ -1,0 +1,14 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\FrontEnd",
+    "\\FrontEnd\\public",
+    "\\FrontEnd\\src",
+    "\\FrontEnd\\src\\assets",
+    "\\FrontEnd\\src\\components",
+    "\\FrontEnd\\src\\router",
+    "\\FrontEnd\\src\\views"
+  ],
+  "SelectedNode": "\\FrontEnd\\src\\views\\ColorGraphView.vue",
+  "PreviewInSolutionExplorer": false
+}
