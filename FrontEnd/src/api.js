@@ -1,4 +1,4 @@
-const baseurl = 'http://localhost:5000/';
+const baseurl = 'https://localhost/';
 
 async function get(path) {
   const p = baseurl + path;

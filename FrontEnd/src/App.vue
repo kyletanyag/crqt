@@ -1,4 +1,5 @@
 <template>
+<div>
     <div class="row">
         <header class="col">
             <nav class="navbar navbar-expand navbar-light bg-light mt-3 mb-3">
@@ -86,9 +87,14 @@
     <div>
         <router-view />
     </div>
+</div>
 </template>
 
-
+<script>
+export default {
+    name: 'App',
+}
+</script>
 
 <!--<template>
     <div id="nav">
