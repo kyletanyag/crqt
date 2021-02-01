@@ -1,5 +1,5 @@
 {
   "domain": "rfhstrong.us.auth0.com",
   "client_id": "Yjv0CglGAdWgSaHB1iMrmVyqBb1ETutb",
-  "redirect_uri": "http://localhost:8080/callback",
+  "redirect_uri": "http://localhost:8080/callback"
 }
