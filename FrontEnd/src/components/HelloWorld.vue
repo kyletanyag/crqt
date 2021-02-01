@@ -1,13 +1,14 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h2> Test for API! You should see a list of movies below: </h2>
-    <ul class="list-group pb-2">
-      <li v-for="m in movies" :key="m.title"> 
-        Title: {{ m.title }}, Rating: {{ m.rating }}
+    <h2> Test for API! You should see a list of movies: </h2>
+    <!-- <ul class="list-group pb-2">
+      <li v-for="item in results" :key="item"> 
+        {{ item }}
       </li>
-    </ul>
-    <p>
+    </ul> -->
+    <span> {{ results }} </span>
+    <p> 
       For a guide and recipes on how to configure / customize this project,<br>
       check out the
       <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
@@ -44,12 +45,12 @@ export default {
 
   data() {
 
-    const movies = ref([]);
+    const results = ref([]);
 
-    get('movies').then((d) => { console.log(d); movies.value = d.movies});
+    get('/api/cve/CVE-2021-1668').then((d) => { console.log(d); results.value = d.cvss });
 
     return {
-      movies,
+      results,
     };
   },
 
