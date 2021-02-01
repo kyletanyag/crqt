@@ -73,7 +73,12 @@
                                          active-class="active"
                                          to="/ContactUs">Contact Us</router-link>
                         </li>
-                        
+                        <li class="nav-item" align="right">
+                            <div v-if="!$auth.loading.value">
+                                <button v-if="!$auth.isAuthenticated.value" @click="login">Log in</button>
+                                <button v-if="$auth.isAuthenticated.value" @click="logout">Log out</button>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -88,15 +93,6 @@
         <router-view />
     </div>
 </div>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-    <div v-if="!$auth.loading.value">
-        <button v-if="!$auth.isAuthenticated.value" @click="login">Log in</button>
-        <button v-if="$auth.isAuthenticated.value" @click="logout">Log out</button>
-    </div>
-  </div>
-  <router-view/>
 </template>
 
 <script>
