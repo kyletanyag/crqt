@@ -75,7 +75,7 @@
                         </li>    
                     </ul>
                     <form class="form-inline my-2 my-lg-0">
-                        <button class="button button1" v-if="!$auth.isAuthenticated.value" @click="login">Log in</button>
+                        <button class="btn btn-primary" v-if="!$auth.isAuthenticated.value" @click="login">Log in</button>
                         <button v-if="$auth.isAuthenticated.value" @click="logout">Log out</button>
                     </form>
                 </div>
