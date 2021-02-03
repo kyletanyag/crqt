@@ -1,7 +1,7 @@
 <template>
 <body>
 
-<h3 style="padding:10px"> Input Settings: Corporate FIrewall, Corporate DMZ and Corporate LAN</h3>
+<h3 style="padding-left:10px"> Input Settings: Corporate FIrewall, Corporate DMZ and Corporate LAN</h3>
 <table width="100%" border="0" cellpadding="px">
   
    <tbody>
@@ -13,7 +13,7 @@
     </tr>
 
       <tr>
-        
+         
          <td width="33%">
            <div align="center">
             <p align="center">Corporate Firewall L1 Vendor</p>
@@ -45,60 +45,38 @@
             </div>
          </td>
       </tr>
+      <tr>
+        <div style="padding:10px">
+       <h4> Corporate DMZ Settings:</h4>
+       <p> Please select the poduct vendor, model, and quantity for your Corporate DMZ Network. Use the "Add Server" button to add and "Remove Server" button to remove </p>
+       </div>
+      </tr>
+      <tr>
+         <td width="33%">
+           <div align="center">
+            <p align="center">Corporate Firewall L1 Vendor</p>
+            <select>
+               <option value="">Option 1</option>
+               <option value="">Option 2</option>
+            </select>
+            </div>
+         </td>
+        
+         
+         <td align="center" width="33%">
+           <div align="center">
+            <p>Corporate Firewall L1 Product</p>
+            <select>
+                <option value="">Option 1</option>
+               <option value="">Option 2</option>
+            </select>
+            </div>
+         </td>
+      </tr>
    </tbody>
 </table>
+
 </body>
-<!-- <div class="btn-group">
-        <li @click="toggleMenu()" class="dropdown-toggle" v-if="selectedOption.name !== undefined">
-          {{ selectedOption.name }}
-          <span class="caret"></span>
-        </li>
-
-        <li @click="toggleMenu()" class="dropdown-toggle dropdown-toggle-placeholder" v-if="selectedOption.name === undefined">
-          {{placeholderText}}
-          <span class="caret"></span>
-        </li>
-
-        <ul class="dropdown-menu" v-if="showMenu">
-            <li v-for="(option, idx) in options" :key="idx">
-                <a href="javascript:void(0)" @click="updateOption(option)">
-                    {{ option.name }}
-                </a>
-            </li>
-        </ul>
-     </div> -->
-  <!-- <div id="table">
-  <table id="table" width="100%" border="0">
-<tbody>
-      <tr>
-        <td>
-          <div>
-            <h5>Input Settings: </h5>
-            <p>Something</p>
-          
-          </div>
-          </td>
-        </tr>
-      </tbody>
-      </table>
-            <table id="table" width="100%" border="0">
-              <tbody>
-        <tr>
-       <td class="dropdown-toggle">
-             <a>Main Link</a>
-
-<ul>
-<li>link 1</li>
-<li>link 2</li>
-<li>link 3</li>
-</ul>
-
-          </td>
-        </tr>
-      </tbody>
-      </table>
-      </div> -->
-
 </template>
 
 <script>

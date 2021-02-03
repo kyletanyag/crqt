@@ -2,7 +2,7 @@
 <div>
     <div class="row">
         <header class="col">
-            <nav class="navbar navbar-expand navbar-light bg-light mt-3 mb-3">
+            <nav class="navbar navbar-expand navbar-light bg-light mt-3 mb-3" >
                 <strong class="mr-3">CRQT</strong>
                 <button class="navbar-toggler"
                         type="button"
@@ -15,7 +15,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarActual">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
+                        <li class="nav-item" >
                             <router-link class="nav-link"
                                          active-class="active"
                                          to="/">Home</router-link>
