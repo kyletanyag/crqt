@@ -40,13 +40,13 @@ def Dataframe_Creator(file):
     pd.set_option('display.colheader_justify', "center")
     pd.set_option('display.precision', 2)
     return df
-###dataframe 2018 data added to the end of the excel document
+###dataframe 2018 data added to the beginning of the excel document
 file = pd.read_json(r"C:\Users\Cierra\Downloads\Capstone Data\d2018.json")
 dataframe_2018=Dataframe_Creator(file)
 print(len(dataframe_2018))
 dataframe_2018.to_excel(r'C:\Users\Cierra\Documents\Python Scripts\CapstoneData2021.xlsx')
 
-####dataframe 2018 data added to the end of the excel document
+####dataframe 2019 data added to the end of the excel document
 file_2019 = pd.read_json(r"C:\Users\Cierra\Downloads\Capstone Data\d2019.json")
 dataframe_2019=Dataframe_Creator(file_2019)
 print(len(dataframe_2019))
@@ -54,7 +54,7 @@ writer = pd.ExcelWriter(r'C:\Users\Cierra\Documents\Python Scripts\CapstoneData2
 dataframe_2019.to_excel(writer)
 writer.save()
 
-####dataframe 2018 data added to the end of the excel
+####dataframe 2020 data added to the end of the excel
 file_2020 = pd.read_json(r"C:\Users\Cierra\Downloads\Capstone Data\d2020.json")
 dataframe_2020=Dataframe_Creator(file_2020)
 print(len(dataframe_2020))
