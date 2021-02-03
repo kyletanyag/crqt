@@ -1,5 +1,54 @@
 <template>
-<div class="btn-group">
+<body>
+
+<h3 style="padding:10px"> Input Settings: Corporate FIrewall, Corporate DMZ and Corporate LAN</h3>
+<table width="100%" border="0" cellpadding="px">
+  
+   <tbody>
+     <tr>
+       <div style="padding:10px">
+       <h4> Corporate Firewall L1 Settings:</h4>
+       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
+       </div>
+    </tr>
+
+      <tr>
+        
+         <td width="33%">
+           <div align="center">
+            <p align="center">Corporate Firewall L1 Vendor</p>
+            <select>
+               <option value="">Option 1</option>
+               <option value="">Option 2</option>
+            </select>
+            </div>
+         </td>
+        
+         
+         <td align="center" width="33%">
+           <div align="center">
+            <p>Corporate Firewall L1 Product</p>
+            <select>
+                <option value="">Option 1</option>
+               <option value="">Option 2</option>
+            </select>
+            </div>
+         </td>
+         
+         <td width="33%" align="center">
+           <div align="center">
+            <p>Number of Coporate Firewall 1</p>
+            <select>
+                <option value="">Option 1</option>
+               <option value="">Option 2</option>
+            </select>
+            </div>
+         </td>
+      </tr>
+   </tbody>
+</table>
+</body>
+<!-- <div class="btn-group">
         <li @click="toggleMenu()" class="dropdown-toggle" v-if="selectedOption.name !== undefined">
           {{ selectedOption.name }}
           <span class="caret"></span>
@@ -17,8 +66,8 @@
                 </a>
             </li>
         </ul>
-     </div>
-  <!--<div id="table">
+     </div> -->
+  <!-- <div id="table">
   <table id="table" width="100%" border="0">
 <tbody>
       <tr>
@@ -35,8 +84,15 @@
             <table id="table" width="100%" border="0">
               <tbody>
         <tr>
-        <td>
-             
+       <td class="dropdown-toggle">
+             <a>Main Link</a>
+
+<ul>
+<li>link 1</li>
+<li>link 2</li>
+<li>link 3</li>
+</ul>
+
           </td>
         </tr>
       </tbody>
@@ -46,69 +102,11 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                selectedOption: {
-                  name: '',
-                },
-                showMenu: false,
-                placeholderText: 'Please select an item',
-            }
-        },
-        props: {
-            options: {
-                type: [Array, Object]
-            },
-            selected: {},
-            placeholder: [String],
-            closeOnOutsideClick: {
-              type: [Boolean],
-              default: true,
-            },
-        },
 
-        mounted() {
-            this.selectedOption = this.selected;
-            if (this.placeholder)
-            {
-                this.placeholderText = this.placeholder;
-            }
-
-            if (this.closeOnOutsideClick) {
-              document.addEventListener('click', this.clickHandler);
-            }
-        },
-
-        beforeUnmount() {
-            document.removeEventListener('click', this.clickHandler);
-        },
-
-        methods: {
-            updateOption(option) {
-                this.selectedOption = option;
-                this.showMenu = false;
-                this.$emit('updateOption', this.selectedOption);
-            },
-
-            toggleMenu() {
-              this.showMenu = !this.showMenu;
-            },
-
-            clickHandler(event) {
-                const { target } = event;
-                const { $el } = this;
-
-                if (!$el.contains(target)) {
-                  this.showMenu = false;
-                }
-            },
-        }
-    }
 </script>
 <style>
 table, th, td {
-  border: 1px solid black;
+  border: 1px solid rgb(255, 255, 255);
   border-collapse: collapse;
 }
 th, td {
