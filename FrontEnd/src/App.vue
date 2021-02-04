@@ -20,7 +20,7 @@
                                          active-class="active"
                                          to="/">Home</router-link>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" >
                             <router-link class="nav-link"
                                          active-class="active"
                                          to="/NetworkTopology">Network Topology</router-link>
@@ -33,17 +33,17 @@
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown">Resilience Metrics</a>
-                            <div class="dropdown-menu" style="width: 20em">
-                                <router-link class="nav-link"
+                            <div class="dropdown-menu" style="width: 20em " >
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/Robustness">Robustness</router-link>
-                                <router-link class="nav-link"
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/Redundancy">Redundancy</router-link>
-                                <router-link class="nav-link"
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/Resourcefullness">Resourcefullness</router-link>
-                                <router-link class="nav-link"
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/Rapidity">Rapidity</router-link>
                             </div>
@@ -51,19 +51,19 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown">Visualization</a>
                             <div class="dropdown-menu" style="width: 20em">
-                                <router-link class="nav-link"
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/BasicGraphView">Basic Graph View</router-link>
-                                <router-link class="nav-link"
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/ColorGraphView">Color Graph View</router-link>
-                                <router-link class="nav-link"
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/CollapsibleLayout">Collapsible Layout</router-link>
-                                <router-link class="nav-link"
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/ForceLayout">Force Layout</router-link>
-                                <router-link class="nav-link"
+                                <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/TidyTree">Tidy Tree Layout</router-link>
                             </div>
@@ -134,5 +134,7 @@ export default {
   background-color: #2c20d4;
   color: white;
 }
-
+.dropdown-menu{
+  color: #0d0852;
+}
 </style>

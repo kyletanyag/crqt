@@ -2,7 +2,7 @@
     <div class="home">
         <img alt="CRQT logo" src="../assets/logo.png">
         <H1>Welcome to the Cyber Resilience Quantification Tool (CRQT)</H1>
-        <p align="center">Log In</p>
+        <h3 align="center">Log In</h3>
         <input v-model="message" placeholder="Username">
         <p></p>
         <input v-model="message" placeholder="Password">
