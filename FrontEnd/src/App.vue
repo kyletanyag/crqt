@@ -2,8 +2,8 @@
 <div>
     <div class="row">
         <header class="col">
-            <nav class="navbar navbar-expand navbar-light bg-light mt-3 mb-3" >
-                <strong class="mr-3">CRQT</strong>
+            <nav class="navbar navbar-expand navbar-dark bg-dark mb-3" variant="dark" >
+                <strong class="mr-3" style="color:white; font-size:30px;">CRQT |</strong>
                 <button class="navbar-toggler"
                         type="button"
                         data-toggle="collapse"

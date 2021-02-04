@@ -119,6 +119,54 @@
             </tr>
          </tbody>
       </table>
+      <h4> Corporate LAN Settings</h4>
+      <p> Please select the poduct vendor, model, and quantity for your Corporate LAN Network.  Use the "Add Server" button to add and "Remove Server" button to remove </p>
+      <form>
+         <input type="button" class="add-row" value="Add Server">
+         <input type="button" class="add-row" value="Remove Server">
+      </form>
+      <table id="AddServer" width="100%" border="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <td width="25%">
+                  <div align="center">
+                     <p align="center">Corporate Firewall L1 Vendor</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Corporate Firewall L1 Product</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+      </table>
    </body>
 </template>
 <script>
@@ -126,7 +174,7 @@
 </script>
 <style>
    table, th, td {
-   border: 1px solid rgb(255, 255, 255);
+   border: 1px solid rgb(5, 5, 5);
    border-collapse: collapse;
    }
    th, td {
