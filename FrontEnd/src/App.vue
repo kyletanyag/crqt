@@ -1,10 +1,109 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+<div>
+    <div class="row">
+        <header class="col">
+            <nav class="navbar navbar-expand navbar-light bg-light mt-3 mb-3" >
+                <strong class="mr-3">CRQT</strong>
+                <button class="navbar-toggler"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#navbarActual"
+                        aria-controls="navbarActual"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarActual">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item" >
+                            <router-link class="nav-link"
+                                         active-class="active"
+                                         to="/">Home</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link class="nav-link"
+                                         active-class="active"
+                                         to="/NetworkTopology">Network Topology</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link class="nav-link"
+                                         active-class="active"
+                                         to="/SimulationResults">Simulation Results</router-link>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown">Resilience Metrics</a>
+                            <div class="dropdown-menu" style="width: 20em">
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/Robustness">Robustness</router-link>
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/Redundancy">Redundancy</router-link>
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/Resourcefullness">Resourcefullness</router-link>
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/Rapidity">Rapidity</router-link>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown">Visualization</a>
+                            <div class="dropdown-menu" style="width: 20em">
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/BasicGraphView">Basic Graph View</router-link>
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/ColorGraphView">Color Graph View</router-link>
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/CollapsibleLayout">Collapsible Layout</router-link>
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/ForceLayout">Force Layout</router-link>
+                                <router-link class="nav-link"
+                                             active-class="bg-primary text-white"
+                                             to="/TidyTree">Tidy Tree Layout</router-link>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <router-link class="nav-link"
+                                         active-class="active"
+                                         to="/ContactUs">Contact Us</router-link>
+                        </li>    
+                    </ul>
+                    <form class="form-inline my-2 my-lg-0">
+                        <button class="button button1" v-if="!$auth.isAuthenticated.value" @click="login">Log in</button>
+                        <button v-if="$auth.isAuthenticated.value" @click="logout">Log out</button>
+                    </form>
+                </div>
+            </nav>
+        </header>
+    </div>
+    <div>
+    <router-view />
+    </div>
+</div>
 </template>
+
+<script>
+export default {
+  name: 'App',
+  methods: {
+    login() {
+      this.$auth.loginWithRedirect();
+    },
+    // Log the user out
+    logout() {
+      this.$auth.logout({
+        returnTo: window.location.origin
+      });
+    }
+  }
+}
+</script>
 
 <style>
 #app {
@@ -14,17 +113,26 @@
   text-align: center;
   color: #2c3e50;
 }
-
-#nav {
-  padding: 30px;
+.button {
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+.button1 {
+  background-color: white; 
+  color: black; 
+  border: 2px solid #2a79b9;
+}
+.button1:hover {
+  background-color: #2c20d4;
+  color: white;
 }
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
 </style>
