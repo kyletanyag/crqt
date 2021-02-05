@@ -5,9 +5,15 @@
 '''
 from flask import Flask 
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
+import mysql.connector
 
-db = SQLAlchemy()
+
+db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    passwd="password",
+    database="testdb"
+)
 
 def create_app():
     app = Flask(__name__)
