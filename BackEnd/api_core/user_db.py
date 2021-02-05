@@ -7,7 +7,15 @@ main = Blueprint('main', __name__)
 def verify_user():
     request.get_json()
     ## query with MySQL
+    # IF USERNAME FOUND: THEN 
+    # - COMPARE PASSWORDS (HASH GIVEN PASSWORD)
+    # - IF PASSWORDS ARE EQUIVLENT:
+    # -- RETRUN TRUE
+    # 
+    # RETURN FALSE
+
     # username=key, password, email
+    # Python Hash function: https://docs.python.org/3/library/hashlib.html (open-source)
 
 @main.route('/register', methods=['POST'])
 def register():
