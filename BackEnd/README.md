@@ -28,6 +28,9 @@ Can be downloaded [here](https://www.postman.com/downloads/).
 https://blog.miguelgrinberg.com/post/running-your-flask-application-over-https
 
 
+# Virtual environment
+https://www.youtube.com/watch?v=N5vscPTWKOk&t=311s
+
 
 # How to Run
 ```
