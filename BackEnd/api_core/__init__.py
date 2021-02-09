@@ -5,25 +5,25 @@
 '''
 from flask import Flask 
 from flask_cors import CORS
-import mysql.connector
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+CORS(app)
+db = SQLAlchemy(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../dms/users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_BINDS'] = {
+'users':     app.config['SQLALCHEMY_DATABASE_URI'],
+'nvd':      'sqlite:///../dms/nvd.db'
+}
+
+# registering blueprints
+from .user_db import user_bp
+from .nvd import nvd_bp
+app.register_blueprint(user_hp)
+app.register_blueprint(nvd_bp)
 
 
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="password",
-    database="testdb"
-)
-
-def create_app():
-    app = Flask(__name__)
-    CORS(app)
-
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
-
-    db.init_app(app)
-
-    from .views import main
-    app.register_blueprint(main)
-
-    return app
+if __name__ == "__main__":
+    app.run()

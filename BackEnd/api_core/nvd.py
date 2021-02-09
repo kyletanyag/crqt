@@ -1,10 +1,4 @@
-import mysql.connector
+from flask import Blueprint, jsonify, request
+from . import db 
 
-
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    passwd="password"
-)
-
-mycursor = db.cursor()
+nvd_bp = Blueprint('nvd_bp', __name__)
