@@ -1,6 +1,6 @@
 '''
 @author Thomas Laverghetta
-@brief This is implementation of a simple Flask and React tutorial I found on Youtube. 
+@brief main executable for back-end. It has the job of initializating flask and databases. 
 
 '''
 from flask import Flask 
@@ -14,16 +14,17 @@ db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../dms/users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_BINDS'] = {
-'users':     app.config['SQLALCHEMY_DATABASE_URI'],
-'nvd':      'sqlite:///../dms/nvd.db'
+    'users':     app.config['SQLALCHEMY_DATABASE_URI'],
+    'nvd':      'sqlite:///../dms/nvd.db'
 }
 
-# registering blueprints
+# registering blueprints (routes)
 from .user_db import user_bp
 from .nvd import nvd_bp
+from .graph_generation import graph_bp
 app.register_blueprint(user_hp)
 app.register_blueprint(nvd_bp)
-
+app.register_blueprint(graph_bp)
 
 if __name__ == "__main__":
     app.run()
