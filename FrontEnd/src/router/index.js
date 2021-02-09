@@ -110,6 +110,11 @@ const routes = [
         path: '/error',
         name: 'Error',
         component: ErrorPage,
+    },
+    {
+        path: '/sandbox',
+        name: 'Sandbox',
+        component: () => import(/* webpackChunkName: "Sanbox" */ '../views/_Sandbox.vue')
     }
 ]
 

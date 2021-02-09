@@ -1,4 +1,17 @@
-const baseurl = 'http://localhost:5000';
+const baseurl = 'http://localhost:5000/';
+
+// If we were to use axios library instead? Up to us
+/*
+import axios from 'axios';
+function get(path) {
+  return axios.get(baseurl + path);
+}
+
+function post(path, data) {
+  axios.post(baseurl + path, data)
+  .catch(error => console.log(error));
+}
+*/
 
 async function get(path) {
   const p = baseurl + path;
@@ -8,15 +21,14 @@ async function get(path) {
 }
 
 async function post(path, data) {
-  const r = await fetch(baseurl + path, {
+  const r = fetch(baseurl + path, {
     headers: {
       'Content-Type': 'application/json',
     },
     method: 'POST',
     body: JSON.stringify(data),
   });
-  const d = await r.json();
-  return d;
+  return r;
 }
 
 export { get, post };

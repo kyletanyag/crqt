@@ -11,16 +11,16 @@
 
 <script>
  /* eslint-disable */
-    import {inject} from 'vue';
+import {inject} from 'vue';
 
-    export default {
-        name: "VueCsvFiles",
-        setup() {
-            const VueCsvImportData = inject('VueCsvImportData');
+export default {
+    name: "VueCsvFiles",
+    setup() {
+        const VueCsvImportData = inject('VueCsvImportData');
 
-            return {
-                VueCsvImportData,
-            }
-        },
-    };
+        return {
+            VueCsvImportData,
+        }
+    },
+};
 </script>

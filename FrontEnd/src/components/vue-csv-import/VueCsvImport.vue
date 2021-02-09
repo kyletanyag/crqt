@@ -1,9 +1,11 @@
 <template>
+<div>
     <slot
         :errors="VueCsvImportData.errors"
         :fields="VueCsvImportData.fields"
         :file="VueCsvImportData.file"
     ></slot>
+</div>
 </template>
 
 <script>
