@@ -9,3 +9,7 @@ import .nvd
 
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
+
+@graph_bp.route('/network_topology_input', methods=['POST'])
+def network_topology_input():
+    pass
