@@ -8,6 +8,11 @@ from . import db
 
 nvd_bp = Blueprint('nvd_bp', __name__)
 
+class CVSS:
+    base_score = float()
+    exploitability = float()
+    impact = float()
+
 # query with database to get cve_ids
 def cvss_query(cve_ids):
     pass
