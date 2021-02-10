@@ -1,22 +1,26 @@
-# Flask Tutorial Notes:
-Tutorial: https://www.youtube.com/watch?v=Urx8Kj00zsI&list=WL&index=32&t=133s
-
-## 1. Must install pipenv first:
+## 1. (optional) Install and Deploy Virtual Environment:
  ```
-$ pip install pipenv
+$ pip install virtualenv
+$ virtualenv <name of virtual env> # I named mine backend_env
+$ <name of virtual env>/Scripts/activate # activate virtual environment
 ```
-Resource on [pipenv](https://realpython.com/pipenv-guide/).
+Resource on [virtualenv](https://www.youtube.com/watch?v=N5vscPTWKOk).
 
 From what I gather, it seem it is used to build pip libs so other executables do not interfear
 
-## 2. Install Flask, Flask sqlalchemy, Flask-CORS
+Deactivate virtual environment
 ```
-$ pipenv install flask flask-sqlalchemy flask-cors
+$ deactivate
+```
+
+## 2. Install Dependencies
+```
+$ pip install -r requirements.txt
 ```
 
 ## 3. To export variables in Windows use 'set' command in cmd
 ```
-set FLASK_APP=BackEnd
+set FLASK_APP=api
 set FLASK_DEBUG=1
 ```
 
@@ -28,16 +32,15 @@ Can be downloaded [here](https://www.postman.com/downloads/).
 https://blog.miguelgrinberg.com/post/running-your-flask-application-over-https
 
 
-# Virtual environment
-https://www.youtube.com/watch?v=N5vscPTWKOk&t=311s
-
-
-# How to Run
+# How to Run Flask
 ```
-$ pip install pipenv
-$ pipenv install flask flask-sqlalchemy flask-cors
-$ pipenv shell
-$ set FLASK_APP=BackEnd
+$ <name of virtual env>/Scripts/activate # if virtual env not activated
+$ set FLASK_APP=api
 $ set FLASK_DEBUG=1
 $ flask run
 ```
+Port 5000 will have 
+
+
+# Flask Tutorials:
+https://www.youtube.com/watch?v=Urx8Kj00zsI&list=WL&index=32&t=133s
