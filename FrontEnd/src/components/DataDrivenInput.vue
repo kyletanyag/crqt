@@ -1,55 +1,59 @@
 <template>
-<div>
-    <div class="col d-flex justify-content-center my-2">
-        <div class="card">
+<div class="row">
+    <div class="col d-flex justify-content-center">
+        <div class="card mx-2" id="maincard">
             <div class="card-header">Data-Driven Input</div>
             <div class="card-body text-left">
                 <h5 class="card-title">Two Input files required:</h5>
-                <div>
-                    <p class="pr-3 font-weight-bold">Vertex.CSV file</p>
+                <div class="pr-3 py-2">
+                    <h6 class="font-weight-bold">Vertex.CSV file</h6>
                     <vue-csv-import v-model="vertices"
                         :fields="{
-                            id: {required: true, label: 'id'},
-                            description: {required: true, label: 'description'},
-                            logic: {required: true, label: 'logic'},
-                            direction: {required: true, label: 'direction'}}"
+                            id: {required: true, label: 'ID'},
+                            description: {required: true, label: 'Description'},
+                            logic: {required: true, label: 'Logic'},
+                            direction: {required: true, label: 'Direction'}}"
                     >
+                        <vue-csv-input @change="progress = 0"></vue-csv-input>
                         <vue-csv-toggle-headers></vue-csv-toggle-headers>
                         <vue-csv-errors></vue-csv-errors>
-                        <vue-csv-input></vue-csv-input>
                         <vue-csv-map></vue-csv-map>
                     </vue-csv-import>
                 </div>
-                <div>
-                    <p class="pr-3 font-weight-bold">Arcs.CSV file</p>
+                <div class="pr-3 py-2">
+                    <h6 class="font-weight-bold">Arcs.CSV file</h6>
                     <vue-csv-import v-model="arcs"
                         :fields="{
-                            currNode: {required: true, label: 'current_node'},
-                            nextNode: {required: true, label: 'next_node'},
-                            direction: {required: true, label: 'direction'}}"
+                            currNode: {required: true, label: 'Current Node'},
+                            nextNode: {required: true, label: 'Next Node'},
+                            direction: {required: true, label: 'Direction'}}"
                     >
+                        <vue-csv-input @change="progress = 0"></vue-csv-input>
                         <vue-csv-toggle-headers></vue-csv-toggle-headers>
                         <vue-csv-errors></vue-csv-errors>
-                        <vue-csv-input></vue-csv-input>
                         <vue-csv-map></vue-csv-map>
                     </vue-csv-import>
                 </div>
-                <button type="submit" class="btn btn-primary" @click="submit">Submit</button>
+                <div class="text-center py-2">
+                    <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
+                    <button type="submit" class="btn btn-primary" @click="Submit">Submit</button>
+                </div>
                 <div class="progress">
                     <div class="progress-bar progress-bar-info"
-                        role="progressnbar"
+                        role="progressbar"
                         :style="{ width: progress + '%' }"
+                        :aria-valuenow="progress"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
                     >
-                        {{ progress}}%
+                        {{progress}}%
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col d-flex justify-content-center my-2">
-        <div class="card">
+        <div v-if="preview" class="card mx-2" :style="GetCardSize()">
             <div class="card-header">JSON Object Preview</div>
-            <div class="card-body">
+            <div class="card-body" style="overflow-y: auto;">
                 <div>
                     {{ network }}
                 </div>
@@ -63,7 +67,6 @@
 
 import {
     VueCsvToggleHeaders,
-    // VueCsvSubmit,
     VueCsvMap,
     VueCsvInput,
     VueCsvErrors,
@@ -71,19 +74,16 @@ import {
 } from 'vue-csv-import';
 
 import http from "../http-common";
-// import UploadFiles from '../components/UploadFiles.vue';
 
 export default {
     name: 'DataDrivenInput',
 
     components: {
         VueCsvToggleHeaders,
-        // VueCsvSubmit,
         VueCsvMap,
         VueCsvInput,
         VueCsvErrors,
         VueCsvImport
-        // UploadFiles
     },
 
     data() {
@@ -91,6 +91,7 @@ export default {
             vertices: null,
             arcs: null,
             progress: 0,
+            preview: false,
         };
     },
 
@@ -104,9 +105,12 @@ export default {
     },
 
     methods: {
-        submit() {
-            // post('upload', this.network).then((r) => {console.log(r)});
-            this.upload(this.network, (event) => {
+        Submit() {
+            if (this.network.vertices === null || this.network.arcs === null) {
+                alert('Missing CSV file(s)! Please make sure both CSV files have been selected.');
+                return;
+            }
+            this.Upload(this.network, (event) => {
                 this.progress = Math.round(100 * event.loaded / event.total);
             })
             .then((response) => {
@@ -118,14 +122,16 @@ export default {
             })
         },
 
-        upload(data, onUploadProgress) {
-            return http.post("/upload", data , {
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                onUploadProgress
-            });
+        Upload(data, onUploadProgress) {
+            return http.post("/upload", data , { onUploadProgress });
         },
+
+        GetCardSize() {
+            return {
+                'width' : document.getElementById('maincard').offsetWidth + 'px',
+                'height' : document.getElementById('maincard').offsetHeight + 'px'
+            };
+        }
     },
 }
 </script>
