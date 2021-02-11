@@ -1,6 +1,11 @@
 <template>
    <body>
-      <h3 style="padding-left:10px"> Input Settings: Corporate FIrewall, Corporate DMZ and Corporate LAN</h3>
+      
+      <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
+      <h4 style="padding-left:10px"> If you would like to upload a CSV file, click the button below.</h4>
+      <form class="form-inline my-2 my-lg-0" action="/Sandbox" style="padding-left:10px">
+                        <button type="submit">CSV File Upload</button>
+                    </form>
       <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
       <table width=100% border="0" cellspacing="0" >
@@ -169,8 +174,9 @@
       </table>
    </body>
 </template>
+
 <script>
-   
+
 </script>
 <style>
    table, th, td {

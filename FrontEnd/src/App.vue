@@ -74,10 +74,10 @@
                                          to="/ContactUs">Contact Us</router-link>
                         </li>    
                     </ul>
-                    <form class="form-inline my-2 my-lg-0">
+                    <!-- <form class="form-inline my-2 my-lg-0">
                         <button class="btn btn-primary" v-if="!$auth.isAuthenticated.value" @click="login">Log in</button>
                         <button v-if="$auth.isAuthenticated.value" @click="logout">Log out</button>
-                    </form>
+                    </form> -->
                 </div>
             </nav>
         </header>
