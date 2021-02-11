@@ -11,8 +11,7 @@
                         :fields="{
                             id: {required: true, label: 'ID'},
                             description: {required: true, label: 'Description'},
-                            logic: {required: true, label: 'Logic'},
-                            direction: {required: true, label: 'Direction'}}"
+                            logic: {required: true, label: 'Logic'}}"
                     >
                         <vue-csv-input @change="progress = 0"></vue-csv-input>
                         <vue-csv-toggle-headers></vue-csv-toggle-headers>
@@ -25,8 +24,7 @@
                     <vue-csv-import v-model="arcs"
                         :fields="{
                             currNode: {required: true, label: 'Current Node'},
-                            nextNode: {required: true, label: 'Next Node'},
-                            direction: {required: true, label: 'Direction'}}"
+                            nextNode: {required: true, label: 'Next Node'}}"
                     >
                         <vue-csv-input @change="progress = 0"></vue-csv-input>
                         <vue-csv-toggle-headers></vue-csv-toggle-headers>
