@@ -10,10 +10,32 @@ from . import db
 user_bp = Blueprint('user_bp', __name__)
 
 # user verification route
-@user_bp.route('/verify_user', methods=['POST'])
+@user_bp.route('/verify_user')
 def verify_user():
     user = request.get_json()  # username and passwd
     # query with SQL given user_info.username
+    user_list = Users.query.all()
+
+    for n in user_list:
+        if user.username == n.username:
+            print ("User found.")
+            u_hash = hashlib.sha256()
+            n_hash = hashlib.sha256()
+            u_hash.update(user.password)
+            n_hash.update(n.password)
+
+            if u_hash.digest() == n_hash.digest():
+                print ("Password match.")
+                return True
+            else:
+                print ("Password does not match.")
+                return False
+    
+
+    print ("User not found.")
+    return False
+
+
 
     # IF USERNAME FOUND IN QUERY: THEN 
     # - COMPARE PASSWORDS (HASH GIVEN PASSWORD)
