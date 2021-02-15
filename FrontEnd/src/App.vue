@@ -73,36 +73,51 @@
                                          active-class="active"
                                          to="/ContactUs">Contact Us</router-link>
                         </li>    
+                        <li class="nav-item">
+                            <router-link class="nav-link"
+                                         active-class="active"
+                                         to="/Secure">Secure Page</router-link>
+                        </li>   
                     </ul>
-                    <!-- <form class="form-inline my-2 my-lg-0">
-                        <button class="btn btn-primary" v-if="!$auth.isAuthenticated.value" @click="login">Log in</button>
-                        <button v-if="$auth.isAuthenticated.value" @click="logout">Log out</button>
-                    </form> -->
                 </div>
+                <div id="log">
+                  <router-link v-if="authenticated" to="/Home" v-on:click="logout()" replace>Logout</router-link>
+               </div>
             </nav>
         </header>
     </div>
     <div>
-    <router-view />
+      <router-view @authenticated="setAuthenticated" />
     </div>
 </div>
 </template>
 
 <script>
-export default {
-  name: 'App',
-  methods: {
-    login() {
-      this.$auth.loginWithRedirect();
+  export default {
+    name: 'App',
+    data() {
+      return {
+        authenticated: false,
+        mockAccount: {
+          emailAddress: "email",
+          password: "password"
+        }
+      }
     },
-    // Log the user out
-    logout() {
-      this.$auth.logout({
-        returnTo: window.location.origin
-      });
+    mounted() {
+      if (!this.authenticated) {
+        this.$router.replace({ name: "Home" });
+      }
+    },
+    methods: {
+      setAuthenticated(status) {
+        this.authenticated = status;
+      },
+      logout() {
+        this.authenticated = false;
+      }
     }
   }
-}
 </script>
 
 <style>
