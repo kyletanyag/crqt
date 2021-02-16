@@ -32,3 +32,7 @@ def network_topology():
     print(vertex_data)
 
     return 'Done', 201
+
+@main.route('/')
+def hello_world():
+    return 'Hello World!', 201
