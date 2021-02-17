@@ -44,12 +44,12 @@
       <h4> Corporate DMZ Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate DMZ Network. Use the "Add Server" button to add and "Remove Server" button to remove </p>
       <form>
-         <input type="button" @click="addRow(row)" value="Add Server">
+         <input type="button" @click="addRow(index)" value="Add Server">
          <input type="button" class="add-row" value="Remove Server">
       </form>
       <table id="AddServer" width="100%" border="0" cellspacing="0">
          <tbody>
-            <tr>
+            <tr v-for="(row, index) in rows" :key="index">
                <td width="25%">
                   <div align="center">
                      <p align="center">Corporate Firewall L1 Vendor</p>
@@ -173,7 +173,7 @@
          </tbody>
       </table>
  
-    <DynamicRow msg="Add / Edit / Clone / Delete row in vue.js"/>
+   
   
    </body>
 </template>
@@ -185,15 +185,15 @@ export default {
   data() {
     return {
       output: "",
-      flowers: []
+      rows: [1,2,3]
     };
   },
     methods:{
-    addRow: function(){
-      this.rows.push({});
+    addRow: function(_index){
+      this.rows.splice(_index+1,0, this.rows[_index]);
     },
     removeRow: function(row){
-      //console.log(row);
+      //console.log(row);d
       this.rows.$remove(row);
     }
   }
