@@ -4,20 +4,28 @@
 
 '''
 from . import db
+import enum
 
+# Enum for user roles
+class User_Role(enum.Enum):
+    ADMIN = 1
+    GENERAL_USER = 0
+
+
+# User table
 class Users(db.Model):
     __bind_key__ = 'users'
     username = db.Column(db.Integer, primary_key=True)
     password = db.Column(db.Integer)
     first_name = db.Column(db.String (30))
     last_name = db.Column(db.String (30))
-    email = db.Column(db.String (40))
-    user_role = db.Column(db.String()) #Need to look up how to implement ENUM in Python/Flask. Roles = {Admin, User/Pleb}
-    is_verified = db.Column(db.Boolean()) # Is this how to implement Boolean through Flask
-    # Needs a Key.  What is contained in a key?  What is the object type
+    email = db.Column(db.String (40), unique=True)
+    user_role = db.Column(User_Role, default=User_Role(0)) #Need to look up how to implement ENUM in Python/Flask. Roles = {Admin, User/Pleb}
+    is_registered = db.Column(db.Boolean(), default=False) # Is this how to implement Boolean through Flask
+    auth_key = db.Column(db.String()) # Needs a Key.  What is contained in a key?  What is the object type 
 
 
-
+# NVD Table
 class NVD(db.Model):
     __bind_key__ = 'nvd'
     cve_id = db.Column(db.String(16), primary_key=True)
