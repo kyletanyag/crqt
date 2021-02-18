@@ -4,12 +4,12 @@
 
 '''
 from flask import Blueprint, jsonify, request
-from . import db 
-import .nvd
+from .nvd import cvss_query
 
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
 
-@graph_bp.route('/network_topology_input', methods=['POST'])
-def network_topology_input():
-    pass
+@graph_bp.route('/network_topology_data_driven_input', methods=['POST'])
+def network_topology_data_driven_input():
+    network = request.get_json()  # json network topology data driven
+    
