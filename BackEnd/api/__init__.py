@@ -26,12 +26,12 @@ def create_app():
     db.init_app(app)
 
     # # registering blueprints (routes)
-    # from .user_db import user_bp
-    # from .nvd import nvd_bp
-    # from .graph_generation import graph_bp
-    # app.register_blueprint(user_bp)
-    # app.register_blueprint(nvd_bp)
-    # app.register_blueprint(graph_bp)
+    from .user_db import user_bp
+    from .nvd import nvd_bp
+    from .graph_generation import graph_bp
+    app.register_blueprint(user_bp)
+    app.register_blueprint(nvd_bp)
+    app.register_blueprint(graph_bp)
     
     return app
 
