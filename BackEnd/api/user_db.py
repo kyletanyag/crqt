@@ -13,7 +13,7 @@ from .data_models import Users
 import os
 import io
 import base64
-import onetimepass
+import onetimepass as otp
 import enum
 import pyqrcode
 
@@ -24,24 +24,34 @@ user_bp = Blueprint('user_bp', __name__)
 def verify_user():
     # query with SQL given user_info.username
     user = request.get_json()  # username and passwd
-    user_db_entry = Users.query.filter_by(username=user.username).first()
+    user_db_entry = Users.query.filter_by(username=user['username']).first()
 
-    if user['username']== user_db_entry.username:
+    if user['username'] == user_db_entry.username:
         print ("User found.")
         u_hash = hashlib.sha256()
-        u_hash.update(user['password'])
+        u_hash.update(user['password'].encode())
+        password = str(u_hash.digest())
 
-        if u_hash.digest() == user_db_entry.password:
+        if password == user_db_entry.password:
             print ("Password match.")
-            return True
+            return 'Passwords Match', 201
         else:
             print ("Password does not match.")
-        return False    
+        return 'Passwords Do Not Match', 201 
 
     print ("User not found.")
-    return False, 404
+    return 'User not found', 404
 
+# get 2FA 6-digit pin 
+@user_bp.route('/otp/<user_i>')
+def get_otp(user_i):
+    user_db_entry = Users.query.filter_by(username=user_i).first()
 
+    if user_db_entry is not None:
+
+        return str(otp.get_totp(user_db_entry.otp_secret)), 201
+    else:
+        return 'Cannot generate token', 201
 
     # IF USERNAME FOUND IN QUERY: THEN 
     # - COMPARE PASSWORDS (HASH GIVEN PASSWORD)
@@ -67,7 +77,7 @@ def register():
 
     else:
         hash = hashlib.sha256()
-        hash.update(str(user['password']).encode())
+        hash.update(user['password'].encode())
         password_hash = str(hash.digest())
         secret = base64.b32encode(os.urandom(10)).decode('utf-8')
 
@@ -148,11 +158,10 @@ def get_unregistered_users():
 
 @user_bp.route('/qrcode/<user_i>')
 def qrcode(user_i):
-    # user_db_entry = Users.query.filter_by(username=user_i).first_or_404(description=
-    #     'There is no username to verify: {}'.format(Users.username))
+    user_db_entry = Users.query.filter_by(username=user_i).first_or_404(description=
+        'There is no username matching {}'.format(Users.username))
 
-    # url = pyqrcode.create(f'otpauth://totp/2FA-Demo:{user_db_entry.username}?secret={user_db_entry.otp_secret}&issuer=CRQT')
-    url = pyqrcode.create(f'otpauth://totp/CRQT:{user_i}?secret=abcdefghijkl&issuer=CRQT')
+    url = pyqrcode.create(f'otpauth://totp/CRQT:{user_db_entry.username}?secret={user_db_entry.otp_secret}&issuer=CRQT')
 
     stream = io.BytesIO()
     url.svg(stream, scale=5)
