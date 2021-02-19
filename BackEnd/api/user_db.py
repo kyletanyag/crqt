@@ -61,10 +61,8 @@ def register():
     user_db_entry = Users.query.filter_by(username=user['username']).first_or_404(description=
         'There is no username: {}'.format(user['username']))
 
-    if user_db_entry is None:
-        return False, 201
-
-    elif user['username'] == user_db_entry.username:
+    
+    if user['username'] == user_db_entry.username:
         print ("Username already exists.  Please select a new username.")
         return 'Done'
 
