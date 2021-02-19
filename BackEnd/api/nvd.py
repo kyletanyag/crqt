@@ -31,7 +31,7 @@ def data_driven_cvss_query(cve_id):
 
 ####### STILL IN WORK:
 
-@nvd_bp.route('/model_driven_cvss_query')
+# @nvd_bp.route('/model_driven_cvss_query')
 def model_driven_cvss_query(cve_ids):
     scores = []
     for cve_id in cve_ids:
@@ -41,9 +41,9 @@ def model_driven_cvss_query(cve_ids):
     return scores
 
 # updates database with latest nvd
-@nvd_bp.route('/update_nvd')
-def update_nvd(cve_ids):
-    for data in nvd.query.filter(nvd["cve id"]).all():
-        if cve_ids not in data:
-            nvd.add(cve_ids)
-            nvd.commit()
+# @nvd_bp.route('/update_nvd')
+# def update_nvd(cve_ids):
+#     for data in nvd.query.filter(nvd["cve id"]).all():
+#         if cve_ids not in data:
+#             nvd.add(cve_ids)
+#             nvd.commit()

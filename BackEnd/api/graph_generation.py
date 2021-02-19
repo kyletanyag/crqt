@@ -64,3 +64,7 @@ def network_topology_data_driven_input():
     for edge in network["arcs"]:
         lag[edge["nextNode"]].next_node.append(edge["currNode"]) 
         i += 1
+
+@graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
+def network_topology_model_driven_input():
+    pass
