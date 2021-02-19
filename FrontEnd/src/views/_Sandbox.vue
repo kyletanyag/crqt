@@ -1,20 +1,18 @@
 <template>
 <div>
-    <data-driven-input></data-driven-input>
+    <qr-code :username="kyle" :secret="abcdefghi"></qr-code>
 </div>
 </template>
 
 
 <script>
-
-import DataDrivenInput from '../components/DataDrivenInput.vue';
+import QRCode from './QRCode.vue'
 
 export default {
     name: 'Sandbox',
 
     components: {
-        DataDrivenInput,
+        'qr-code': QRCode
     }
-
 }
 </script>
