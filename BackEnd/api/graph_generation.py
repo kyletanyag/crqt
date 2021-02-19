@@ -44,10 +44,23 @@ def network_topology_data_driven_input():
 
         # searching for CVE ID
         cve_index = node["description"].find('CVE')
-        if cve_index != -1: 
-            # cve_id found
-            pass
+        if cve_index != -1:
+            # getting CVE ID
+            lag[-1].cve_id = node["description"][cve_index:(cve_index+13)]
+
+            # getting CVSS scores
+            lag[-1].cvss_score = data_driven_cvss_query(lag[-1].cve_id)
         
-        lag[-1].node_logic = None
-
-
+        # setting logic
+        if node["logic"] == "FLOW":
+            lag[-1].node_logic = Node_Logic.FLOW 
+        elif node["logic"] == "AND":
+            lag[-1].node_logic = Node_Logic.AND
+        else:
+            lag[-1].node_logic = Node_Logic.OR
+    
+    # edges
+    i = 0
+    for edge in network["arcs"]:
+        lag[edge["nextNode"]].next_node.append(edge["currNode"]) 
+        i += 1
