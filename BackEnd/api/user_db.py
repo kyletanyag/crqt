@@ -6,9 +6,14 @@
 from flask import Blueprint, jsonify, request
 import hashlib
 from . import db 
-from . import User_Role
-from . import Users
+from .data_models import User_Role
+from .data_models import Users
+import os
+import io
+import base64
+import onetimepass
 import enum
+import pyqrcode
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -20,14 +25,12 @@ def verify_user():
     user_db_entry = Users.query.filter_by(username=user.username).first_or_404(description=
         'There is no username to verify: {}'.format(Users.username))
 
-    if user.username == user_db_entry.username:
+    if user['username']== user_db_entry.username:
         print ("User found.")
         u_hash = hashlib.sha256()
-        entry_hash = hashlib.sha256()
-        u_hash.update(user.password)
-        entry_hash.update(user_db_entry.password)
+        u_hash.update(user['password'])
 
-        if u_hash.digest() == entry_hash.digest():
+        if u_hash.digest() == user_db_entry.password:
             print ("Password match.")
             return True
         else:
@@ -55,18 +58,24 @@ def register():
     user = request.get_json() # who (name, email, organization), why (why they need access)
     
     # query with SQL given user_info.username
-    user_db_entry = Users.query.filter_by(username=user.username).first_or_404(description=
-        'There is no username: {}'.format(Users.username))
+    user_db_entry = Users.query.filter_by(username=user['username']).first_or_404(description=
+        'There is no username: {}'.format(user['username']))
 
-    if user.username == user_db_entry.username:
+    
+    if user['username'] == user_db_entry.username:
         print ("Username already exists.  Please select a new username.")
         return 'Done'
 
     else:
-        new_user = Users(username=user['username'], password=user['password'], 
+        password_hash = hashlib.sha256()
+        password_hash.update(user['password'])
+        
+        secret = base64.b32encode(os.urandom(10)).decode('utf-8')
+
+        new_user = Users(username=user['username'], password=password_hash.digest(), 
             first_name=user['first_name'], last_name=user['last_name'], 
             email=user['email'], user_role=user['user_role'], 
-            is_registered=False)
+            is_registered=False, otp_secret=secret)
 
         db.session.add(new_user)
         db.session.commmit()
@@ -132,3 +141,19 @@ def get_unregistered_users():
             'user_role' : n.user_role, 'is_registered' : n.is_registered, 'auth_key' : n.auth_key})
     
     return jsonify({'verified_users' : verified_users})
+
+@user_bp.route('/qrcode/<user_i>')
+def qrcode(user_i):
+    user_db_entry = Users.query.filter_by(username=user_i).first_or_404(description=
+        'There is no username to verify: {}'.format(Users.username))
+
+    url = pyqrcode.create(f'otpauth://totp/2FA-Demo:{user_db_entry.username}?secret={user_db_entry.otp_secret}&issuer=CRQT')
+
+    stream = io.BytesIO()
+    url.svg(stream, scale=5)
+    return stream.getvalue(), 200, {
+        'Content-Type': 'img/svg+xml',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+        }

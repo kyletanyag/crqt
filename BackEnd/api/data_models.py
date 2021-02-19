@@ -6,6 +6,7 @@
 from . import db
 import enum
 
+
 # Enum for user roles
 class User_Role(enum.Enum):
     ADMIN = 1
@@ -16,13 +17,13 @@ class User_Role(enum.Enum):
 class Users(db.Model):
     __bind_key__ = 'users'
     username = db.Column(db.Integer, primary_key=True)
-    password = db.Column(db.Integer)
+    password = db.Column(db.String(128))
     first_name = db.Column(db.String (30))
     last_name = db.Column(db.String (30))
     email = db.Column(db.String (40), unique=True)
-    user_role = db.Column(User_Role, default=User_Role(0)) #Need to look up how to implement ENUM in Python/Flask. Roles = {Admin, User/Pleb}
+    user_role = db.Column(db.Integer, default=User_Role(0)) #Need to look up how to implement ENUM in Python/Flask. Roles = {Admin, User/Pleb}
     is_registered = db.Column(db.Boolean(), default=False) # Is this how to implement Boolean through Flask
-    auth_key = db.Column(db.String()) # Needs a Key.  What is contained in a key?  What is the object type 
+    otp_secret = db.Column(db.String(16)) # Needs a Key.  What is contained in a key?  What is the object type 
 
 
 # NVD Table

@@ -27,8 +27,8 @@ class Node:
     index = int()                   # node index
     cve_id = None                   # cve_id(s) optional
     cvss_score = CVSS()             # base, impact, exploitability score
-    node_type = Node_Type()         # type of node
-    node_logic = Node_Logic()       # node relationship
+    node_type = Node_Type(0)         # type of node // need to fix -- kbt 
+    node_logic = Node_Logic(0)       # node relationship // need to fix -- kbt
     next_node = []                  # next nodes
 
 @graph_bp.route('/network_topology_data_driven_input', methods=['POST'])
