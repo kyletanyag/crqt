@@ -16,7 +16,7 @@ class User_Role(enum.Enum):
 # User table
 class Users(db.Model):
     __bind_key__ = 'users'
-    username = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(128), primary_key=True)
     password = db.Column(db.String(128))
     first_name = db.Column(db.String (30))
     last_name = db.Column(db.String (30))

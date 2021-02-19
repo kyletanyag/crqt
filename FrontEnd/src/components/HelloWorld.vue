@@ -44,7 +44,7 @@ export default {
 
     const svg = ref([]);
 
-    axios.get('http://localhost:5000/qrcode').then((d) => { console.log(d); svg.value = d.data });
+    axios.get('http://localhost:5000/qrcode/kyle').then((d) => { console.log(d); svg.value = d.data });
 
     return {
       svg,

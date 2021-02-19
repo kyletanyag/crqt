@@ -5,6 +5,8 @@
 '''
 from flask import Blueprint, jsonify, request
 import hashlib
+
+from sqlalchemy.orm.session import Session
 from . import db 
 from .data_models import User_Role
 from .data_models import Users
@@ -22,8 +24,7 @@ user_bp = Blueprint('user_bp', __name__)
 def verify_user():
     # query with SQL given user_info.username
     user = request.get_json()  # username and passwd
-    user_db_entry = Users.query.filter_by(username=user.username).first_or_404(description=
-        'There is no username to verify: {}'.format(Users.username))
+    user_db_entry = Users.query.filter_by(username=user.username).first()
 
     if user['username']== user_db_entry.username:
         print ("User found.")
@@ -35,10 +36,10 @@ def verify_user():
             return True
         else:
             print ("Password does not match.")
-            return False
+        return False    
 
     print ("User not found.")
-    return False
+    return False, 404
 
 
 
@@ -58,27 +59,30 @@ def register():
     user = request.get_json() # who (name, email, organization), why (why they need access)
     
     # query with SQL given user_info.username
-    user_db_entry = Users.query.filter_by(username=user['username']).first_or_404(description=
-        'There is no username: {}'.format(user['username']))
+    user_db_entry = Users.query.filter_by(username=user['username']).first()
 
-    
-    if user['username'] == user_db_entry.username:
+    if False if user_db_entry is None else user['username'] == user_db_entry.username:
         print ("Username already exists.  Please select a new username.")
         return 'Done'
 
     else:
-        password_hash = hashlib.sha256()
-        password_hash.update(user['password'])
-        
+        hash = hashlib.sha256()
+        hash.update(str(user['password']).encode())
+        password_hash = str(hash.digest())
         secret = base64.b32encode(os.urandom(10)).decode('utf-8')
 
-        new_user = Users(username=user['username'], password=password_hash.digest(), 
+        # new_user = Users(username=user['username'], password=password_hash, 
+        #     first_name=user['first_name'], last_name=user['last_name'], 
+        #     email=user['email'], user_role=user['user_role'], 
+        #     is_registered=False, otp_secret=secret)
+
+        new_user = Users(username=user['username'], password=password_hash, 
             first_name=user['first_name'], last_name=user['last_name'], 
             email=user['email'], user_role=user['user_role'], 
             is_registered=False, otp_secret=secret)
 
         db.session.add(new_user)
-        db.session.commmit()
+        db.session.commit()
 
         return 'Done', 201
 
@@ -144,10 +148,11 @@ def get_unregistered_users():
 
 @user_bp.route('/qrcode/<user_i>')
 def qrcode(user_i):
-    user_db_entry = Users.query.filter_by(username=user_i).first_or_404(description=
-        'There is no username to verify: {}'.format(Users.username))
+    # user_db_entry = Users.query.filter_by(username=user_i).first_or_404(description=
+    #     'There is no username to verify: {}'.format(Users.username))
 
-    url = pyqrcode.create(f'otpauth://totp/2FA-Demo:{user_db_entry.username}?secret={user_db_entry.otp_secret}&issuer=CRQT')
+    # url = pyqrcode.create(f'otpauth://totp/2FA-Demo:{user_db_entry.username}?secret={user_db_entry.otp_secret}&issuer=CRQT')
+    url = pyqrcode.create(f'otpauth://totp/CRQT:{user_i}?secret=abcdefghijkl&issuer=CRQT')
 
     stream = io.BytesIO()
     url.svg(stream, scale=5)
