@@ -1,6 +1,8 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <h2> Test for API! You should see a list of movies: </h2>
+    <p v-html="svg"></p>
     <p> 
       For a guide and recipes on how to configure / customize this project,<br>
       check out the
@@ -31,8 +33,23 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+// import { get } from '../api';
+import  axios  from 'axios';
+
 export default {
   name: 'HelloWorld',
+
+  data() {
+
+    const svg = ref([]);
+
+    axios.get('http://localhost:5000/qrcode/kyle').then((d) => { console.log(d); svg.value = d.data });
+
+    return {
+      svg,
+    };
+  },
 
   props: {
     msg: String

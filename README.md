@@ -5,7 +5,7 @@ Make sure you have the following downloaded:
 - [Node.js](https://nodejs.org/en/)
 
 
-## Project setup
+## Project setup Front-End
 From this directory run
 ```
 npm install
@@ -34,3 +34,22 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Devtools
 Download the [Vue.js devtools Chrome Extension](https://chrome.google.com/webstore/detail/vuejs-devtools/ljjemllljcmogpfapbkkighbhhppjdbg) for debugging Vue.js applications in the browser.
+
+## Project setup Back-End
+From this directory run (Window cmd):
+```
+pip install pipenv
+```
+Note: pipenv is only compatible with Python 3.8. 
+More information on pipenv: https://realpython.com/pipenv-guide/
+
+### Run
+From this directory run (Window cmd):
+```
+set FLASK_APP=BackEnd
+set FLASK_DEBUG=1
+flask run
+```
+
+Useful tool for testing backend: https://www.postman.com/downloads/
+
