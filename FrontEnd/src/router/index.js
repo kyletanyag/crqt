@@ -1,18 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home'
-import About from '@/views/About'
 
 import Callback from '@/views/Callback'
 import ErrorPage from '@/views/Error'
 
-import { routeGuard } from '@/auth'
+import LoginComponent from "../views/Home.vue"
+import SecureComponent from "../views/Secure.vue"
+
+//import { routeGuard } from '@/auth'
 
 const routes = [
-//   {
-//     path: '/',
-//     name: 'Home',
-//     component: Home
-//   },
+
   {
       path: '/ContactUs',
       name: 'ContactUs',
@@ -104,13 +102,7 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home
-    },
-    {
-        path: '/about',
-        name: 'About',
-        component: About,
-        beforeEnter: routeGuard
+        component: Home, LoginComponent
     },
     {
         path: '/callback',
@@ -121,6 +113,16 @@ const routes = [
         path: '/error',
         name: 'Error',
         component: ErrorPage,
+    },
+    {
+        path: '/secure',
+        name: "Secure",
+        component: SecureComponent
+    },
+    {
+        path: '/sandbox',
+        name: 'Sandbox',
+        component: () => import(/* webpackChunkName: "Sanbox" */ '../views/_Sandbox.vue')
     }
 ]
 

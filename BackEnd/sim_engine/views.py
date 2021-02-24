@@ -24,3 +24,15 @@ def movies():
         movies.append({'title' : movie.title, 'rating' : movie.rating})
 
     return jsonify({'movies' : movies})
+
+@main.route('/upload', methods=['POST'])
+def network_topology():
+    vertex_data = request.get_json()
+
+    print(vertex_data)
+
+    return 'Done', 201
+
+@main.route('/')
+def hello_world():
+    return 'Hello World!', 201
