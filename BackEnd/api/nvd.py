@@ -10,15 +10,15 @@ from .data_models import NVD
 nvd_bp = Blueprint('nvd_bp', __name__)
 
 class CVSS:
-    base_score = -1.0
-    exploitabiliy = -1.0
-    impact = -1.0
+    base = 1.0
+    exploitabiliy = 1.0
+    impact = 1.0
 
 # query with database to get cve_ids
 @nvd_bp.route('/data_driven_cvss_query')
 def data_driven_cvss_query(cve_id):
     nvd = NVD.query.get(cve_id)
-    return CVSS(base_score=nvd.base_score, exploitabiliy=nvd.exploitabiliy_score_v2,impact=nvd.impact_score_v2)
+    return CVSS(base=nvd.base_score, exploitabiliy=nvd.exploitabiliy_score_v2,impact=nvd.impact_score_v2)
     # for data in nvd.query.filter(nvd["cve id"]).all():
     #     if cve_ids == data:
     #         print(nvd[data].cveid, nvd[data].basescore, nvd[data].exploitability, nvd[data].discription)
