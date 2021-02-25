@@ -20,51 +20,48 @@ def network_topology_data_driven_input():
 
     # vertices
     for node in network["vertices"]:
-        lag[node["id"]] = Node()
+        node_id = int(node["id"])
+        lag[node_id] = Node()
 
         # setting logic
         if node["logic"] == "FLOW":
-            lag[node["id"]].node_logic = Node_Logic.FLOW 
+            lag[node_id].node_logic = Node_Logic.FLOW 
         elif node["logic"] == "AND":
-            lag[node["id"]].node_logic = Node_Logic.AND
+            lag[node_id].node_logic = Node_Logic.AND
         elif node["logic"] == "OR":
-            lag[node["id"]].node_logic = Node_Logic.OR
+            lag[node_id].node_logic = Node_Logic.OR
         else:
-            lag[node["id"]].node_logic = Node_Logic.LEAF
+            lag[node_id].node_logic = Node_Logic.LEAF
 
         # checking if derivation node
         if node["description"][:3] == 'RULE':
-            lag[node["id"]].node_type = Node_Type.DERIVATION
+            lag[node_id].node_type = Node_Type.DERIVATION
 
         # checking if primitive fact node (primitive fact nodes are always leafs)
-        elif lag[node["id"]].node_logic == Node_Logic.LEAF: 
-            lag[node["id"]].node_type = Node_Type.PRIMITIVE_FACT
+        elif lag[node_id].node_logic == Node_Logic.LEAF: 
+            lag[node_id].node_type = Node_Type.PRIMITIVE_FACT
 
         # else, derived fact node
         else:
-            lag[node["id"]].node_type = Node_Type.DERIVED
+            lag[node_id].node_type = Node_Type.DERIVED
         
     # edges
     for edge in network["arcs"]:
-        lag[edge["currNode"]].next_node.append(edge["nextNode"]) 
+        lag[int(edge["currNode"])].next_node.append(int(edge["nextNode"])) 
 
     # constructing queue for leaf nodes for derived score calculations
     leaf_queue = deque()
     for key in lag:
         if lag[key].node_type == Node_Type.PRIMITIVE_FACT:
-            tmp_node = PrimitiveFactNode()
-            tmp_node.index = key
-            tmp_node.next_node = lag[key].next_node
-
             # searching for CVE ID
             cve_index = node["description"].find('CVE')
             if cve_index != -1:
                 # getting CVSS scores
-                tmp_node.cvss_score = data_driven_cvss_query(node["description"][cve_index:(cve_index+13)])
+                lag[key].derived_score = data_driven_cvss_query(node["description"][cve_index:(cve_index+13)])
             # else use default values (1.0)
-            leaf_queue.append(tmp_node)
+            leaf_queue.append(lag[key])
 
-    DerivedScore(lag, leaf_queue)
+    lag = DerivedScore(lag, leaf_queue)
         
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
