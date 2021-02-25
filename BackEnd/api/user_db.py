@@ -19,6 +19,16 @@ import pyqrcode
 
 user_bp = Blueprint('user_bp', __name__)
 
+# IF USERNAME FOUND IN QUERY: THEN 
+# - COMPARE PASSWORDS (HASH GIVEN PASSWORD)
+# - IF PASSWORDS ARE EQUIVLENT:
+# -- RETRUN TRUE
+# 
+# RETURN FALSE
+
+# username=key, password, email
+# Python Hash function: https://docs.python.org/3/library/hashlib.html (open-source)
+
 # route to verify username and password
 @user_bp.route('/verify_user')
 def verify_user():
@@ -53,15 +63,6 @@ def get_otp(user_i):
     else:
         return 'Cannot generate token', 201
 
-    # IF USERNAME FOUND IN QUERY: THEN 
-    # - COMPARE PASSWORDS (HASH GIVEN PASSWORD)
-    # - IF PASSWORDS ARE EQUIVLENT:
-    # -- RETRUN TRUE
-    # 
-    # RETURN FALSE
-
-    # username=key, password, email
-    # Python Hash function: https://docs.python.org/3/library/hashlib.html (open-source)
 
 # user registration route
 @user_bp.route('/register', methods=['POST'])
@@ -98,6 +99,7 @@ def register():
 
     # Send email/msg to admin about registration of user
 
+
 # Admin adds user to accepted list of registration. admin call ONLY
 @user_bp.route('/add_user_init', methods=['POST'])
 def add_user_init():
@@ -122,6 +124,7 @@ def add_user_init():
     print ("User :", user.username, ", was not found.")
     return 'Done'
     # Send email/msg to user with link to add_user route so they can put in their crodentials
+
 
 # returns a json file containing a collection of users that are registered 
 @user_bp.route('/get_registered_users')
@@ -155,6 +158,7 @@ def get_unregistered_users():
             'user_role' : n.user_role, 'is_registered' : n.is_registered, 'auth_key' : n.auth_key})
     
     return jsonify({'verified_users' : verified_users})
+
 
 @user_bp.route('/qrcode/<user_i>')
 def qrcode(user_i):
