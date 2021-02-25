@@ -14,26 +14,13 @@ nvd_bp = Blueprint('nvd_bp', __name__)
 def data_driven_cvss_query(cve_id):
     nvd = NVD.query.get(cve_id)
     return [nvd.base_score, nvd.exploitabiliy_score_v2,nvd.impact_score_v2]
-    # for data in nvd.query.filter(nvd["cve id"]).all():
-    #     if cve_ids == data:
-    #         print(nvd[data].cveid, nvd[data].basescore, nvd[data].exploitability, nvd[data].discription)
-    #     else:
-    #         print("CVE ID not found")
-    #         return nvd.query.filterby(nvd['cve id']==cve_ids).first_or_404()
-
-
 
 
 ####### STILL IN WORK:
 
 # @nvd_bp.route('/model_driven_cvss_query')
 def model_driven_cvss_query(cve_ids):
-    scores = []
-    for cve_id in cve_ids:
-        nvd = NVD.query.get(cve_id)
-        scores.append(CVSS(base_score=nvd.base_score, exploitabiliy_score_v2=nvd.exploitabiliy_score_v2,impact=nvd.impact_score_v2))
-
-    return scores
+    pass
 
 # updates database with latest nvd
 # @nvd_bp.route('/update_nvd')
