@@ -2,7 +2,7 @@
 <div class="row">
     <div class="col d-flex justify-content-center">
         <div class="card mx-2" id="maincard">
-            <div class="card-header">Data-Driven Input</div>
+            <div class="card-header font-weight-bold">Data-Driven Input</div>
             <div class="card-body text-left">
                 <h5 class="card-title">Two Input files required:</h5>
                 <div class="pr-3 py-2">
@@ -41,7 +41,7 @@
                     <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
                     <button type="submit" class="btn btn-primary" @click="Submit">Submit</button>
                 </div>
-                <div class="progress">
+                <div v-if="progress > 0" class="progress">
                     <div class="progress-bar progress-bar-info"
                         role="progressbar"
                         :style="{ width: progress + '%' }"

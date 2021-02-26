@@ -1,5 +1,4 @@
 import { createApp } from 'vue'
-import VueNumberInput from '@chenfengyuan/vue-number-input';
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -17,8 +16,7 @@ import { setupAuth } from "./auth";
 
 const app = createApp(App)
     .use(store)
-    .use(router)
-    .component(VueNumberInput.name, VueNumberInput);
+    .use(router);
 
 function callbackRedirect(appState) {
     router.push(
