@@ -200,7 +200,7 @@
 </template>
 
 <script>
-
+/* eslint-disable */ 
 import http from "../http-common";
 export default {
 
@@ -217,12 +217,12 @@ export default {
       rows: [1]
     };
   },  
-  watch: {
-    serverProduct(){
-      // binding this to the data value in the email input
-      this.ValidateServerProduct();
-    }
-  },
+//   watch: {
+//     serverProduct(){
+//       // binding this to the data value in the email input
+//       this.ValidateServerProduct();
+//     }
+//   },
     computed: {
         input() {
             return {
@@ -247,11 +247,11 @@ export default {
       addRow: function(_index){
          this.rows.splice(_index+1,0, this.rows[_index]);
     },
-      ValidateServerProduct(){
-         if (this.serverProduct!=""){
+   //    ValidateServerProduct(){
+   //       if (this.serverProduct!=""){
             
-         }
-    },
+   //       }
+   //  },
   
    //  removeRow: function(row){
    //    //console.log(row);d
