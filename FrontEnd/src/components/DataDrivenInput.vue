@@ -120,9 +120,9 @@ export default {
             })
         },
 
-        Upload(data, onUploadProgress) {
+       Upload(data, onUploadProgress) {
             return http.post("/upload", data , { onUploadProgress });
-        },
+        }, 
 
         GetCardSize() {
             return {
