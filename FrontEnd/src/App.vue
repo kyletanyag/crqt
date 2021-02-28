@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="row">
+    <div class="row"  v-show="this.$route.name != 'Login'">
         <header class="col">
             <nav class="navbar navbar-expand navbar-dark bg-dark mb-3" variant="dark" >
                 <strong class="mr-3" style="color:white; font-size:30px;">CRQT |</strong>
@@ -81,7 +81,7 @@
                     </ul>
                 </div>
                 <div id="log">
-                  <router-link v-if="authenticated" to="/Home" v-on:click="logout()" replace>Logout</router-link>
+                  <router-link v-if="authenticated" to="/Login" v-on:click="logout()" replace>Logout</router-link>
                </div>
             </nav>
         </header>
@@ -97,7 +97,7 @@
     name: 'App',
     data() {
       return {
-        authenticated: true, // change back to false --kbt
+        authenticated: false, // change back to false --kbt
         mockAccount: {
           emailAddress: "email",
           password: "password"
@@ -106,7 +106,7 @@
     },
     mounted() {
       if (!this.authenticated) {
-        this.$router.replace({ name: "Home" });
+        this.$router.replace({ name: "Login" });
       }
     },
     methods: {

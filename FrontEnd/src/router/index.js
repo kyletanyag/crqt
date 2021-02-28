@@ -4,7 +4,8 @@ import Home from '@/views/Home'
 import Callback from '@/views/Callback'
 import ErrorPage from '@/views/Error'
 
-import LoginComponent from "../views/Home.vue"
+import LoginComponent from "../views/Login.vue"
+import Login from "../views/Login.vue"
 import SecureComponent from "../views/Secure.vue"
 
 //import { routeGuard } from '@/auth'
@@ -102,7 +103,7 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home, LoginComponent
+        component: Home
     },
     {
         path: '/callback',
@@ -118,6 +119,11 @@ const routes = [
         path: '/secure',
         name: "Secure",
         component: SecureComponent
+    },
+    {
+        path: '/login',
+        name: "Login",
+        component: Login, LoginComponent
     },
     {
         path: '/sandbox',
