@@ -14,7 +14,9 @@ import authConfig from "../auth-config.json";
 // Import the plugin here
 import { setupAuth } from "./auth";
 
-let app = createApp(App).use(store).use(router);
+const app = createApp(App)
+    .use(store)
+    .use(router);
 
 function callbackRedirect(appState) {
     router.push(
