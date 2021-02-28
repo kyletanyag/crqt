@@ -245,10 +245,10 @@ export default {
       addRow: function(_index){
          this.rows.splice(_index+1,0, this.rows[_index]);
     },
-    ValidateServerProduct(){
-      if (this.serverProduct!=""){
-         
-      }
+      ValidateServerProduct(){
+         if (this.serverProduct!=""){
+            
+         }
     },
   
    //  removeRow: function(row){
