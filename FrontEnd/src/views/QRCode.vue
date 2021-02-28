@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div v-html="svg">
     </div>
     <p>QR CODE</p>
@@ -17,7 +17,7 @@ export default {
 
     const svg = ref();
 
-    http.get(`qrcode/${this.username}/${this.secret}`).then((r) => {svg.value = r.data; });
+    http.get(`qrcode/${this.username}`).then((r) => {svg.value = r.data; });
 
     return {
         svg
@@ -29,10 +29,6 @@ export default {
       type: String,
       required: true
     },
-    secret: { 
-      type: String,
-      required: true
-    }
   }
 }
 </script>
