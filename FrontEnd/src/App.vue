@@ -97,7 +97,7 @@
     name: 'App',
     data() {
       return {
-        authenticated: false, // change back to false --kbt
+        authenticated: true, // change to true when developing
         mockAccount: {
           emailAddress: "email",
           password: "password"

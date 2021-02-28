@@ -7,7 +7,6 @@
             <button type="submit">CSV File Upload</button>
                   </form> -->
       <router-link to="/Sandbox" tag="button">CSV Upload</router-link>
-
       <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
       <table width=100% border="0" cellspacing="0" >
@@ -17,15 +16,7 @@
                   <div align="center">
                      <p align="center">Corporate Firewall L1 Vendor</p>
                      <select v-model="L1Vendor">
-                        <option value="Cisco">Cisco</option>
-                        <option value="Juniper">Juniper</option>
-                        <option value="Microsoft">Microsoft</option>
-                        <option value="Paloalto">PALOALTO</option>
-                        <option value="Linux">Linux</option>
-                        <option value="Oracle">ORACLE</option>
-                        <option value="Semens">Semens</option>
-                        <option value="Emerson">Linux</option>
-                        <option value="SchneiderElectric">Schneider-Electric</option>
+                        <option v-for="item in coporateFirewall" :key="item" :value="item">{{item}}</option>
                      </select>
                   </div>
                </td>
@@ -66,7 +57,7 @@
                <td width="25%">
                   <div align="center">
                      <p align="center">Server Type</p>
-                     <select v-model="emailServer">
+                     <select v-model="emailServer[index]">
                         <option value="Gmail">Gmail</option>
                         <option value="Outlook">Outlook</option>
                      </select>
@@ -202,9 +193,13 @@
 <script>
 
 import http from "../http-common";
+// import { ref } from 'vue';
 export default {
 
   data() {
+   //   const coporateFirewall = ref([]);
+   //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });
+
     return {
       
       L1Vendor:"",
@@ -212,9 +207,14 @@ export default {
       L1Product: "",
       progress: 0,
       output: "",
-      emailServer:"",
-      serverProduct:[],
-      rows: [1]
+      emailServer: [],
+      serverProduct: [],
+      rows: [1],
+      coporateFirewall: [
+         'Cisco',
+         'Juniper',
+         'Microsoft',
+      ],
     };
   },  
   watch: {
@@ -249,7 +249,7 @@ export default {
     },
       ValidateServerProduct(){
          if (this.serverProduct!=""){
-            
+            return false;  // kbt false
          }
     },
   
