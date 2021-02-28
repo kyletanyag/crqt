@@ -7,7 +7,7 @@ from flask import Blueprint, jsonify, request
 from .nvd import data_driven_cvss_query, model_driven_cvss_query
 import enum
 from collections import deque
-from .analysis import Node, Node_Logic, Node_Type, PrimitiveFactNode, DerivedScore
+from .analysis import DataDriven, DerivedScore
 
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
@@ -21,38 +21,40 @@ def network_topology_data_driven_input():
     # vertices
     for node in network["vertices"]:
         node_id = int(node["id"])
-        lag[node_id] = Node()
+        lag[node_id] = DataDriven.Node()
 
         # setting logic
         if node["logic"] == "FLOW":
-            lag[node_id].node_logic = Node_Logic.FLOW 
+            lag[node_id].node_logic = DataDriven.Node_Logic.FLOW 
         elif node["logic"] == "AND":
-            lag[node_id].node_logic = Node_Logic.AND
+            lag[node_id].node_logic = DataDriven.Node_Logic.AND
         elif node["logic"] == "OR":
-            lag[node_id].node_logic = Node_Logic.OR
+            lag[node_id].node_logic = DataDriven.Node_Logic.OR
         else:
-            lag[node_id].node_logic = Node_Logic.LEAF
+            lag[node_id].node_logic = DataDriven.Node_Logic.LEAF
 
         # checking if derivation node
         if node["description"][:3] == 'RULE':
-            lag[node_id].node_type = Node_Type.DERIVATION
+            lag[node_id].node_type = DataDriven.Node_Type.DERIVATION
+            lag[node_id].derived_score = network["sim_config"][0]["derivation_node_prob"]
 
         # checking if primitive fact node (primitive fact nodes are always leafs)
-        elif lag[node_id].node_logic == Node_Logic.LEAF: 
-            lag[node_id].node_type = Node_Type.PRIMITIVE_FACT
+        elif lag[node_id].node_logic == DataDriven.Node_Logic.LEAF: 
+            lag[node_id].node_type = DataDriven.Node_Type.PRIMITIVE_FACT
 
         # else, derived fact node
         else:
-            lag[node_id].node_type = Node_Type.DERIVED
+            lag[node_id].node_type = DataDriven.Node_Type.DERIVED
         
     # edges
     for edge in network["arcs"]:
         lag[int(edge["currNode"])].next_node.append(int(edge["nextNode"])) 
+        lag[int(edge["nextNode"])].calculations_remaining += 1              # increase number of nodes needed for calculation
 
     # constructing queue for leaf nodes for derived score calculations
     leaf_queue = deque()
     for key in lag:
-        if lag[key].node_type == Node_Type.PRIMITIVE_FACT:
+        if lag[key].node_type == DataDriven.Node_Type.PRIMITIVE_FACT:
             # searching for CVE ID
             cve_index = node["description"].find('CVE')
             if cve_index != -1:
@@ -62,6 +64,8 @@ def network_topology_data_driven_input():
             leaf_queue.append(lag[key])
 
     lag = DerivedScore(lag, leaf_queue)
+
+    # json
         
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
