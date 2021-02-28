@@ -33,7 +33,9 @@ For any n events e1, e2, ..., en:
 	2. P(e1 U e2 U ... U en) = 1 - product(P(NOT(ei)),1,n)		// http://people.duke.edu/~hpgavin/cee201/ProbabilityRules.pdf
 '''
 LAG = {}
-def Depth_First_Search(scores, key):
+# scores is derived scores tuple
+# key is dictionary key to access node
+def Depth_First_Alg(scores, key): 
     global LAG
 
     # reduce number of nodes needed to make calculation
@@ -52,13 +54,14 @@ def Depth_First_Search(scores, key):
     # if no more nodes are required to make calculation
     if LAG[key].calculations_remaining == 0:
         # if OR node, then finalize calculation
+        # 1 - (1-p1)*...*(1-pn)
         if LAG[key].node_logic == DataDriven.Node_Logic.OR:
             for i in range(3):
                 LAG[key].derived_score[i] = 1-LAG[key].derived_score[i]             # probability formula 2
 
         # next node(s)
         for k in LAG[key].next_node:
-            Depth_First_Search(LAG[key].derived_score, k)
+            Depth_First_Alg(LAG[key].derived_score, k)
     
 
 
@@ -70,6 +73,6 @@ def DerivedScore(lag_dict, leaf_queue):
     while not leaf_queue.empty():
         node = leaf_queue.pop()
         for key in node.next_node:
-            Depth_First_Search(node.derived_score, key)
+            Depth_First_Alg(node.derived_score, key)
         
     return LAG
