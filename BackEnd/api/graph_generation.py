@@ -36,7 +36,8 @@ def network_topology_data_driven_input():
         # checking if derivation node
         if node["description"][:3] == 'RULE':
             lag[node_id].node_type = DataDriven.Node_Type.DERIVATION
-            lag[node_id].derived_score = network["sim_config"][0]["derivation_node_prob"]
+            for score in lag[node_id].derived_score:
+                score = network["sim_config"][0]["derivation_node_prob"]
 
         # checking if primitive fact node (primitive fact nodes are always leafs)
         elif lag[node_id].node_logic == DataDriven.Node_Logic.LEAF: 
@@ -65,7 +66,26 @@ def network_topology_data_driven_input():
 
     lag = DerivedScore(lag, leaf_queue)
 
-    # json
+    # converting to JSON
+    node_type_to_str = {
+        DataDriven.Node_Type.DERIVATION : 'Derivation', 
+        DataDriven.Node_Type.DERIVED : 'Derived Fact',
+        DataDriven.Node_Type.PRIMITIVE_FACT: 'Primitive Fact'}
+
+    vertices = []
+    edges = []
+    for key in lag:
+        vertices.append({
+                'id' : key,
+                'node_type' : node_type_to_str[lag[key].node_type], 
+                'base_score' : lag[key].derived_score[0],
+                'exploitability_score' : lag[key].derived_score[1],
+                'impact_score' : lag[key].derived_score[2]})
+        for e in lag[key].next_node:
+            edges.append({'source' : key, 'target' : e})
+    
+    return jsonify({'nodes': vertices, 'edges' : edges})
+
         
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
