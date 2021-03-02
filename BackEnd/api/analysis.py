@@ -24,6 +24,7 @@ class DataDriven:
         node_logic = Node_Logic(0)      # node relationship 
         next_node = []                  # next nodes
         calculations_remaining = 0      # number of nodes needed to calculate derived score
+        isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
 
 
 '''

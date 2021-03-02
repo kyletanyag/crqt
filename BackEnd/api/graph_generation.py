@@ -47,6 +47,13 @@ def network_topology_data_driven_input():
         else:
             lag[node_id].node_type = DataDriven.Node_Type.DERIVED
         
+        # checking if node is execCode
+        if lag[node_id].node_type == DataDriven.Node_Type.DERIVATION:
+            execCode_index = node["description"].find('execCode')
+            if execCode_index != -1:
+                # if execCode node, flag
+                lag[node_id].isExecCode = True
+
     # edges
     for edge in network["arcs"]:
         lag[int(edge["currNode"])].next_node.append(int(edge["nextNode"])) 
