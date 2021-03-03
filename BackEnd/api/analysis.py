@@ -1,6 +1,10 @@
 from flask import Blueprint, jsonify, request
 import enum
 from . import db 
+import math
+
+# route for LAG generation module
+analysis_bp = Blueprint('analysis_bp', __name__)
 
 # namespace for data-driven objects
 class DataDriven:
@@ -78,3 +82,14 @@ def DerivedScore(lag_dict, leaf_queue):
             Depth_First_Alg(node.derived_score, key)
         
     return LAG
+
+
+
+################## MODEL DRIVEN ##############################
+class ModelDriven:
+    class Edge:
+        weight = float()
+        target = None
+    class Node:
+        edges = []          # array of edges
+        discription = str() # node discription    
