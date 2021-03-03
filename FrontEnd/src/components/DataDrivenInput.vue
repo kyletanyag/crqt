@@ -121,7 +121,7 @@ export default {
         },
 
         Upload(data, onUploadProgress) {
-            return http.post("/network_topology_model_driven_input", data , { onUploadProgress });
+            return http.post("/network_topology_data_driven_input", data , { onUploadProgress });
         },
 
         GetCardSize() {
