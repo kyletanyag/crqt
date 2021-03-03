@@ -10,12 +10,14 @@
 
 <script>
 import QRCode from './QRCode.vue'
+import DataDrivenInput from '../components/DataDrivenInput.vue';
 
 export default {
     name: 'Sandbox',
 
     components: {
-        'qr-code': QRCode
+        'qr-code': QRCode,
+        DataDrivenInput
     }
 }
 </script>
