@@ -73,28 +73,7 @@ def network_topology_data_driven_input():
             # else use default values (1.0)
             leaf_queue.append(lag[key])
 
-    lag = DerivedScore(lag, leaf_queue)
-
-    # converting to JSON
-    node_type_to_str = {
-        DataDriven.Node_Type.DERIVATION : 'Derivation', 
-        DataDriven.Node_Type.DERIVED : 'Derived Fact',
-        DataDriven.Node_Type.PRIMITIVE_FACT: 'Primitive Fact'}
-
-    vertices = []
-    edges = []
-    for key in lag:
-        vertices.append({
-                'id' : key,
-                'discription' : lag[key].discription,
-                'node_type' : node_type_to_str[lag[key].node_type], 
-                'base_score' : lag[key].derived_score[0],
-                'exploitability_score' : lag[key].derived_score[1],
-                'impact_score' : lag[key].derived_score[2]})
-        for e in lag[key].next_node:
-            edges.append({'source' : key, 'target' : e})
-    
-    return jsonify({'nodes': vertices, 'edges' : edges})
+    DerivedScore(lag, leaf_queue)
 
         
 

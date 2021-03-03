@@ -83,7 +83,30 @@ def DerivedScore(lag_dict, leaf_queue):
         
     return LAG
 
+@analysis_bp.route('/getDerivedScores', methods=['POST'])
+def getDerivedScores():
+    global LAG
 
+    # converting to JSON
+    node_type_to_str = {
+        DataDriven.Node_Type.DERIVATION : 'Derivation', 
+        DataDriven.Node_Type.DERIVED : 'Derived Fact',
+        DataDriven.Node_Type.PRIMITIVE_FACT: 'Primitive Fact'}
+
+    vertices = []
+    edges = []
+    for key in LAG:
+        vertices.append({
+                'id' : key,
+                'discription' : LAG[key].discription,
+                'node_type' : node_type_to_str[LAG[key].node_type], 
+                'base_score' : LAG[key].derived_score[0],
+                'exploitability_score' : LAG[key].derived_score[1],
+                'impact_score' : LAG[key].derived_score[2]})
+        for e in LAG[key].next_node:
+            edges.append({'source' : key, 'target' : e})
+    
+    return jsonify({'nodes': vertices, 'edges' : edges})
 
 ################## MODEL DRIVEN ##############################
 class ModelDriven:
