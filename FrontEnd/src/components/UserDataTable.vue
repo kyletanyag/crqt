@@ -1,34 +1,42 @@
 <template>
-<div class="col d-flex justify-content-center">
-  <div class="card mt-4">
+<div class="col-8">
+  <div class="card mt-4" >
     <div class="card-header font-weight-bold">{{ title }}</div>
-    <table class="table m-0">
+    <table v-if="anyUsers" class="table m-0">
       <thead>
         <tr>
           <th scope="col">Name</th>
-          <th scope="col">Username</th>
           <th scope="col">Email</th>
+          <th scope="col">Role</th>
           <th scope="col" v-if="approve || reject || info">Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="{ name, username, email } in users" :key="username">
-          <td>{{ name }}</td>
-          <td>{{ username }}</td>
-          <td>{{ email }}</td>
+        <tr v-for="user in users" :key="user.id">
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.role }}</td>
           <td>
-            <button v-if="approve" @click="ApproveUser(username)" class="btn btn-success btn-sm mx-1">Approve</button>
-            <button v-if="reject" @click="RejectUser(username)" class="btn btn-danger btn-sm mx-1">Reject</button>
-            <button v-if="info" @click="GetUserInfo(username)" class="btn btn-info btn-sm mx-1">Info</button>
+            <button v-if="approve" @click="ApproveUser(user.id)" class="btn btn-success btn-sm mx-1">Approve</button>
+            <button v-if="reject" @click="DeleteUser(user.id)" class="btn btn-danger btn-sm mx-1">Delete</button>
+            <button v-if="info" @click="GetUserInfo(user.id)" class="btn btn-info btn-sm mx-1">Info</button>
           </td>
         </tr>
       </tbody>
     </table>
+    <div v-else-if="happyError" class="alert alert-success" role="alert">
+      <p>No outstanding user registration requests!</p>
+    </div>
+    <div v-else class="alert alert-danger" role="alert">
+      <p>Error with connecting to user databse! </p>
+    </div>
   </div>
 </div>
 </template>
 
 <script>
+import http from '../http-common.js';
+
 export default {
   name: 'User Data Table',
 
@@ -58,23 +66,37 @@ export default {
     info: {
       type: Boolean,
       default: true,
-    }
+    },
+
+    happyError: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   methods: {
     ApproveUser(id) {
-      return id;
+      http.get(`approve_user/${id}`).then((r) => {
+        console.log(r);
+      }); 
     },
 
-    RejectUser(id) {
-      return id;
+    DeleteUser(id) {
+      http.get(`delete_user/${id}`).then((r) => {
+        console.log(r);
+      }); 
     },
 
     GetUserInfo(id) {
       return id;
     },
-  }, 
-
+  },
+  
+  computed: {
+    anyUsers() {
+      return this.users && this.users.length > 0;
+    }
+  }
 }
 </script>
 

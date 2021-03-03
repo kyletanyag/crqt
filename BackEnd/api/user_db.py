@@ -19,14 +19,14 @@ import pyqrcode
 
 user_bp = Blueprint('user_bp', __name__)
 
-# route to verify username and password
+# route to verify email and password
 @user_bp.route('/verify_user')
 def verify_user():
-    # query with SQL given user_info.username
-    user = request.get_json()  # username and passwd
-    user_db_entry = Users.query.filter_by(username=user['username']).first()
+    # query with SQL given user_info.eail
+    user = request.get_json()  # email and password
+    user_db_entry = Users.query.filter_by(username=user['email']).first()
 
-    if user['username'] == user_db_entry.username:
+    if user['email'] == user_db_entry.email:
         print ("User found.")
         u_hash = hashlib.sha256()
         u_hash.update(user['password'].encode())
@@ -34,7 +34,8 @@ def verify_user():
 
         if password == user_db_entry.password:
             print ("Password match.")
-            return 'Passwords Match', 201
+            return {'message': 'Passwords Match.', 
+                    '2fa': user_db_entry.enabled_2fa}, 201
         else:
             print ("Password does not match.")
         return 'Passwords Do Not Match', 201 
@@ -42,14 +43,14 @@ def verify_user():
     print ("User not found.")
     return 'User not found', 404
 
-# get 2FA 6-digit pin 
-@user_bp.route('/otp/<user_i>')
-def get_otp(user_i):
-    user_db_entry = Users.query.filter_by(username=user_i).first()
+# route to verify otp
+@user_bp.route('/verify_otp')
+def get_otp():
+    user = request.get_json()
+    user_db_entry = Users.query.filter_by(email=user['email']).first()
 
     if user_db_entry is not None:
-
-        return str(otp.get_totp(user_db_entry.otp_secret)), 201
+        return {'access' : str(otp.get_totp(user_db_entry.otp_secret)) == user['pin']}, 200
     else:
         return 'Cannot generate token', 201
 
@@ -69,11 +70,10 @@ def register():
     user = request.get_json() # who (name, email, organization), why (why they need access)
     
     # query with SQL given user_info.username
-    user_db_entry = Users.query.filter_by(username=user['username']).first()
+    user_db_entry = Users.query.filter_by(email=user['email']).first()
 
-    if False if user_db_entry is None else user['username'] == user_db_entry.username:
-        print ("Username already exists.  Please select a new username.")
-        return 'Done'
+    if False if user_db_entry is None else user['email'] == user_db_entry.email:
+        return {'error': 'Account with associated email already exists.'}, 200
 
     else:
         hash = hashlib.sha256()
@@ -86,10 +86,10 @@ def register():
         #     email=user['email'], user_role=user['user_role'], 
         #     is_registered=False, otp_secret=secret)
 
-        new_user = Users(username=user['username'], password=password_hash, 
+        new_user = Users(email=user['email'], password=password_hash, 
             first_name=user['first_name'], last_name=user['last_name'], 
-            email=user['email'], user_role=user['user_role'], 
-            is_registered=False, otp_secret=secret)
+            user_role=user['user_role'], is_registered=False, otp_secret=secret, 
+            enabled_2fa=False)
 
         db.session.add(new_user)
         db.session.commit()
@@ -99,29 +99,27 @@ def register():
     # Send email/msg to admin about registration of user
 
 # Admin adds user to accepted list of registration. admin call ONLY
-@user_bp.route('/add_user_init', methods=['POST'])
-def add_user_init():
+@user_bp.route('/approve_user/<input>')
+def approve_user(input):
+    user = Users.query.filter_by(id=input).first_or_404(description=
+        'Account not found.')
 
-    # who (name, email, organization), why (why they need access)
-    # may need revising once we determine what data is passed
-    user = request.get_json() 
-    
-    # query with SQL given user_info.username
-    user_list = Users.query.all()
+    user.is_registered = True
+    db.session.commit()
 
-    # searches for the user by username, then changes the is_registered variable to true
-    for n in user_list:
-        if user.username == n.username:
-            entry = Users.query.filter_by(username=user.username).first()
-            entry.is_registered = True
-            db.session.commmit()
-            print ("User :", user.username, ", is now registered.")
-            return 'Done'
-    
-    # if the for loop completes, it is assumed that the username did not exist in the db
-    print ("User :", user.username, ", was not found.")
-    return 'Done'
-    # Send email/msg to user with link to add_user route so they can put in their crodentials
+    return 'Done', 200
+
+# Admin deletes a user's account
+@user_bp.route('/delete_user/<input>')
+def delete_user(input):
+    user = Users.query.filter_by(id=input).first_or_404(description=
+        'Account not found.')
+
+    db.session.delete(user)
+    db.session.commit()
+
+    return 'Done', 200
+
 
 # returns a json file containing a collection of users that are registered 
 @user_bp.route('/get_registered_users')
@@ -129,15 +127,18 @@ def get_registered_users():
 
     # query with SQL for all contents
     user_list = Users.query.all()
-    verified_users = []
+    registered_users = []
 
     for n in user_list:
-        if n.username == True:
-            verified_users.append({'username' : n.username, 'password' : n.password, 
-            'first_name' : n.first_name, 'last_name' : n.last_name, 'email' : n.email, 
-            'user_role' : n.user_role, 'is_registered' : n.is_registered, 'auth_key' : n.auth_key})
+        if n.is_registered == True:
+            registered_users.append({
+                'email' : n.email, 
+                'id' : n.id,
+                'name' : n.first_name + ' ' + n.last_name,
+                'role' : 'Admin' if n.user_role == 1 else 'Common', 
+                'is_registered' : n.is_registered})
     
-    return jsonify({'verified_users' : verified_users})
+    return jsonify({'registered_users' : registered_users}), 200
 
 
 # returns a json file containing a collection of users that are NOT registered 
@@ -146,22 +147,25 @@ def get_unregistered_users():
 
     # query with SQL for all contents
     user_list = Users.query.all()
-    verified_users = []
+    unregistered_users = []
 
     for n in user_list:
-        if n.username == True:
-            verified_users.append({'username' : n.username, 'password' : n.password, 
-            'first_name' : n.first_name, 'last_name' : n.last_name, 'email' : n.email, 
-            'user_role' : n.user_role, 'is_registered' : n.is_registered, 'auth_key' : n.auth_key})
+        if n.is_registered == False:
+            unregistered_users.append({
+                'email' : n.email, 
+                'id' : n.id,
+                'name' : n.first_name + ' ' + n.last_name, 
+                'role' : 'Admin' if n.user_role == 1 else 'Common', 
+                'is_registered' : n.is_registered})
     
-    return jsonify({'verified_users' : verified_users})
+    return jsonify({'unregistered_users': unregistered_users}), 200
 
-@user_bp.route('/qrcode/<user_i>')
-def qrcode(user_i):
-    user_db_entry = Users.query.filter_by(username=user_i).first_or_404(description=
-        'There is no username matching {}'.format(Users.username))
+@user_bp.route('/qrcode/<input>')
+def qrcode(input):
+    user_db_entry = Users.query.filter_by(id=input).first_or_404(description=
+        'There is no matching account with the email: {}'.format(Users.email))
 
-    url = pyqrcode.create(f'otpauth://totp/CRQT:{user_db_entry.username}?secret={user_db_entry.otp_secret}&issuer=CRQT')
+    url = pyqrcode.create(f'otpauth://totp/CRQT:{user_db_entry.email}?secret={user_db_entry.otp_secret}&issuer=CRQT')
 
     stream = io.BytesIO()
     url.svg(stream, scale=5)

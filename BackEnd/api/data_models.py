@@ -16,15 +16,15 @@ class User_Role(enum.Enum):
 # User table
 class Users(db.Model):
     __bind_key__ = 'users'
-    username = db.Column(db.String(128), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String (128), unique=True)
     password = db.Column(db.String(128))
-    first_name = db.Column(db.String (30))
-    last_name = db.Column(db.String (30))
-    email = db.Column(db.String (40), unique=True)
-    user_role = db.Column(db.Integer, default=User_Role(0)) #Need to look up how to implement ENUM in Python/Flask. Roles = {Admin, User/Pleb}
-    is_registered = db.Column(db.Boolean(), default=False) # Is this how to implement Boolean through Flask
-    otp_secret = db.Column(db.String(16)) # Needs a Key.  What is contained in a key?  What is the object type 
-
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
+    user_role = db.Column(db.Integer, default=User_Role(0))
+    is_registered = db.Column(db.Boolean(), default=False) 
+    otp_secret = db.Column(db.String(16)) # OTP KEY
+    enabled_2fa = db.Column(db.Integer, default=False) 
 
 # NVD Table
 class NVD(db.Model):

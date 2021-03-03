@@ -18,7 +18,7 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '../views/ContactUs.vue')
+      component: () => import(/* webpackChunkName: "ContactUs" */ '../views/ContactUs.vue')
    },
   {
       path: '/SimulationResults',
@@ -26,7 +26,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '../views/SimulationResults.vue')
+      component: () => import(/* webpackChunkName: "SimulationResults" */ '../views/SimulationResults.vue')
     },
     {
         path: '/TidyTree',
@@ -82,7 +82,7 @@ const routes = [
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/NetworkTopology.vue')
+        component: () => import(/* webpackChunkName: "NetworkTopology" */ '../views/NetworkTopology.vue')
     },
     {
         path: '/ForceLayout',
@@ -137,6 +137,18 @@ const routes = [
         path: '/sandbox',
         name: 'Sandbox',
         component: () => import(/* webpackChunkName: "Sanbox" */ '../views/_Sandbox.vue')
+    },
+    {
+        path: '/2fa/:email',
+        name: '2FA',
+        component: () => import(/* webpackChunkName: "2FA" */ '../views/QRCode.vue'),
+        props: true
+    },
+    {
+        path: '/admin',
+        name: 'Admin',
+        component: () => import(/* webpackChunkName: "Admin" */ '../views/Admin.vue'),
+        props: true
     }
 ]
 
