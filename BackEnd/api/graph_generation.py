@@ -97,4 +97,5 @@ def network_topology_data_driven_input():
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
 def network_topology_model_driven_input():
-    pass
+    print ('Hello FUCKERS!')
+    return {'message': 'Hello!'}

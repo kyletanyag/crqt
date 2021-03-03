@@ -112,7 +112,7 @@ export default {
                 this.progress = Math.round(100 * event.loaded / event.total);
             })
             .then((response) => {
-                console.log(response);
+                console.log(response.data.message);
             })
             .catch(() => {
                 this.progress.percentage = 0;
@@ -121,7 +121,7 @@ export default {
         },
 
         Upload(data, onUploadProgress) {
-            return http.post("/upload", data , { onUploadProgress });
+            return http.post("/network_topology_model_driven_input", data , { onUploadProgress });
         },
 
         GetCardSize() {

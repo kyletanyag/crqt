@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
+import enum
 from . import db 
-from .nvd import CVSS
 
 # namespace for data-driven objects
 class DataDriven:
@@ -20,8 +20,8 @@ class DataDriven:
     # graph data structure (adjenency list) for DataDriven
     class Node:
         derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
-        node_type = Node_Type(0)        # type of node  
-        node_logic = Node_Logic(0)      # node relationship 
+        node_type = None      # type of node  
+        node_logic = None      # node relationship 
         next_node = []                  # next nodes
         calculations_remaining = 0      # number of nodes needed to calculate derived score
         isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
