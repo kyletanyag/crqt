@@ -20,8 +20,9 @@ class DataDriven:
     # graph data structure (adjenency list) for DataDriven
     class Node:
         derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
-        node_type = None      # type of node  
-        node_logic = None      # node relationship 
+        discription = str()             # node discription
+        node_type = None                # type of node  
+        node_logic = None               # node relationship 
         next_node = []                  # next nodes
         calculations_remaining = 0      # number of nodes needed to calculate derived score
         isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
