@@ -23,6 +23,8 @@ def network_topology_data_driven_input():
         node_id = int(node["id"])
         lag[node_id] = DataDriven.Node()
 
+        lag[node_id].discription = node["description"]
+
         # setting logic
         if node["logic"] == "FLOW":
             lag[node_id].node_logic = DataDriven.Node_Logic.FLOW 
@@ -84,6 +86,7 @@ def network_topology_data_driven_input():
     for key in lag:
         vertices.append({
                 'id' : key,
+                'discription' : lag[key].discription,
                 'node_type' : node_type_to_str[lag[key].node_type], 
                 'base_score' : lag[key].derived_score[0],
                 'exploitability_score' : lag[key].derived_score[1],
