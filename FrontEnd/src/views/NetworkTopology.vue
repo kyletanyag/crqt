@@ -177,6 +177,72 @@
 
 <script>
 
+import http from '../http-common.js';
+
+export default {
+  data() {
+   //   const coporateFirewall = ref([]);
+   //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });
+
+    return {
+      
+      L1Vendor:"",
+      NumberFireWall: 0,
+      L1Product: "",
+      progress: 0,
+      output: "",
+      emailServer: [],
+      serverProduct: [],
+      rows: [1],
+      coporateFirewall: [
+         'Cisco',
+         'Juniper',
+         'Microsoft',
+      ],
+    };
+  },  
+//   watch: {
+//     serverProduct(){
+//       // binding this to the data value in the email input
+//       this.ValidateServerProduct();
+//     }
+//   },
+    computed: {
+        input() {
+            return {
+                L1Vendor: this.L1Vendor,
+                NumberFireWall: this.NumberFireWall,
+                L1Product: this.L1Product,
+                emailServer:this.emailServer,
+               serverProduct:this.serverProduct
+            };
+        },
+    },
+    methods:{
+      Submit() {
+               this.Upload(this.input, (event) => {                  
+                this.progress = Math.round(100 * event.loaded / event.total);
+         })
+         
+      },
+      Upload(data, onUploadProgress) {
+            return http.post("/upload", data , { onUploadProgress });
+      }, 
+      addRow: function(_index){
+         this.rows.splice(_index+1,0, this.rows[_index]);
+    },
+      ValidateServerProduct(){
+         if (this.serverProduct!=""){
+            return false;  // kbt false
+         }
+    },
+  
+   //  removeRow: function(row){
+   //    //console.log(row);d
+   //    this.rows.$remove(row);
+   //  }
+  }
+};
 </script>
 <style>
    table, th, td {

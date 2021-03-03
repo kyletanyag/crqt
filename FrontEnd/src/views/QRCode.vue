@@ -20,7 +20,7 @@ export default {
     http.get(`qrcode/${this.username}/${this.secret}`).then((r) => {svg.value = r.data; });
 
     return {
-        svg
+      svg
     }
   },
 
@@ -28,11 +28,7 @@ export default {
     username: { 
       type: String,
       required: true
-    },
-    secret: { 
-      type: String,
-      required: true
-    }
+    },  
   }
 }
 </script>
