@@ -247,19 +247,11 @@ export default {
       addRow: function(_index){
          this.rows.splice(_index+1,0, this.rows[_index]);
     },
-<<<<<<< HEAD
-   //    ValidateServerProduct(){
-   //       if (this.serverProduct!=""){
-            
-   //       }
-   //  },
-=======
       ValidateServerProduct(){
          if (this.serverProduct!=""){
             return false;  // kbt false
          }
     },
->>>>>>> a6c136711bb66f66df19e07f9ed051516144be09
   
    //  removeRow: function(row){
    //    //console.log(row);d
