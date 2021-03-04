@@ -95,7 +95,7 @@ def getDerivedScores():
 
     vertices = []
     edges = []
-    for key in LAG:
+    for key in LAG: 
         vertices.append({
                 'id' : key,
                 'discription' : LAG[key].discription,
@@ -135,6 +135,48 @@ def test_Derived_Scores():
     ]
 
     return jsonify({'nodes': nodes, 'edges': links}), 200
+#################### DATA-DRIVEN LAG Metrics ########################
+@analysis_bp.route('/percentage_execCode_nodes', methods=['GET'])
+def percentage_execCode_nodes():
+    global LAG
+    sum = 0
+    for key in LAG:
+        sum += LAG[key].isExecCode
+    
+    return (float(sum) / float(len(LAG)) * 100.0)
+
+
+@analysis_bp.route('/percentage_rule_nodes', methods=['GET'])
+def percentage_rule_nodes():
+    global LAG
+    rules = 0
+    for key in LAG:
+        rules += (LAG[key].node_type == DerivedScore.Node_Type.DERIVATION)
+    
+    return (float(rules) / float(len(LAG)) * 100.0)
+
+@analysis_bp.route('/percentage_derived_nodes', methods=['GET'])
+def percentage_derived_nodes():
+    global LAG
+    numDerived = 0
+    for key in LAG:
+        numDerived += (LAG[key].node_type == DerivedScore.Node_Type.DERIVED)
+    
+    return (float(numDerived) / float(len(LAG)) * 100.0)
+
+@analysis_bp.route('/network_entropy', methods=['GET'])
+def network_entropy():
+    global LAG
+    net_entropy = [0.0,0.0,0.0]
+    for key in LAG:
+        for i in range(3):
+            net_entropy[i] += LAG[key].derived_score[i] * math.log2(LAG[key].derived_score[i])
+    
+    for i in range(3):
+        net_entropy[i] *= -1.0
+        
+    return (net_entropy)
+
 
 ################## MODEL DRIVEN ##############################
 class ModelDriven:
