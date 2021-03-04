@@ -31,6 +31,9 @@ class DataDriven:
         calculations_remaining = 0      # number of nodes needed to calculate derived score
         isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
 
+        def printFunc(self):
+            print(self.derived_score, self.discription, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
+
 
 '''
 Probability Formulas:
@@ -76,12 +79,13 @@ def DerivedScore(lag_dict, leaf_queue):
     LAG = lag_dict
     
     # modifying derived scores
-    while not leaf_queue.empty():
+    while len(leaf_queue) > 0:
         node = leaf_queue.pop()
         for key in node.next_node:
             Depth_First_Alg(node.derived_score, key)
-        
-    return LAG
+
+    print(LAG)    
+    # return LAG
 
 @analysis_bp.route('/getDerivedScores', methods=['GET'])
 def getDerivedScores():
