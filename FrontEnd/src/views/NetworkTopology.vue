@@ -227,9 +227,15 @@ export default {
       serverProduct:[],
       rows: [1],
       coporateFirewall: [
-         'Cisco',
-         'Juniper',
-         'Microsoft',
+         "Cisco",
+         "Juniper",
+         "Microsoft",
+         "Paloalto",
+         "Linux",
+         "Oracle",
+         "Semens",
+         "Emerson",
+         "SchneiderElectric",
       ],
     };
   },  
