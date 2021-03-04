@@ -1,7 +1,7 @@
 <template>
 <div>
   <p>hello!</p>
-  <network-graph></network-graph>
+  <network-graph :data="d"></network-graph>
 </div> 
 </template>
 
@@ -32,7 +32,7 @@ export default {
             id: 3
           }
         ],
-        edges: [
+        links: [
           {
             source: 1,
             target: 2
