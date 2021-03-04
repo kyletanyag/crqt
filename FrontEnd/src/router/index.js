@@ -8,6 +8,8 @@ import LoginComponent from "../views/Login.vue"
 import Login from "../views/Login.vue"
 import SecureComponent from "../views/Secure.vue"
 
+import Sandbox from "../views/_Sandbox.vue";
+
 //import { routeGuard } from '@/auth'
 
 const routes = [
@@ -136,7 +138,7 @@ const routes = [
     {
         path: '/sandbox',
         name: 'Sandbox',
-        component: () => import(/* webpackChunkName: "Sanbox" */ '../views/_Sandbox.vue')
+        component: Sandbox
     },
     {
         path: '/2fa/:email',

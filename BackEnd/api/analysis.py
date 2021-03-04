@@ -108,6 +108,34 @@ def getDerivedScores():
     
     return jsonify({'nodes': vertices, 'edges' : edges})
 
+@analysis_bp.route('/test-derived-scores', methods=['GET'])
+def test_Derived_Scores():
+    nodes = [{
+            'id': 1,
+            'description': 'Something!',
+            'node_type' : 'Leaf',
+            'base_score' : 10,
+            'exploitability_score': 5,
+            'impact_score': 7
+        },
+        {
+            'id': 2,
+            'description': 'Something Part 2!',
+            'node_type' : 'Leaf',
+            'base_score' : 8,
+            'exploitability_score': 4,
+            'impact_score': 3
+        }
+    ]
+
+    links = [{
+            'source': '1',
+            'target': '2'
+        }
+    ]
+
+    return jsonify({'nodes': nodes, 'edges': links}), 200
+
 ################## MODEL DRIVEN ##############################
 class ModelDriven:
     class Edge:
