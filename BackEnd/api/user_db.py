@@ -54,15 +54,6 @@ def get_otp():
     else:
         return 'Cannot generate token', 201
 
-    # IF USERNAME FOUND IN QUERY: THEN 
-    # - COMPARE PASSWORDS (HASH GIVEN PASSWORD)
-    # - IF PASSWORDS ARE EQUIVLENT:
-    # -- RETRUN TRUE
-    # 
-    # RETURN FALSE
-
-    # username=key, password, email
-    # Python Hash function: https://docs.python.org/3/library/hashlib.html (open-source)
 
 # user registration route
 @user_bp.route('/register', methods=['POST'])
@@ -98,6 +89,7 @@ def register():
 
     # Send email/msg to admin about registration of user
 
+
 # Admin adds user to accepted list of registration. admin call ONLY
 @user_bp.route('/approve_user/<input>')
 def approve_user(input):
@@ -119,6 +111,7 @@ def delete_user(input):
     db.session.commit()
 
     return 'Done', 200
+
 
 
 # returns a json file containing a collection of users that are registered 

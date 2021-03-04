@@ -122,7 +122,7 @@ export default {
                 this.progress = Math.round(100 * event.loaded / event.total);
             })
             .then((response) => {
-                console.log(response);
+                console.log(response.data.message);
             })
             .catch(() => {
                 this.progress.percentage = 0;
