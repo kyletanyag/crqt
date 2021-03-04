@@ -95,7 +95,7 @@ def getDerivedScores():
 
     vertices = []
     edges = []
-    for key in LAG:
+    for key in LAG: 
         vertices.append({
                 'id' : key,
                 'discription' : LAG[key].discription,
@@ -107,6 +107,41 @@ def getDerivedScores():
             edges.append({'source' : key, 'target' : e})
     
     return jsonify({'nodes': vertices, 'edges' : edges})
+
+    
+def PercentDerived():
+    global LAG
+
+    numDerived = 0.0
+    totalNodes = 0
+    
+    for node in LAG:
+        if node.Node_Type == DataDriven.Node_Type.DERIVED:
+            numDerived += 1
+        totalNodes += 1
+    return numDerived/totalNodes * 100
+
+def ComputeUncertainty():
+    global LAG
+
+    results = []
+    base_sum = 0.0
+    exp_sum = 0.0
+    imp_sum = 0.0
+
+    for node in LAG:
+        base_sum += (node.derived_score[0] * math.log2(node.derived_score[0]))
+        exp_sum += (node.derived_score[1] * math.log2(node.derived_score[1]))
+        imp_sum += (node.derived_score[2] * math.log2(node.derived_score[2]))
+
+    base_sum *= -1.0
+    exp_sum *= -1.0
+    imp_sum *= -1.0 
+
+    results = [base_sum, exp_sum, imp_sum]
+
+    return results
+
 
 ################## MODEL DRIVEN ##############################
 class ModelDriven:
