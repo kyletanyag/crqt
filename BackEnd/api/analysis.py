@@ -108,39 +108,47 @@ def getDerivedScores():
     
     return jsonify({'nodes': vertices, 'edges' : edges})
 
-    
-def PercentDerived():
+#################### DATA-DRIVEN LAG Metrics ########################
+@analysis_bp.route('/percentage_execCode_nodes', methods=['GET'])
+def percentage_execCode_nodes():
     global LAG
-
-    numDerived = 0.0
-    totalNodes = 0
+    sum = 0
+    for key in LAG:
+        sum += LAG[key].isExecCode
     
-    for node in LAG:
-        if node.Node_Type == DataDriven.Node_Type.DERIVED:
-            numDerived += 1
-        totalNodes += 1
-    return numDerived/totalNodes * 100
+    return (float(sum) / float(len(LAG)) * 100.0)
 
-def ComputeUncertainty():
+
+@analysis_bp.route('/percentage_rule_nodes', methods=['GET'])
+def percentage_rule_nodes():
     global LAG
+    rules = 0
+    for key in LAG:
+        rules += (LAG[key].node_type == DerivedScore.Node_Type.DERIVATION)
+    
+    return (float(rules) / float(len(LAG)) * 100.0)
 
-    results = []
-    base_sum = 0.0
-    exp_sum = 0.0
-    imp_sum = 0.0
+@analysis_bp.route('/percentage_derived_nodes', methods=['GET'])
+def percentage_derived_nodes():
+    global LAG
+    numDerived = 0
+    for key in LAG:
+        numDerived += (LAG[key].node_type == DerivedScore.Node_Type.DERIVED)
+    
+    return (float(numDerived) / float(len(LAG)) * 100.0)
 
-    for node in LAG:
-        base_sum += (node.derived_score[0] * math.log2(node.derived_score[0]))
-        exp_sum += (node.derived_score[1] * math.log2(node.derived_score[1]))
-        imp_sum += (node.derived_score[2] * math.log2(node.derived_score[2]))
-
-    base_sum *= -1.0
-    exp_sum *= -1.0
-    imp_sum *= -1.0 
-
-    results = [base_sum, exp_sum, imp_sum]
-
-    return results
+@analysis_bp.route('/network_entropy', methods=['GET'])
+def network_entropy():
+    global LAG
+    net_entropy = [0.0,0.0,0.0]
+    for key in LAG:
+        for i in range(3):
+            net_entropy[i] += LAG[key].derived_score[i] * math.log2(LAG[key].derived_score[i])
+    
+    for i in range(3):
+        net_entropy[i] *= -1.0
+        
+    return (net_entropy)
 
 
 ################## MODEL DRIVEN ##############################
