@@ -84,9 +84,7 @@ def DerivedScore(lag_dict, leaf_queue):
         node = leaf_queue.pop()
         for key in node.next_node:
             Depth_First_Alg(node.derived_score, key)
-
-    for key in LAG:
-        print(key, LAG[key].printFunc())    
+               
     # return LAG
 
 @analysis_bp.route('/getDerivedScores', methods=['GET'])
@@ -148,8 +146,10 @@ def percentage_execCode_nodes():
     sum = 0
     for key in LAG:
         sum += LAG[key].isExecCode
-    
-    return (float(sum) / float(len(LAG)) * 100.0)
+
+    result=(float(sum) / float(len(LAG)) * 100.0)
+    print(sum)
+    return jsonify({'percentage_execCode_nodes': result})
 
 
 @analysis_bp.route('/percentage_rule_nodes', methods=['GET'])
@@ -157,18 +157,20 @@ def percentage_rule_nodes():
     global LAG
     rules = 0
     for key in LAG:
-        rules += (LAG[key].node_type == DerivedScore.Node_Type.DERIVATION)
-    
-    return (float(rules) / float(len(LAG)) * 100.0)
+        rules += (LAG[key].node_type == DataDriven.Node_Type.DERIVATION)
+
+    result=(float(rules) / float(len(LAG)) * 100.0)
+    return jsonify({'percentage_rule_nodes': result})
 
 @analysis_bp.route('/percentage_derived_nodes', methods=['GET'])
 def percentage_derived_nodes():
     global LAG
     numDerived = 0
     for key in LAG:
-        numDerived += (LAG[key].node_type == DerivedScore.Node_Type.DERIVED)
+        numDerived += (LAG[key].node_type == DataDriven.Node_Type.DERIVED)
     
-    return (float(numDerived) / float(len(LAG)) * 100.0)
+    result=(float(numDerived) / float(len(LAG)) * 100.0)
+    return jsonify({'percentage_derived_nodes': result})
 
 @analysis_bp.route('/network_entropy', methods=['GET'])
 def network_entropy():
@@ -181,7 +183,12 @@ def network_entropy():
     for i in range(3):
         net_entropy[i] *= -1.0
         
-    return (net_entropy)
+    result = [] 
+    result.append({'base' : net_entropy[0]})
+    result.append({'exploitability' : net_entropy[1]})
+    result.append({'impact' : net_entropy[2]})
+
+    return jsonify({'network_entropy': result})
 
 
 ################## MODEL DRIVEN ##############################

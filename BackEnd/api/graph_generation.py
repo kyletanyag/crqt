@@ -36,10 +36,10 @@ def network_topology_data_driven_input():
             lag[node_id].node_logic = DataDriven.Node_Logic.LEAF
 
         # checking if derivation node
-        if node["description"][:3] == 'RULE':
+        if node["description"][:4] == 'RULE':
             lag[node_id].node_type = DataDriven.Node_Type.DERIVATION
             for score in lag[node_id].derived_score:
-                score = network["sim_config"][0]["derivation_node_prob"]
+                score = network["sim_config"]
 
         # checking if primitive fact node (primitive fact nodes are always leafs)
         elif lag[node_id].node_logic == DataDriven.Node_Logic.LEAF: 
@@ -50,7 +50,7 @@ def network_topology_data_driven_input():
             lag[node_id].node_type = DataDriven.Node_Type.DERIVED
         
         # checking if node is execCode
-        if lag[node_id].node_type == DataDriven.Node_Type.DERIVATION:
+        if lag[node_id].node_type == DataDriven.Node_Type.DERIVED:
             execCode_index = node["description"].find('execCode')
             if execCode_index != -1:
                 # if execCode node, flag
@@ -79,7 +79,7 @@ def network_topology_data_driven_input():
             # else use default values (1.0)
             leaf_queue.append(lag[key])
         
-        # print(key, lag[key].next_node)
+        # print(key, lag[key].isExecCode)
     DerivedScore(lag, leaf_queue)
 
     return "Done", 21
