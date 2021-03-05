@@ -23,13 +23,14 @@ class DataDriven:
 
     # graph data structure (adjenency list) for DataDriven
     class Node:
-        derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
-        discription = str()             # node discription
-        node_type = None                # type of node  
-        node_logic = None               # node relationship 
-        next_node = []                  # next nodes
-        calculations_remaining = 0      # number of nodes needed to calculate derived score
-        isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
+        def __init__(self):
+            self.derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
+            self.discription = str()             # node discription
+            self.node_type = None                # type of node  
+            self.node_logic = None               # node relationship 
+            self.next_node = []                  # next nodes
+            self.calculations_remaining = 0      # number of nodes needed to calculate derived score
+            self.isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
 
         def printFunc(self):
             print(self.derived_score, self.discription, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
@@ -84,7 +85,8 @@ def DerivedScore(lag_dict, leaf_queue):
         for key in node.next_node:
             Depth_First_Alg(node.derived_score, key)
 
-    print(LAG)    
+    for key in LAG:
+        print(key, LAG[key].printFunc())    
     # return LAG
 
 @analysis_bp.route('/getDerivedScores', methods=['GET'])

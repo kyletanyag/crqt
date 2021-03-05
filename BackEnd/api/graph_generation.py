@@ -58,10 +58,8 @@ def network_topology_data_driven_input():
 
     # edges
     for edge in network["arcs"]:
-        currNode = int(edge["currNode"])
         targetNode = int(edge["nextNode"])
-        print (currNode, targetNode)
-        lag[currNode].next_node.append(targetNode) 
+        lag[int(edge["currNode"])].next_node.append(targetNode) 
         lag[targetNode].calculations_remaining += 1              # increase number of nodes needed for calculation
 
     # constructing queue for leaf nodes for derived score calculations
@@ -81,8 +79,8 @@ def network_topology_data_driven_input():
             # else use default values (1.0)
             leaf_queue.append(lag[key])
         
-        print(key)
-    # DerivedScore(lag, leaf_queue)
+        # print(key, lag[key].next_node)
+    DerivedScore(lag, leaf_queue)
 
     return "Done", 21
 

@@ -12,7 +12,7 @@ nvd_bp = Blueprint('nvd_bp', __name__)
 # query with database to get cve_ids
 def data_driven_cvss_query(cve_id):
     nvd = NVD.query.get(cve_id)
-    return [nvd.base_score, nvd.exploitabiliy_score_v2,nvd.impact_score_v2]
+    return [nvd.base_score/10.0, nvd.exploitabiliy_score_v2/10.0,nvd.impact_score_v2/10.0]
 
 @nvd_bp.route('/cvss_query', methods=['POST'])
 def cvss_query():
