@@ -20,7 +20,7 @@ import pyqrcode
 user_bp = Blueprint('user_bp', __name__)
 
 # route to verify email and password
-@user_bp.route('/verify_user')
+@user_bp.route('/verify_user', methods=['POST'])
 def verify_user():
     # query with SQL given user_info.eail
     user = request.get_json()  # email and password
@@ -35,6 +35,7 @@ def verify_user():
         if password == user_db_entry.password:
             print ("Password match.")
             return {'message': 'Passwords Match.', 
+                    'access' : True,
                     '2fa': user_db_entry.enabled_2fa}, 201
         else:
             print ("Password does not match.")

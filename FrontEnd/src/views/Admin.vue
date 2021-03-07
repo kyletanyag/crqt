@@ -13,7 +13,7 @@
     </button>
   </div> -->
   <div v-show="accountManagement">
-    <h2>Account Mangement</h2>
+    <h2>Account Management</h2>
     <div v-if="!loadingUnregistered" class="row justify-content-center">
       <user-data-table 
         title="Unregistered Users" 
@@ -30,7 +30,7 @@
     <hr>
   </div>
   <div v-show="simulationManagement">
-    <h2>Simulation Managment</h2>
+    <h2>Simulation Management</h2>
   </div>
 </div>
 </template>
