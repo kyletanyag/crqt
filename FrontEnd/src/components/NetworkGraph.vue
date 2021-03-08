@@ -6,11 +6,9 @@
       <svg id="network" width="960" height="600"></svg>
     </div>
     <div class="col">
-      <ul v-if="network">
-        <li v-for="i in network.nodes" :key="i.id">
-          {{ i }}
-        </li>
-      </ul>
+      <object-array-as-table 
+        :data="network.nodes" 
+        tableTitle="Network Data" />
     </div>
   </div>
 </div>
@@ -82,6 +80,7 @@ var simulation = d3.forceSimulation()
   simulation.force("link")
       .links(graph.edges);
 
+
 function dragstarted(d) {
   if (!d3.event.active) simulation.alphaTarget(0.3).restart();
   d.fx = d.x;
@@ -99,26 +98,32 @@ function dragended(d) {
   d.fy = null;
 }
 };
-
-
 }
 
 import http from '../http-common.js';
+import ObjectArrayAsTable from './ObjectArrayAsTable.vue';
 export default {
   name: 'Network Graph',
 
   data() {
     return {
-      network: undefined
+      network: {
+        nodes: undefined,
+        links: undefined,
+      }
     }
+  },
+
+  components: {
+    ObjectArrayAsTable,
   },
 
   methods: {
   },
 
   mounted() {
-    http.get('test-derived-scores').then((r) => {
-      this.network = { links: r.data.jumbo, nodes: r.data.nodes };
+    http.get('get-derived-scores').then((r) => {
+      this.network = { links: r.data.edges, nodes: r.data.nodes };
       dothis(r.data);
     });
   }

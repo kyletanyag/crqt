@@ -129,7 +129,7 @@ def get_registered_users():
                 'email' : n.email, 
                 'id' : n.id,
                 'name' : n.first_name + ' ' + n.last_name,
-                'role' : 'Admin' if n.user_role == 1 else 'Common', 
+                'role' : 'Admin' if n.user_role == 1 else 'General', 
                 'is_registered' : n.is_registered})
     
     return jsonify({'registered_users' : registered_users}), 200
@@ -149,7 +149,7 @@ def get_unregistered_users():
                 'email' : n.email, 
                 'id' : n.id,
                 'name' : n.first_name + ' ' + n.last_name, 
-                'role' : 'Admin' if n.user_role == 1 else 'Common', 
+                'role' : 'Admin' if n.user_role == 1 else 'General', 
                 'is_registered' : n.is_registered})
     
     return jsonify({'unregistered_users': unregistered_users}), 200

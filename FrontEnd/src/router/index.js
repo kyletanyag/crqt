@@ -79,35 +79,28 @@ const routes = [
         component: () => import(/* webpackChunkName: "about" */ '../views/Rapidity.vue')
     },
     {
-        path: '/NetworkTopology',
-        name: 'NetworkTopology',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "NetworkTopology" */ '../views/NetworkTopology.vue')
+        path: '/network-topology/data-driven',
+        name: 'Data Driven',
+        component: () => import(/* webpackChunkName: "Data-Driven-Input" */ '../views/DataDriven.vue')
+    },
+    {
+        path: '/network-topology/model-driven',
+        name: 'Model Driven',
+        component: () => import(/* webpackChunkName: "Model-Driven-Input" */ '../views/ModelDriven.vue')
     },
     {
         path: '/ForceLayout',
         name: 'ForceLayout',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
     },
     {
         path: '/hello',
         name: 'hello',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
     },
     {
         path: '/ColorGraphView',
         name: 'ColorGraphView',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/ColorGraphView.vue')
     },
     {
