@@ -1,9 +1,13 @@
 <template>
     <img alt="CRQT logo" src="../assets/logo.png">
     <h3 align="center">Log In</h3>
-    <input type="text" name="emailAddress" v-model="input.emailAddress" placeholder="Email Address" />
-    <input type="password" name="password" v-model="input.password" placeholder="Password" />
-    <button type="button" v-on:click="login()">Log in</button>
+    <form>
+        <input type="submit" style="display: none">
+        <input type="text" name="emailAddress" v-model="input.emailAddress" placeholder="Email Address" />
+        <input type="password" name="password" v-model="input.password" placeholder="Password" />
+        <button type="button" v-on:click="login()">Log in</button>
+    </form>
+    <router-link to="/Register" tag="button">Don't have an account? Click here to register!</router-link>
 </template>
 
 <script>

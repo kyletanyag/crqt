@@ -1,6 +1,6 @@
 <template>
 <div class="container-fluid">
-    <div class="row"  v-show="this.$route.name != 'Login'">
+    <div class="row"  v-show="this.$route.name != 'Login' && this.$route.name != 'Register'">
         <header class="col-12 px-0">
             <nav class="navbar navbar-expand navbar-dark bg-dark mb-3" variant="dark" >
                 <strong class="mr-3" style="color:white; font-size:30px;">CRQT |</strong>
@@ -111,7 +111,7 @@
       }
     },
     mounted() {
-      if (!this.authenticated) {
+      if (!this.authenticated && this.$route.name != 'Login' && this.$route.name != 'Register') {
         this.$router.replace({ name: "Login" });
       }
     },

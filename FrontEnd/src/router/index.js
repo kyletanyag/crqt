@@ -9,6 +9,7 @@ import Login from "../views/Login.vue"
 import SecureComponent from "../views/Secure.vue"
 
 import Sandbox from "../views/_Sandbox.vue";
+import Register from "../views/Register.vue"
 
 //import { routeGuard } from '@/auth'
 
@@ -127,6 +128,11 @@ const routes = [
         path: '/login',
         name: "Login",
         component: Login, LoginComponent
+    },
+    {
+        path: '/register',
+        name: "Register",
+        component: Register
     },
     {
         path: '/sandbox',
