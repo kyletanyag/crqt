@@ -1,13 +1,17 @@
 <template>
-<h1>test</h1>
-  <Histogram/>
-                
+<div>
+  <h1>test</h1>
+  <histogram />
+</div> 
 </template>
 <script>
-    import { defineComponent } from "vue";
-    import Histogram from '@/views/Histogram.vue'
-    export default defineComponent({
-        components: { Histogram }
-    })
+import Histogram from '../components/Histogram.vue'
+export default {
 
+  name: 'Simulation Results',
+
+  components: { 
+    Histogram,
+  }
+}
 </script>

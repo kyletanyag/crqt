@@ -1,7 +1,3 @@
-<template>
-<h1>Histogram</h1>
-</template>
-
 <script>
 import { defineComponent } from 'vue'
 import { Bar } from 'vue3-chart-v2'
