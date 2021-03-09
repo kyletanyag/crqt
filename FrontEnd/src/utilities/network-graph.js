@@ -2,31 +2,33 @@
 /*eslint no-undef: "error"*/
 
 function generateNetworkDiagram(data) {
-    var svg = d3.select("#network"),
-        width = +svg.attr("width"),
-        height = +svg.attr("height");
+  const svg = d3.select("#network"),
+      width = +svg.attr("width"),
+      height = +svg.attr("height");
+
+  const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+    svg.append('defs').append('marker')
+        .attrs({'id':'arrowhead',
+            'viewBox':'-0 -5 10 10',
+            'refX':13,
+            'refY':0,
+            'orient':'auto',
+            'markerWidth':13,
+            'markerHeight':13,
+            'xoverflow':'visible'})
+        .append('svg:path')
+        .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+        .attr('fill', '#999')
+        .style('stroke','none');
   
-      svg.append('defs').append('marker')
-          .attrs({'id':'arrowhead',
-              'viewBox':'-0 -5 10 10',
-              'refX':13,
-              'refY':0,
-              'orient':'auto',
-              'markerWidth':13,
-              'markerHeight':13,
-              'xoverflow':'visible'})
-          .append('svg:path')
-          .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-          .attr('fill', '#999')
-          .style('stroke','none');
   
-  
-    var color = d3.scaleOrdinal(d3.schemeCategory10);
+    
     render(null, data);
   
   
     function render (error, graph) {
-    var simulation = d3.forceSimulation()
+    const simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
         .force("charge", d3.forceManyBody().strength(-30))
         .force("center", d3.forceCenter(width / 2, height / 2));
@@ -34,8 +36,9 @@ function generateNetworkDiagram(data) {
   
       if (error) throw error;
   
-        console.log(graph);
-      var link = svg.append("g")
+      console.log(graph);
+
+      const link = svg.append("g")
           .attr("class", "links")
           .attr("stroke", "#999")
         .selectAll("line")
@@ -45,21 +48,55 @@ function generateNetworkDiagram(data) {
           .attr('color', 'black')
           .attr('marker-end', 'url(#arrowhead)');
   
-      var node = svg.append("g")
-          .attr("class", "nodes")
-        .selectAll("circle")
+
+      const nodeWrapper = svg.append('g')
+        .attr('class', 'nodes')
+        .selectAll('.node')
         .data(graph.nodes)
-        .enter().append("circle")
-          .attr("r", 5)
-          .attr("fill", function(d) { return color(d.node_type); })
-          .call(d3.drag()
-              .on("start", dragstarted)
-              .on("drag", dragged)
-              .on("end", dragended));
+        .enter().append('g')
+        .attr('class', 'nodeWrapper')
+
+      const node = nodeWrapper
+        .append("circle")
+        .attr("r", 5)
+        .attr("fill", function(d) { return color(d.node_type); })
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
+      
+      const tooltip = d3.select('#networkContainer')
+        .append('div')
+        .classed('tooltip', true)
+        .style('opacity', 0);
+
+      
+      nodeWrapper
+        .on("mouseover", function(d) {
+          tooltip.transition()
+            .duration(300)
+            .style("opacity", 1) // show the tooltip
+            .style('background-color', 'rgba(211, 211, 211, 0.3)')
+          tooltip.html(`<div style="width: 300px">\
+ID: ${d.id} <br>\
+Description: ${d.discription} <br>\
+Type: ${d.node_type} <br>\
+Base Score: ${d.base_score} <br>\
+Exploitability Score: ${d.exploitability_score} <br>\
+Impact Score ${d.impact_score}\
+</div>`)
+            .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 350) + "px")
+            .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight) + "px");
+        })
+        .on("mouseleave", function() {
+          tooltip.transition()
+            .duration(200)
+            .style("opacity", 0)
+        })
   
-      node.append("title")
-          .text(function(d) { return d.id; });
-  
+      // node.append("title")
+      //     .text(function(d) { return d.id; });
+
       simulation
           .nodes(graph.nodes)
           .on("tick", () => {

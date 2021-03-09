@@ -2,7 +2,7 @@
 <div>
   <h3>Network Graph</h3>
   <div class="row">
-    <div class="col">
+    <div class="col" id="networkContainer">
       <svg id="network" width="960" height="600"></svg>
     </div>
     <!-- <div class="col">
