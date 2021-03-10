@@ -21,14 +21,11 @@ function generateNetworkDiagram(data) {
         .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
         .attr('fill', '#999')
         .style('stroke','none');
-  
-  
     
     render(null, data);
   
-  
     function render (error, graph) {
-    const simulation = d3.forceSimulation()
+      const simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
         .force("charge", d3.forceManyBody().strength(-30))
         .force("center", d3.forceCenter(width / 2, height / 2));
@@ -60,6 +57,7 @@ function generateNetworkDiagram(data) {
         .append("circle")
         .attr("r", 5)
         .attr("fill", function(d) { return color(d.node_type); })
+        .attr("id", function(d) { return `node_${d.id}`; })
         .call(d3.drag()
             .on("start", dragstarted)
             .on("drag", dragged)
@@ -76,7 +74,7 @@ function generateNetworkDiagram(data) {
           tooltip.transition()
             .duration(300)
             .style("opacity", 1) // show the tooltip
-            .style('background-color', 'rgba(211, 211, 211, 0.3)')
+            .style('background-color', 'rgba(211, 211, 211, 0.8)')
           tooltip.html(`<div style="width: 300px">\
 ID: ${d.id} <br>\
 Description: ${d.discription} <br>\
@@ -90,8 +88,10 @@ Impact Score ${d.impact_score}\
         })
         .on("mouseleave", function() {
           tooltip.transition()
-            .duration(200)
+            .duration(0)
             .style("opacity", 0)
+            .style('left', 0 + 'px')
+            .style('top', 0 + 'px');
         })
   
       // node.append("title")

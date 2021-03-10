@@ -7,8 +7,8 @@
 <script>
   /* eslint-disable */
 import NetworkGraph from '../components/NetworkGraph.vue';
-
-
+import http from '../http-common.js';
+import { ref } from 'vue';
 
 export default {
 
@@ -19,12 +19,15 @@ export default {
   },
 
   data() {
+
+    const nodes = ref([]);
+
+    http.get('get-derived-scores').then((r) => {
+      nodes.value = r.data.nodes;
+    })
+
     return {
-      data: [['A', 'B', 'C'],
-            [1, 2, 3],
-            [4, 5, 6],
-            [7, 8, 9]
-      ],
+      nodes,
     };
   },
 
