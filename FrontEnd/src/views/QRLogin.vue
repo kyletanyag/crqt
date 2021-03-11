@@ -7,7 +7,7 @@
         <h2 class="card-title pt-2">2FA</h2>
         <div>
           <div class="form-group">
-            <input class="form-control" name="pin" v-model="pin" placeholder="OTP Pin" /> 
+            <input class="form-control" type="password" autocomplete="off" name="pin" v-model="pin" placeholder="OTP Pin" /> 
           </div>
           <button type="submit" class="btn btn-primary" v-on:click="login()">Log in</button>
         </div>

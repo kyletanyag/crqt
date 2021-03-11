@@ -15,7 +15,7 @@
   <div v-show="accountManagement">
     <h2>Account Management</h2>
     <div v-if="!loadingUnregistered" class="row justify-content-center">
-      <user-data-table @approve="fetchData" @delete="fetchData"
+      <user-data-table @approve="fetchData" @delete="fetchUnregistered"
         title="Unregistered Users" 
         :users="unregisteredUsers"
         :happyError="true"

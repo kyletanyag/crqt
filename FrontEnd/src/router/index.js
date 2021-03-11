@@ -123,9 +123,9 @@ const routes = [
         component: Sandbox
     },
     {
-        path: '/2fa/:email',
-        name: '2FA',
-        component: () => import(/* webpackChunkName: "2FA" */ '../views/QRCode.vue'),
+        path: '/qr/:id',
+        name: 'QR Setup',
+        component: () => import(/* webpackChunkName: "QR Setup" */ '../views/QRCode.vue'),
         props: true
     },
     {

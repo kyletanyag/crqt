@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div v-if="!loading">
+  <div v-if="!loading && rawData.length > 0">
     <h1>Node Probability Histogram</h1>
     <histogram :data="rawData" />
   </div>

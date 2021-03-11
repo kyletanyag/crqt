@@ -7,7 +7,7 @@
         <h2 class="card-title pt-2">Login</h2>
         <div>
           <div class="form-group">
-            <input class="form-control" name="email" v-model="email" placeholder="Email Address" /> 
+            <input class="form-control" name="email" autocomplete="off" v-model="email" placeholder="Email Address" /> 
           </div>
           <div class="form-group">
             <input type="password" class="form-control" name="password" v-model="password" placeholder="Password" />
