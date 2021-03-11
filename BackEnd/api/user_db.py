@@ -24,7 +24,7 @@ user_bp = Blueprint('user_bp', __name__)
 def verify_user():
     # query with SQL given user_info.eail
     user = request.get_json()  # email and password
-    user_db_entry = Users.query.filter_by(username=user['email']).first()
+    user_db_entry = Users.query.filter_by(email=user['email']).first()
 
     if user['email'] == user_db_entry.email:
         print ("User found.")

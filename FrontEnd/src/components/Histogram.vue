@@ -5,6 +5,11 @@ import { Bar } from 'vue3-chart-v2'
 export default defineComponent({
   name: 'Histogram',
   extends: Bar,
+
+  props: {
+    data: Array,
+  },
+
   mounted() {
     // Overwriting base render method with actual data.
     this.renderChart({
@@ -13,7 +18,7 @@ export default defineComponent({
         {
           label: 'Dataset Label',
           backgroundColor: '#f87979',
-          data: [1,2,3,9]
+          data: this.data
         }
       ]
     })
