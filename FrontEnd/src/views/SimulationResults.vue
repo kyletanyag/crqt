@@ -1,7 +1,9 @@
 <template>
 <div>
-  <h1>Node Probability Histogram</h1>
-  <histogram :data="rawData" />
+  <div v-if="!loading">
+    <h1>Node Probability Histogram</h1>
+    <histogram :data="rawData" />
+  </div>
 </div> 
 </template>
 <script>
@@ -19,15 +21,24 @@ export default {
   data() {
     return {
       rawData: [],
+      loading: Boolean,
     };
   },
 
-  mounted() {
-    http.get('get-derived-scores').then((r) => {
-      r.data.nodes.filter((n) => {
-        this.rawData.push(n.base_score);
-      })
-    })
+  created() {
+    this.getData();
+  },
+
+  methods: {
+    getData() {
+      this.loading = true;
+      http.get('get-derived-scores').then((r) => {
+        r.data.nodes.filter((n) => {
+          this.rawData.push(n.base_score);
+        });
+        this.loading = false;
+      });
+    },
   },
 }
 </script>
