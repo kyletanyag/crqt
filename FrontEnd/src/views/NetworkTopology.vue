@@ -36,7 +36,7 @@
                   </div>
                </td>
             </tr>
-                    {{ input }}
+                  <!-- {{ input }} -->
          </tbody>
       </table>
       <h4> Corporate DMZ Settings:</h4>
@@ -227,15 +227,9 @@ export default {
       serverProduct:[],
       rows: [1],
       coporateFirewall: [
-         "Cisco",
-         "Juniper",
-         "Microsoft",
-         "Paloalto",
-         "Linux",
-         "Oracle",
-         "Semens",
-         "Emerson",
-         "SchneiderElectric",
+         'Cisco',
+         'Juniper',
+         'Microsoft',
       ],
     };
   },  
