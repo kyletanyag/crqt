@@ -23,13 +23,17 @@ class DataDriven:
 
     # graph data structure (adjenency list) for DataDriven
     class Node:
-        derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
-        discription = str()             # node discription
-        node_type = None                # type of node  
-        node_logic = None               # node relationship 
-        next_node = []                  # next nodes
-        calculations_remaining = 0      # number of nodes needed to calculate derived score
-        isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
+        def __init__(self):
+            self.derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
+            self.discription = str()             # node discription
+            self.node_type = None                # type of node  
+            self.node_logic = None               # node relationship 
+            self.next_node = []                  # next nodes
+            self.calculations_remaining = 0      # number of nodes needed to calculate derived score
+            self.isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
+
+        def printFunc(self):
+            print(self.derived_score, self.discription, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
 
 
 '''
@@ -76,14 +80,14 @@ def DerivedScore(lag_dict, leaf_queue):
     LAG = lag_dict
     
     # modifying derived scores
-    while not leaf_queue.empty():
+    while len(leaf_queue) > 0:
         node = leaf_queue.pop()
         for key in node.next_node:
             Depth_First_Alg(node.derived_score, key)
-        
-    return LAG
+               
+    # return LAG
 
-@analysis_bp.route('/getDerivedScores', methods=['GET'])
+@analysis_bp.route('/get-derived-scores', methods=['GET'])
 def getDerivedScores():
     global LAG
 
@@ -95,7 +99,7 @@ def getDerivedScores():
 
     vertices = []
     edges = []
-    for key in LAG:
+    for key in LAG: 
         vertices.append({
                 'id' : key,
                 'discription' : LAG[key].discription,
@@ -135,6 +139,57 @@ def test_Derived_Scores():
     ]
 
     return jsonify({'nodes': nodes, 'edges': links}), 200
+#################### DATA-DRIVEN LAG Metrics ########################
+@analysis_bp.route('/percentage_execCode_nodes', methods=['GET'])
+def percentage_execCode_nodes():
+    global LAG
+    sum = 0
+    for key in LAG:
+        sum += LAG[key].isExecCode
+
+    result=(float(sum) / float(len(LAG)) * 100.0)
+    print(sum)
+    return jsonify({'percentage_execCode_nodes': result})
+
+
+@analysis_bp.route('/percentage_rule_nodes', methods=['GET'])
+def percentage_rule_nodes():
+    global LAG
+    rules = 0
+    for key in LAG:
+        rules += (LAG[key].node_type == DataDriven.Node_Type.DERIVATION)
+
+    result=(float(rules) / float(len(LAG)) * 100.0)
+    return jsonify({'percentage_rule_nodes': result})
+
+@analysis_bp.route('/percentage_derived_nodes', methods=['GET'])
+def percentage_derived_nodes():
+    global LAG
+    numDerived = 0
+    for key in LAG:
+        numDerived += (LAG[key].node_type == DataDriven.Node_Type.DERIVED)
+    
+    result=(float(numDerived) / float(len(LAG)) * 100.0)
+    return jsonify({'percentage_derived_nodes': result})
+
+@analysis_bp.route('/network_entropy', methods=['GET'])
+def network_entropy():
+    global LAG
+    net_entropy = [0.0,0.0,0.0]
+    for key in LAG:
+        for i in range(3):
+            net_entropy[i] += LAG[key].derived_score[i] * math.log2(LAG[key].derived_score[i])
+    
+    for i in range(3):
+        net_entropy[i] *= -1.0
+        
+    result = [] 
+    result.append({'base' : net_entropy[0]})
+    result.append({'exploitability' : net_entropy[1]})
+    result.append({'impact' : net_entropy[2]})
+
+    return jsonify({'network_entropy': result})
+
 
 ################## MODEL DRIVEN ##############################
 class ModelDriven:

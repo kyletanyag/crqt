@@ -13,24 +13,31 @@
     </button>
   </div> -->
   <div v-show="accountManagement">
-    <h2>Account Mangement</h2>
+    <h2>Account Management</h2>
     <div v-if="!loadingUnregistered" class="row justify-content-center">
-      <user-data-table 
+      <user-data-table @approve="fetchData" @delete="fetchData"
         title="Unregistered Users" 
         :users="unregisteredUsers"
         :happyError="true"
         ></user-data-table>
     </div>
+    <div v-else>
+      Loading ...
+    </div>
     <div v-if="!loadingRegistered" class="row justify-content-center">
-      <user-data-table 
+      <user-data-table @delete="fetchRegistered"
         title="Registed Users" 
         :users="registeredUsers"
         :approve="false"></user-data-table>
     </div>
+    <div v-else>
+      Loading ...
+    </div>
     <hr>
   </div>
   <div v-show="simulationManagement">
-    <h2>Simulation Managment</h2>
+    <h2>Simulation Management</h2>
+    <p>To be developed ...</p>
   </div>
 </div>
 </template>
@@ -58,22 +65,32 @@ export default {
   },
   
   created() {
-    this.fetchData();
+    this.fetchUnregistered();
+    this.fetchRegistered();
   },
 
   methods: {
+
     fetchData() {
-      this.loadingUnregistered = this.loadingRegistered = true;
+      this.fetchUnregistered();
+      this.fetchRegistered();
+    },
+
+    fetchUnregistered() {
+      this.loadingUnregistered = true;
       http.get('get_unregistered_users').then((r) => {
         this.unregisteredUsers = r.data.unregistered_users;
         this.loadingUnregistered = false;
       });
+    },
 
+    fetchRegistered() {
+      this.loadingRegistered = true;
       http.get('get_registered_users').then((r) => {
         this.registeredUsers = r.data.registered_users;
         this.loadingRegistered = false;
       });
-    }
+    },
   },
   
 }

@@ -41,7 +41,7 @@
                     <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
                     <button type="submit" class="btn btn-primary" @click="Submit">Submit</button>
                 </div>
-                <div v-if="progress > 0" class="progress">
+                <div class="progress">
                     <div class="progress-bar progress-bar-info"
                         role="progressbar"
                         :style="{ width: progress + '%' }"
@@ -118,15 +118,18 @@ export default {
                 alert('Error with Derivation Node Probability input. Please recheck input.');
                 return;
             }
+
             this.Upload(this.network, (event) => {
                 this.progress = Math.round(100 * event.loaded / event.total);
             })
             .then((response) => {
                 console.log(response.data.message);
+                // this.$router.push({name: 'Sandbox'});
             })
-            .catch(() => {
-                this.progress.percentage = 0;
+            .catch((response) => {
+                this.progress = 0;
                 console.log('Could not upload data!');
+                console.log(response);
             })
         },
 

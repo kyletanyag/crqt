@@ -78,13 +78,17 @@ export default {
     ApproveUser(id) {
       http.get(`approve_user/${id}`).then((r) => {
         console.log(r);
+        this.$emit('approve');
       }); 
+      
     },
 
     DeleteUser(id) {
       http.get(`delete_user/${id}`).then((r) => {
         console.log(r);
+        this.$emit('delete');
       }); 
+      
     },
 
     GetUserInfo(id) {

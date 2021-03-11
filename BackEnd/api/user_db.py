@@ -20,11 +20,14 @@ import pyqrcode
 user_bp = Blueprint('user_bp', __name__)
 
 # route to verify email and password
-@user_bp.route('/verify_user')
+@user_bp.route('/verify_user', methods=['POST'])
 def verify_user():
     # query with SQL given user_info.eail
     user = request.get_json()  # email and password
-    user_db_entry = Users.query.filter_by(username=user['email']).first()
+    user_db_entry = Users.query.filter_by(email=user['email']).first()
+
+    if user_db_entry is None:
+        return {'error': 'Email or password is invalid.'}, 200
 
     if user['email'] == user_db_entry.email:
         print ("User found.")
@@ -35,19 +38,21 @@ def verify_user():
         if password == user_db_entry.password:
             print ("Password match.")
             return {'message': 'Passwords Match.', 
-                    '2fa': user_db_entry.enabled_2fa}, 201
+                    'access' : True,
+                    'dual_factor': user_db_entry.enabled_2fa,
+                    'id': user_db_entry.id}, 201
         else:
             print ("Password does not match.")
-        return 'Passwords Do Not Match', 201 
+        return {'error': 'Email or password is invalid.'}, 200
 
     print ("User not found.")
-    return 'User not found', 404
+    return 404
 
 # route to verify otp
-@user_bp.route('/verify_otp')
-def get_otp():
+@user_bp.route('/verify_otp/<input>', methods=['POST'])
+def get_otp(input):
     user = request.get_json()
-    user_db_entry = Users.query.filter_by(email=user['email']).first()
+    user_db_entry = Users.query.filter_by(id=input).first()
 
     if user_db_entry is not None:
         return {'access' : str(otp.get_totp(user_db_entry.otp_secret)) == user['pin']}, 200
@@ -128,7 +133,7 @@ def get_registered_users():
                 'email' : n.email, 
                 'id' : n.id,
                 'name' : n.first_name + ' ' + n.last_name,
-                'role' : 'Admin' if n.user_role == 1 else 'Common', 
+                'role' : 'Admin' if n.user_role == 1 else 'General', 
                 'is_registered' : n.is_registered})
     
     return jsonify({'registered_users' : registered_users}), 200
@@ -148,7 +153,7 @@ def get_unregistered_users():
                 'email' : n.email, 
                 'id' : n.id,
                 'name' : n.first_name + ' ' + n.last_name, 
-                'role' : 'Admin' if n.user_role == 1 else 'Common', 
+                'role' : 'Admin' if n.user_role == 1 else 'General', 
                 'is_registered' : n.is_registered})
     
     return jsonify({'unregistered_users': unregistered_users}), 200

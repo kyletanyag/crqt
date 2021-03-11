@@ -10,11 +10,19 @@ from .data_models import NVD
 nvd_bp = Blueprint('nvd_bp', __name__)
 
 # query with database to get cve_ids
-@nvd_bp.route('/data_driven_cvss_query')
 def data_driven_cvss_query(cve_id):
     nvd = NVD.query.get(cve_id)
-    return [nvd.base_score, nvd.exploitabiliy_score_v2,nvd.impact_score_v2]
+    return [nvd.base_score/10.0, nvd.exploitabiliy_score_v2/10.0,nvd.impact_score_v2/10.0]
 
+@nvd_bp.route('/cvss_query', methods=['POST'])
+def cvss_query():
+    cve_id = request.get_json()  # json network topology data driven
+    print(cve_id['cve'])
+    nvd = NVD.query.get(cve_id['cve'])
+    return jsonify({
+        'base': nvd.base_score, 
+        'exploitability' : nvd.exploitabiliy_score_v2,
+        'impact' : nvd.impact_score_v2})
 
 ####### STILL IN WORK:
 

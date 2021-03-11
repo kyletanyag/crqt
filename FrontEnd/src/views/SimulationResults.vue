@@ -1,36 +1,44 @@
 <template>
-<select id="mySelect" style="width: 581px; height:300px;" rows="10" multiple="multiple">
-    <option id="id1" value="value1">id1</option>
-    <option id="id2" value="value2">id2</option>
-    <option id="id3" value="value3">id3</option>
-    <option id="id4" value="value4">id4</option>
-    <option id="id5" value="value5">id5</option>
-    <div class="text-center py-2">
-                    <button id="save" class="btn btn-primary" @click="saveTextAsFile">Submit</button>
-                </div>
-</select>
-                
+<div>
+  <div v-if="!loading">
+    <h1>Node Probability Histogram</h1>
+    <histogram :data="rawData" />
+  </div>
+</div> 
 </template>
 <script>
-    function saveTextAsFile() {
-        var textToWrite = document.getElementById('mySelect').value;
-        var textFileAsBlob = new Blob([textToWrite], {type: 'text/plain'});
-        var fileNameToSaveAs = "directive.txt";
+import Histogram from '../components/Histogram.vue'
+import http from '../http-common.js';
 
-        var downloadLink = document.createElement("a");
-        downloadLink.download = fileNameToSaveAs;
-        downloadLink.innerHTML = "Download File";
-        console.log("innerHTML -> " + downloadLink.innerHTML);
-//        if ($('#sel1').val() == '') {
-//            alert('Please select ACCOUNT NAME, SCHEDULE and TASK first.');
-//        }
-//        else {
-            window.webkitURL != null;
-            downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
-//        }
-        downloadLink.click();
-    }
+export default {
 
-    var button = document.getElementById('save');
-    button.addEventListener('click', saveTextAsFile);
+  name: 'Simulation Results',
+
+  components: { 
+    Histogram,
+  },
+
+  data() {
+    return {
+      rawData: [],
+      loading: Boolean,
+    };
+  },
+
+  created() {
+    this.getData();
+  },
+
+  methods: {
+    getData() {
+      this.loading = true;
+      http.get('get-derived-scores').then((r) => {
+        r.data.nodes.filter((n) => {
+          this.rawData.push(n.base_score);
+        });
+        this.loading = false;
+      });
+    },
+  },
+}
 </script>

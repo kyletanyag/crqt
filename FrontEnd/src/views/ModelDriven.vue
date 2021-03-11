@@ -1,13 +1,6 @@
 <template>
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-      <h4 style="padding-left:10px"> If you would like to upload a CSV file, click the button below.</h4>
-         <!-- HOLDEN REMOVED THIS BECAUSE HE MADE A NEW LINK. KEEPING THIS IN CASE YOU WANT TO REUSE THE FORMATTING.
-         <form class="form-inline my-2 my-lg-0" action="/Sandbox" style="padding-left:10px">
-            <button type="submit">CSV File Upload</button>
-                  </form> -->
-      <router-link to="/Sandbox" tag="button">CSV Upload</router-link>
-      <data-driven-input></data-driven-input>
       <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
       <table width=100% border="0" cellspacing="0" >
@@ -169,13 +162,10 @@
 </template>
 
 <script>
-import DataDrivenInput from '../components/DataDrivenInput.vue';
 /* eslint-disable */ 
 import http from "../http-common";
 // import { ref } from 'vue';
 export default {
-  components: { DataDrivenInput },
-
   data() {
    //   const coporateFirewall = ref([]);
    //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });

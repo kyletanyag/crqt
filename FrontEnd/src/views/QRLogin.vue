@@ -4,18 +4,13 @@
     <div class="card align-center shadow p-3 mb-5 bg-white rounded" style="width: 25rem;">
       <div class="card-body">
         <img class="card-img-top" alt="CRQT logo" src="../assets/logo.png">
-        <h2 class="card-title pt-2">Login</h2>
+        <h2 class="card-title pt-2">2FA</h2>
         <div>
           <div class="form-group">
-            <input class="form-control" name="email" v-model="email" placeholder="Email Address" /> 
-          </div>
-          <div class="form-group">
-            <input type="password" class="form-control" name="password" v-model="password" placeholder="Password" />
+            <input class="form-control" name="pin" v-model="pin" placeholder="OTP Pin" /> 
           </div>
           <button type="submit" class="btn btn-primary" v-on:click="login()">Log in</button>
         </div>
-        <hr>
-        <router-link to="/Register" tag="button">Don't have an account? Click here to register!</router-link>
       </div>
     </div>
     <transition name="fade">    
@@ -31,31 +26,25 @@
 import http from '../http-common.js';
 
 export default {
-  name: 'Login',
+  name: 'QR Login',
 
   data() {
     return {
-      email: "",
-      password: "",
+      pin: "",
       error: undefined,
     }
   },
 
-  computed: {
-    credentials() {
-      return {
-        email: this.email,
-        password: this.password,
-      };
-    }
+  props: {
+    id: Number,
   },
 
   methods: {
       login() {
-        http.post('verify_user', this.credentials).then((r) => {
-          if (r.data.dual_factor) {
-            this.$router.replace({ name: "QR Login", params: {id: r.data.id} });
-          } else if (r.data.access) {
+        http.post(`verify_otp/${this.id}`, {pin: this.pin}).then((r) => {
+          console.log(r);
+
+          if (r.data.access) {
             this.$emit("authenticated", true);
             this.$router.replace({ name: "Secure" });
           } else {

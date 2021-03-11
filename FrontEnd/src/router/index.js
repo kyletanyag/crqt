@@ -7,8 +7,10 @@ import ErrorPage from '@/views/Error'
 import LoginComponent from "../views/Login.vue"
 import Login from "../views/Login.vue"
 import SecureComponent from "../views/Secure.vue"
+import QRLogin from '../views/QRLogin.vue'
 
 import Sandbox from "../views/_Sandbox.vue";
+import Register from "../views/Register.vue"
 
 //import { routeGuard } from '@/auth'
 
@@ -17,97 +19,66 @@ const routes = [
   {
       path: '/ContactUs',
       name: 'ContactUs',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "ContactUs" */ '../views/ContactUs.vue')
    },
   {
       path: '/SimulationResults',
       name: 'SimulationResults',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "SimulationResults" */ '../views/SimulationResults.vue')
     },
     {
         path: '/TidyTree',
         name: 'TidyTree',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/TidyTree.vue')
     },
     {
         path: '/Robustness',
         name: 'Robustness',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Robustness.vue')
     },
     {
         path: '/Resourcefullness',
         name: 'Resourcefullness',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Resourcefullness.vue')
     },
     {
         path: '/ResilienceMetrics',
         name: 'ResilienceMetrics',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/ResilienceMetrics.vue')
     },
     {
         path: '/Redundancy',
         name: 'Redundancy',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Redundancy.vue')
     },
     {
         path: '/Rapidity',
         name: 'Rapidity',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/Rapidity.vue')
     },
     {
-        path: '/NetworkTopology',
-        name: 'NetworkTopology',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "NetworkTopology" */ '../views/NetworkTopology.vue')
+        path: '/network-topology/data-driven',
+        name: 'Data Driven',
+        component: () => import(/* webpackChunkName: "Data-Driven-Input" */ '../views/DataDriven.vue')
+    },
+    {
+        path: '/network-topology/model-driven',
+        name: 'Model Driven',
+        component: () => import(/* webpackChunkName: "Model-Driven-Input" */ '../views/ModelDriven.vue')
     },
     {
         path: '/ForceLayout',
         name: 'ForceLayout',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
     },
     {
         path: '/hello',
         name: 'hello',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
     },
     {
         path: '/ColorGraphView',
         name: 'ColorGraphView',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "about" */ '../views/ColorGraphView.vue')
     },
     {
@@ -134,6 +105,17 @@ const routes = [
         path: '/login',
         name: "Login",
         component: Login, LoginComponent
+    },
+    {
+        path: '/login/qr/:id',
+        name: 'QR Login',
+        component: QRLogin,
+        props: true,
+    },
+    {
+        path: '/register',
+        name: "Register",
+        component: Register
     },
     {
         path: '/sandbox',
