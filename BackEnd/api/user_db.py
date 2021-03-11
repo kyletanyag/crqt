@@ -26,6 +26,9 @@ def verify_user():
     user = request.get_json()  # email and password
     user_db_entry = Users.query.filter_by(email=user['email']).first()
 
+    if user_db_entry is None:
+        return {'error': 'Email or password is invalid.'}, 200
+
     if user['email'] == user_db_entry.email:
         print ("User found.")
         u_hash = hashlib.sha256()
@@ -36,19 +39,20 @@ def verify_user():
             print ("Password match.")
             return {'message': 'Passwords Match.', 
                     'access' : True,
-                    '2fa': user_db_entry.enabled_2fa}, 201
+                    'dual_factor': user_db_entry.enabled_2fa,
+                    'id': user_db_entry.id}, 201
         else:
             print ("Password does not match.")
-        return 'Passwords Do Not Match', 201 
+        return {'error': 'Email or password is invalid.'}, 200
 
     print ("User not found.")
-    return 'User not found', 404
+    return 404
 
 # route to verify otp
-@user_bp.route('/verify_otp')
-def get_otp():
+@user_bp.route('/verify_otp/<input>', methods=['POST'])
+def get_otp(input):
     user = request.get_json()
-    user_db_entry = Users.query.filter_by(email=user['email']).first()
+    user_db_entry = Users.query.filter_by(id=input).first()
 
     if user_db_entry is not None:
         return {'access' : str(otp.get_totp(user_db_entry.otp_secret)) == user['pin']}, 200

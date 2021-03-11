@@ -7,6 +7,7 @@ import ErrorPage from '@/views/Error'
 import LoginComponent from "../views/Login.vue"
 import Login from "../views/Login.vue"
 import SecureComponent from "../views/Secure.vue"
+import QRLogin from '../views/QRLogin.vue'
 
 import Sandbox from "../views/_Sandbox.vue";
 import Register from "../views/Register.vue"
@@ -104,6 +105,12 @@ const routes = [
         path: '/login',
         name: "Login",
         component: Login, LoginComponent
+    },
+    {
+        path: '/login/qr/:id',
+        name: 'QR Login',
+        component: QRLogin,
+        props: true,
     },
     {
         path: '/register',
