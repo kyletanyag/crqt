@@ -61,7 +61,7 @@
                <td width="25%">
                   <div align="center">
                      <p>Server Product</p>
-                     <select v-model="serverProduct">
+                     <select v-model="serverProduct[index]">
                         <option v-for="item in serverProductInput" :key="item" :value="item">{{item}}</option>                        
                      </select>
                   </div>
@@ -101,7 +101,7 @@
                <td width="33%">
                   <div align="center">
                      <p>Number of Coporate Firewall L2</p>
-                     <input type="text" v-model="numberServer" placeholder="Number of Corporate Firewall L2" />    
+                     <input type="text" v-model="numberServr" placeholder="Number of Corporate Firewall L2" />    
                   </div>
                </td>
             </tr>
@@ -157,7 +157,16 @@
       </table>
  
    <input type="button" @click="Submit()" value="Submit">
-  
+   
+                    <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
+          <div v-if="preview" class="card mx-2" :style="GetCardSize()">
+            <div class="card-header">JSON Object Preview</div>
+            <div class="card-body" style="overflow-y: auto;">
+                <div>
+                    {{ input }}
+                </div>
+            </div>
+        </div>
    </body>
 </template>
 
@@ -171,7 +180,7 @@ export default {
    //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });
 
     return {
-      
+      preview: false,
       L1VendorInput:['Cisco',
          'Juniper',
          'Microsoft',],
@@ -198,7 +207,7 @@ export default {
          "Emerson",
          "SchneiderElectric",], 
       serverVendor:[],                                    
-      progress: 0,
+      progress: 1,
       output: "",
       emailServerInput: [
          "Gmail",
@@ -221,6 +230,7 @@ export default {
          'Juniper',
          'Microsoft',
       ],
+      numberServer:0
     };
   },  
 //   watch: {
@@ -232,25 +242,30 @@ export default {
     computed: {
         input() {
             return {
-                L1Vendor: this.L1Vendor,
-                NumberFireWall: this.NumberFireWall,
-                L1Product: this.L1Product,
-                emailServer:this.emailServer,
-                serverVendor:this.serverVendor,
-               serverProduct:this.serverProduct
+               L1Vendor: this.L1Vendor,
+               NumberFireWall: this.NumberFireWall,
+               L1Product: this.L1Product,
+               emailServer:this.emailServer,
+               serverVendor:this.serverVendor,
+               serverProduct:this.serverProduct,
+               numberServer:this.numberServer
             };
         },
     },
     methods:{
       Submit() {
-               this.Upload(this.input, (event) => {                  
+               this.Upload(this.input, (event) => {
                 this.progress = Math.round(100 * event.loaded / event.total);
-         })
-         
-      },
+            })
+            .then((response) => {
+                console.log(response.data.message);
+                // this.$router.push({name: 'Sandbox'});
+            })
+            
+        },
       Upload(data, onUploadProgress) {
-            return http.post("/upload", data , { onUploadProgress });
-      }, 
+            return http.post("/network_topology_model_driven_input", data , { onUploadProgress });
+        }, 
       addRow: function(_index){
          this.rows.splice(_index+1,0, this.rows[_index]);
     },
@@ -263,9 +278,16 @@ export default {
             return false;  // kbt false
          }
     },  
-    
+    GetCardSize() {
+            return {
+                'width' :100,
+                'height' : 100
+            };
+        },
   }
 };
+
+       
 </script>
 <style>
    table, th, td {
