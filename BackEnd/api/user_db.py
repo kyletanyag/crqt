@@ -10,6 +10,7 @@ from sqlalchemy.orm.session import Session
 from . import db 
 from .data_models import User_Role
 from .data_models import Users
+from validate_email import validate_email
 import os
 import io
 import base64
@@ -31,6 +32,10 @@ def verify_user():
 
     if user['email'] == user_db_entry.email:
         print ("User found.")
+
+        if not user_db_entry.is_registered:
+            return {'error': 'Your account request has not been approved yet.'}, 200
+
         u_hash = hashlib.sha256()
         u_hash.update(user['password'].encode())
         password = str(u_hash.digest())
@@ -55,9 +60,12 @@ def get_otp(input):
     user_db_entry = Users.query.filter_by(id=input).first()
 
     if user_db_entry is not None:
-        return {'access' : str(otp.get_totp(user_db_entry.otp_secret)) == user['pin']}, 200
+        if str(otp.get_totp(user_db_entry.otp_secret)) == user['pin']:
+            return {'access': True}, 200
+        else:
+            return {'access': False, 'error': 'Invalid pin.'}, 200
     else:
-        return 'Cannot generate token', 201
+        return {'error': 'Cannot generate token'}, 201
 
 
 # user registration route
@@ -65,6 +73,17 @@ def get_otp(input):
 def register():
     user = request.get_json() # who (name, email, organization), why (why they need access)
     
+    try:
+        user['email']
+        user['password']
+        user['first_name']
+        user['last_name']
+    except KeyError:
+        return {'error': 'Missing information.'}, 200
+
+    if not validate_email(user['email']):
+        return {'error': 'Not a valid email address.'}, 200
+
     # query with SQL given user_info.username
     user_db_entry = Users.query.filter_by(email=user['email']).first()
 
@@ -77,20 +96,17 @@ def register():
         password_hash = str(hash.digest())
         secret = base64.b32encode(os.urandom(10)).decode('utf-8')
 
-        # new_user = Users(username=user['username'], password=password_hash, 
-        #     first_name=user['first_name'], last_name=user['last_name'], 
-        #     email=user['email'], user_role=user['user_role'], 
-        #     is_registered=False, otp_secret=secret)
-
         new_user = Users(email=user['email'], password=password_hash, 
             first_name=user['first_name'], last_name=user['last_name'], 
             user_role=user['user_role'], is_registered=False, otp_secret=secret, 
-            enabled_2fa=False)
+            enabled_2fa=user['dual_factor'])
 
         db.session.add(new_user)
         db.session.commit()
 
-        return 'Done', 201
+        user_id = Users.query.filter_by(email=user['email']).first().id
+
+        return {'registered': True, 'id': user_id}, 200
 
     # Send email/msg to admin about registration of user
 
