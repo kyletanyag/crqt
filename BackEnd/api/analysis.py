@@ -104,9 +104,9 @@ def getDerivedScores():
                 'id' : key,
                 'discription' : LAG[key].discription,
                 'node_type' : node_type_to_str[LAG[key].node_type], 
-                'base_score' : LAG[key].derived_score[0],
-                'exploitability_score' : LAG[key].derived_score[1],
-                'impact_score' : LAG[key].derived_score[2]})
+                'base_score' : round(LAG[key].derived_score[0],3),
+                'exploitability_score' : round(LAG[key].derived_score[1],3),
+                'impact_score' : round(LAG[key].derived_score[2],3)})
         for e in LAG[key].next_node:
             edges.append({'source' : key, 'target' : e})
     
@@ -147,7 +147,7 @@ def percentage_execCode_nodes():
     for key in LAG:
         sum += LAG[key].isExecCode
 
-    result=(float(sum) / float(len(LAG)) * 100.0)
+    result=round((float(sum) / float(len(LAG)) * 100.0),3)
     print(sum)
     return jsonify({'percentage_execCode_nodes': result})
 
@@ -159,7 +159,7 @@ def percentage_rule_nodes():
     for key in LAG:
         rules += (LAG[key].node_type == DataDriven.Node_Type.DERIVATION)
 
-    result=(float(rules) / float(len(LAG)) * 100.0)
+    result=round((float(rules) / float(len(LAG)) * 100.0),3)
     return jsonify({'percentage_rule_nodes': result})
 
 @analysis_bp.route('/percentage_derived_nodes', methods=['GET'])
@@ -169,7 +169,7 @@ def percentage_derived_nodes():
     for key in LAG:
         numDerived += (LAG[key].node_type == DataDriven.Node_Type.DERIVED)
     
-    result=(float(numDerived) / float(len(LAG)) * 100.0)
+    result=round((float(numDerived) / float(len(LAG)) * 100.0),3)
     return jsonify({'percentage_derived_nodes': result})
 
 @analysis_bp.route('/network_entropy', methods=['GET'])
@@ -184,9 +184,9 @@ def network_entropy():
         net_entropy[i] *= -1.0
         
     result = [] 
-    result.append({'base' : net_entropy[0]})
-    result.append({'exploitability' : net_entropy[1]})
-    result.append({'impact' : net_entropy[2]})
+    result.append({'base' : round(net_entropy[0],3)})
+    result.append({'exploitability' : round(net_entropy[1],3)})
+    result.append({'impact' : round(net_entropy[2],3)})
 
     return jsonify({'network_entropy': result})
 
