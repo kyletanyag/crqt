@@ -7,7 +7,7 @@
         <h2 class="card-title pt-2">2FA</h2>
         <div>
           <div class="form-group">
-            <input class="form-control" type="password" autocomplete="off" name="pin" v-model="pin" placeholder="OTP Pin" /> 
+            <input class="form-control" type="password" autocomplete="off" name="pin" v-model="pin" placeholder="OTP Pin" @keypress="keyEnter" /> 
           </div>
           <button type="submit" class="btn btn-primary" v-on:click="login()">Log in</button>
         </div>
@@ -40,18 +40,24 @@ export default {
   },
 
   methods: {
-      login() {
-        http.post(`verify_otp/${this.id}`, {pin: this.pin}).then((r) => {
-          console.log(r);
+    login() {
+      http.post(`verify_otp/${this.id}`, {pin: this.pin}).then((r) => {
+        console.log(r);
 
-          if (r.data.access) {
-            this.$emit("authenticated", true);
-            this.$router.replace({ name: "Secure" });
-          } else {
-            this.error = r.data.error;
-          }
-        });
-      },
+        if (r.data.access) {
+          this.$emit("authenticated", true);
+          this.$router.replace({ name: "Secure" });
+        } else {
+          this.error = r.data.error;
+        }
+      });
+    },
+
+    keyEnter(e) {
+      if ((e && e.keyCode === 13) || e === 0) {
+        this.login();
+      }
+    },
   }
 }
 </script>

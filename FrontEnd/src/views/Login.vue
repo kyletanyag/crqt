@@ -7,10 +7,10 @@
         <h2 class="card-title pt-2">Login</h2>
         <div>
           <div class="form-group">
-            <input class="form-control" name="email" autocomplete="off" v-model="email" placeholder="Email Address" /> 
+            <input class="form-control" name="email" autocomplete="off" v-model="email" placeholder="Email Address" @keypress="keyEnter"/> 
           </div>
           <div class="form-group">
-            <input type="password" class="form-control" name="password" v-model="password" placeholder="Password" />
+            <input type="password" class="form-control" name="password" v-model="password" placeholder="Password" @keypress="keyEnter" />
           </div>
           <button type="submit" class="btn btn-primary" v-on:click="login()">Log in</button>
         </div>
@@ -51,18 +51,24 @@ export default {
   },
 
   methods: {
-      login() {
-        http.post('verify_user', this.credentials).then((r) => {
-          if (r.data.dual_factor) {
-            this.$router.replace({ name: "QR Login", params: {id: r.data.id} });
-          } else if (r.data.access) {
-            this.$emit("authenticated", true);
-            this.$router.replace({ name: "Secure" });
-          } else {
-            this.error = r.data.error;
-          }
-        });
-      },
+    login() {
+      http.post('verify_user', this.credentials).then((r) => {
+        if (r.data.dual_factor) {
+          this.$router.replace({ name: "QR Login", params: {id: r.data.id} });
+        } else if (r.data.access) {
+          this.$emit("authenticated", true);
+          this.$router.replace({ name: "Secure" });
+        } else {
+          this.error = r.data.error;
+        }
+      });
+    },
+
+    keyEnter(e) {
+      if ((e && e.keyCode === 13) || e === 0) {
+        this.login();
+      }
+    },
   }
 }
 </script>
