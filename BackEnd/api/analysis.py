@@ -194,7 +194,7 @@ def network_entropy():
 
 
 ################## MODEL DRIVEN ##############################
-vulnerability_graph = {}        # dictionary of nodes
+vulnerability_graph = []        # dictionary of nodes
 class ModelDriven:
     # Enum for node layers
     class Layers(enum.Enum):
@@ -240,10 +240,11 @@ def Depth_First_Traversal(node, path):
             Depth_First_Traversal(node.edge[0].target, path)
 
 # find exploitability, impact, and base scoes from origin to node
-@user_bp.route('/attach_paths/model_driven/<node_index>')
+@analysis_bp.route('/model_driven/attack_paths/<node_index>')
 def origin_to_node_metrics(node_index):
     global Solution_Path
     global GoalNode
+    global vulnerability_graph
 
     # setting calculation variables
     GoalNode = node_index
@@ -321,4 +322,45 @@ def origin_to_node_metrics(node_index):
             top_impactful.append(path) 
     
     
-    return jsonify({'metrics_per_path': metrics_per_path,'top_exploitable': {top_exploitable}, 'top_impactful': {top_impactful}})
+    return jsonify({
+        'metrics_per_path': metrics_per_path,
+        'top_exploitable': {
+            "1" : top_exploitable[0],
+            "2" : top_exploitable[1],
+            "3" : top_exploitable[2],
+            "4" : top_exploitable[3],
+            "5" : top_exploitable[4],
+        }, 
+        'top_impactful': {
+            "1" : top_impactful[0],
+            "2" : top_impactful[1],
+            "3" : top_impactful[2],
+            "4" : top_impactful[3],
+            "5" : top_impactful[4],
+        }})
+
+## Vulnerable Host Percentage Metrics
+@analysis_bp.route('/model_driven/vulnerable_host_percentage')
+def vulnerable_host_percentage():
+    global vulnerability_graph
+    node_w_in_edge = set()
+
+    # counting number of nodes with incoming edges
+    for node in vulnerability_graph:
+        for edge in node.edges:
+            if edge.target not in node_w_in_edge:
+                node_w_in_edge.add(edge.target)
+
+    # calculating number of vulnerable hosts (nodes with incoming edges) and num of hosts (nodes with no incoming edges)
+    number_vulnerable_hosts = len(node_w_in_edge)
+    number_hosts = len(vulnerability_graph) - number_vulnerable_hosts
+
+    vulnerable_host_percentage = 100.0 * number_vulnerable_hosts / len(vulnerability_graph)
+    non_vulnerable_host_percentage = 100 - vulnerable_host_percentage
+
+    return jsonify({
+        'number_vulnerable_hosts': round(number_vulnerable_hosts,3),
+        'number_hosts': round(number_hosts,3),
+        'vulnerable_host_percentage': round(vulnerable_host_percentage,3),
+        'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3)
+        })
