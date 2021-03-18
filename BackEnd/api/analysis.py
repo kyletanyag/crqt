@@ -1,5 +1,7 @@
 from flask import Blueprint, jsonify, request
 import enum
+from copy import deepcopy 
+from collections import deque
 from . import db 
 import math
 
@@ -192,10 +194,131 @@ def network_entropy():
 
 
 ################## MODEL DRIVEN ##############################
+vulnerability_graph = {}        # dictionary of nodes
 class ModelDriven:
-    class Edge:
-        weight = float()
-        target = None
+    # Enum for node layers
+    class Layers(enum.Enum):
+        ROMOTE_ATTACKER = 0
+        CORPORATE_DMZ = 1
+        CORPORATE = 2
+        CONTROL_DMZ = 3
+        CONTROL = 4
+        PHY = 5
+
     class Node:
-        edges = []          # array of edges
-        discription = str() # node discription    
+        def __init__(self):
+            edges = []              # array of edges
+            discription = str()     # node discription
+            layer = None            # what layer does node belong too
+            index = int()
+
+        class Edge:
+            def __init__(self, node_target):
+                weights = [0.0,0.0,0.0] # base, exploitability, impact scores
+                target = node_target    # target node (where the edge connect too)
+                source = None
+
+## depth first traversal
+# Will find all paths from origin to GoalNode 
+Solution_Path = []
+GoalNode = int()
+def Depth_First_Traversal(node, path):
+    global GoalNode
+    if GoalNode == node.index:
+        global Solution_Path
+        Solution_Path.append(deepcopy(path))
+    else:
+        # determining if deepcopy is needed
+        if len(node.edges) > 1:
+            for n in node.edges:
+                tmpPath = deepcopy(path)
+                tmpPath.append(n)
+                Depth_First_Traversal(n.target, n)
+                del tmpPath
+        elif len(node.edge) == 1:
+            path.append(node.edge[0])
+            Depth_First_Traversal(node.edge[0].target, path)
+
+# find exploitability, impact, and base scoes from origin to node
+@user_bp.route('/attach_paths/model_driven/<node_index>')
+def origin_to_node_metrics(node_index):
+    global Solution_Path
+    global GoalNode
+
+    # setting calculation variables
+    GoalNode = node_index
+    Solution_Path.clear()
+
+    # generates solution paths    
+    Depth_First_Traversal(vulnerability_graph[0], [])
+
+    # calculating metrics
+    metrics_per_path = []           # scores from each solution path
+    exploitability_list = []
+    impact_list = []
+    for path in Solution_Path:
+        # tuple for base, exploitability, impact
+        score = (0.0,0.0,0.0)
+
+        # pairwise variables used to find top most vulnerable paths
+        exploitability_pair = (len(metrics_per_path),0.0)
+        impact_pair = (len(metrics_per_path),0.0)
+        for edge in path:
+            # summing scores from edges
+            for i in len(score):
+                score[i] += edge.weights[i]
+        
+        metrics_per_path.append({
+                'base_score' : round(score[0],3),
+                'exploitability_score' : round(score[1],3),
+                'impact_score' : round(score[2],3)
+                })
+        exploitability_pair[1] = round(score[1],3)
+        impact_pair[1] = round(score[2],3)
+
+        exploitability_list.append(exploitability_pair)
+        impact_list.append(impact_pair)
+
+    
+    ## finding top 5 most vulnerable paths
+    # sorting lists in decending order
+    exploitability_list.sort(key=lambda vul: vul[1],reverse=True)
+    impact_list.sort(key=lambda vul: vul[1],reverse=True)
+
+    # exploitable paths
+    top_exploitable = []
+    if len(exploitability_list) > 5:
+        for i in range(5):
+            path = []
+            for edge in Solution_Path[exploitability_list[i][0]]:
+                path.append(edge.source.index)
+            
+            top_exploitable.append(path)
+    else:
+        for i in range(len(exploitability_list)):
+            path = []
+            for edge in Solution_Path[exploitability_list[i][0]]:
+                path.append(edge.source.index)
+            
+            top_exploitable.append(path) 
+    
+    # impactful paths
+    top_impactful = []
+    if len(impact_list) > 5:
+        # sorting lists in decending order
+        for i in range(5):
+            path = []
+            for edge in Solution_Path[impact_list[i][0]]:
+                path.append(edge.source.index)
+            
+            top_impactful.append(path)
+    else:
+        for i in range(len(exploitability_list)):
+            path = []
+            for edge in Solution_Path[impact_list[i][0]]:
+                path.append(edge.source.index)
+            
+            top_impactful.append(path) 
+    
+    
+    return jsonify({'metrics_per_path': metrics_per_path,'top_exploitable': {top_exploitable}, 'top_impactful': {top_impactful}})
