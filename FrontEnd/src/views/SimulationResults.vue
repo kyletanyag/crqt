@@ -1,9 +1,13 @@
 <template>
 <div>
   <div v-if="!loading && rawData.length > 0">
-    <h1>Node Probability Histogram</h1>
-    <histogram :data="rawData" />
-  </div>
+    <div class="histogram">
+      <Histogram :data="rawData" numBins="10" name="Node Probability Histogram (Derived Nodes)" barColor='#f87979'/>
+    </div>
+    <div class="histogram">
+      <Histogram :data="rawData" numBins="10" name="Node Probability Histogram (All Nodes [NOTE: CURRENTLY USES thE SAME DATA AS THE PREVIOUS ONE])" barColor='#00FF00'/>
+    </div>
+  </div> 
 </div> 
 </template>
 <script>
@@ -42,3 +46,9 @@ export default {
   },
 }
 </script>
+
+<style>
+   .histogram {
+   width: 35%;
+   }
+</style>
