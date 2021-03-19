@@ -17,7 +17,7 @@
                   <div align="center">
                      <p align="center">Corporate Firewall L1 Vendor</p>
                      <select v-model="selectedVendor" @change="selectVendor">
-                        <option v-for="(L1Vendor,item) in L1VendorInput" :key="item" :value="item">{{L1Vendor.label}}</option>
+                        <option v-for="item in L1VendorInput" :key="item" :value="item">{{L1Vendor.item}}</option>
                      </select>
                   </div>
                </td>
@@ -36,11 +36,15 @@
                   </div>
                </td>
             </tr>
-            <tr>
-               <select v-model="selectedOption" v-if="selectedVendor != -1">
-                  <option v-for="(option,item) in L1VendorInput" :key="item" :value="item">{{ option.options }}</option>
-               </select>
-            </tr>
+            <table>
+               <tbody>
+               <tr>
+                  <select v-model="selectedOption" v-if="selectedVendor != -1">
+                     <option v-for="item in L1VendorInput" :key="item" :value="item">{{ item.options }}</option>
+                  </select>
+               </tr>
+               </tbody>
+            </table>
          </tbody>
       </table>
       <h4> Corporate DMZ Settings:</h4>
