@@ -1,6 +1,6 @@
 <template>
    <body>
-      <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
+      <h3 style="padding-left:10px"> asInput Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
       <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
       <table width=100% border="0" cellspacing="0" >
@@ -101,7 +101,7 @@
                <td width="33%">
                   <div align="center">
                      <p>Number of Coporate Firewall L2</p>
-                     <input type="text" v-model="numberServr" placeholder="Number of Corporate Firewall L2" />    
+                     <input type="text" v-model="numberServer" placeholder="Number of Corporate Firewall L2" />    
                   </div>
                </td>
             </tr>
@@ -230,7 +230,7 @@ export default {
          'Juniper',
          'Microsoft',
       ],
-      numberServer:0
+      numberServer: 0,
     };
   },  
 //   watch: {
