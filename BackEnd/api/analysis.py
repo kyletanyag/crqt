@@ -501,6 +501,10 @@ def outdegree_centrality(node_index):
     global vulnerability_graph
     return len(vulnerability_graph[node_index].out_edges) 
 
+# ref: https://mathinsight.org/degree_distribution
+def degree_centrality(node_index):
+    return indegree_centrality(node_index) + outdegree_centrality(node_index)
+
 # reference: https://en.wikipedia.org/wiki/Centrality
 def closeness_centrality(node_index):
     global shortest_paths
