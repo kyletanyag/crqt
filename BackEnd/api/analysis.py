@@ -4,6 +4,8 @@ from copy import deepcopy
 from collections import deque
 from . import db 
 import math
+import scipy.linalg as la
+import numpy as np
 
 # route for LAG generation module
 analysis_bp = Blueprint('analysis_bp', __name__)
@@ -487,7 +489,10 @@ def betweenness_centrality(node_index):
             # testing v's betweenness
             if shortest_paths[source.index][target.index] == (v_to_target[0] + source_to_v[0]):
                 betweenness += v_to_target[1] * source_to_v[1] / shortest_paths[source.index][target.index][1]
+    
+    return betweenness
 
+# reference: https://bookdown.org/omarlizardo/_main/4-2-degree-centrality.html
 def indegree_centrality(node_index):
     global vulnerability_graph
     return len(vulnerability_graph[node_index].in_edges)
@@ -496,14 +501,94 @@ def outdegree_centrality(node_index):
     global vulnerability_graph
     return len(vulnerability_graph[node_index].out_edges) 
 
+# reference: https://en.wikipedia.org/wiki/Centrality
 def closeness_centrality(node_index):
-    pass
+    global shortest_paths
+    global Solution_Path
+    global vulnerability_graph
+    global GoalNode
 
-def pagerank_centrality(node_index):
-    pass
+    # if shortest_paths is empty, then calculate shortest_paths for all nodes
+    if len(shortest_paths) == 0:
+        # computing the length and number of shortest paths between all pairs
+        for source in vulnerability_graph:
+            GoalNode = source
+            shortest_paths.append([])
+            for target in vulnerability_graph:
+                if (source == target) or (source.layer >= target.layer):
+                    shortest_paths[-1].append((0,0))
+                else:
+                    Solution_Path.clear()
+                    Depth_First_Traversal(target, [])
 
-def katz_centrality(node_index):
-    pass
+                    base_sum = []
+                    for path in Solution_Path:
+                        base_sum.append(0.0)
+                        for edge in path:
+                            base_sum[-1] += edge.weights[0]
+                    
+                    base_sum.sort()
+                    i = 1
+                    # counting number of shortest paths
+                    while(base_sum[0] == base_sum[i]):
+                        i += 1
+                    
+                    # adding shortest path
+                    shortest_paths[-1].append((base_sum[0],i))
+                    
+                    del base_sum
+    
+    # calculating closeness centrality
+    closeness = 0.0
+    for y in len(vulnerability_graph):
+        dom = 0
+        if y < node_index:
+            dom = shortest_paths[y][node_index][0]
+        else:
+            dom = shortest_paths[node_index][y][0]
+
+        if dom > 0:
+            closeness += 1/dom
+
+    return closeness
+
+# ref: https://www.geeksforgeeks.org/katz-centrality-centrality-measure/, https://en.wikipedia.org/wiki/Katz_centrality, https://www.youtube.com/watch?v=vSm1a0-VcMg, https://en.wikipedia.org/wiki/Centrality
+# calculates katz centrality for all nodes
+def katz_centrality_and_pagerank_centrality():
+    global vulnerability_graph
+    global shortest_paths
+    
+    def L(mat, row):
+        result = 0.0
+        for i in len(mat):
+            result += mat[row][i]
+        return result
+
+    # creating adj_matrix
+    adj_mat = np.array([])
+    katz = []
+    pagerank = []
+
+    for F in shortest_paths:
+        adj_mat.append([])
+        for T in F:
+            adj_mat[-1].append(T[1] > 0)
+        
+    eigvals, eigvecs = la.eig(adj_mat)
+
+    max_eigval = max(eigvals)
+
+    for i in range(len(adj_mat)):
+        katz_tmp = 0.0
+        pagarank_tmp = 0.0
+        for j in range(len(adj_mat)):
+            katz_tmp += adj_mat[i][j] * eigvecs[j]
+            pagarank_tmp += adj_mat[i][j] * eigvecs[j] / L(adj_mat, j) + (1 - 1.0 / max_eigval) / len(adj_mat)
+
+        katz.append(1/max_eigval*katz_tmp)
+        pagerank.append(1/max_eigval*pagarank_tmp)
+
+    return katz, pagerank
 
 @analysis_bp.route('/model_driven/centrality')   
 def centrality():
