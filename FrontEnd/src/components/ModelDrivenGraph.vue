@@ -1,13 +1,11 @@
 <template>
 <div>
-  <network-graph></network-graph>
-  <!-- <div id="cy"></div> -->
-</div> 
+  <div id="cy"></div>
+</div>
 </template>
 
 <script>
   /* eslint-disable */
-import NetworkGraph from '../components/NetworkGraph.vue';
 import http from '../http-common.js';
 import { ref } from 'vue';
 
@@ -84,22 +82,16 @@ function getColor(type) {
 
 export default {
 
-  name: 'Sandbox',
+  name: 'Model Driven Graph',
 
   components: {
-    NetworkGraph,
   },
 
   data() {
 
-    const nodes = ref([]);
-    const edges = ref([]);
-
     http.get('get-derived-scores').then((r) => {
 
       console.log(r.data)
-      nodes.value = r.data.nodes;
-      edges.value = r.data.edges;
       var array = [];
       var x = 100;
       var y = 100;
@@ -124,7 +116,6 @@ export default {
         id++;
       });
 
-      
       cytoExample(array);
     });
 
