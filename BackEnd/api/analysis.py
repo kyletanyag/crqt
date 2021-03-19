@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-import enum
+from enum import Enum, auto
 from copy import deepcopy 
 from collections import deque
 from . import db 
@@ -11,14 +11,14 @@ analysis_bp = Blueprint('analysis_bp', __name__)
 # namespace for data-driven objects
 class DataDriven:
     # Enum for node relationships
-    class Node_Logic(enum.Enum):
+    class Node_Logic(Enum):
         AND = 0
         OR = 1
         FLOW = 2
         LEAF = 3
 
     # Enum for Node Types
-    class Node_Type(enum.Enum):
+    class Node_Type(Enum):
         PRIMITIVE_FACT = 0
         DERIVATION = 1
         DERIVED = 2
@@ -197,63 +197,70 @@ def network_entropy():
 vulnerability_graph = []        # dictionary of nodes
 class ModelDriven:
     # Enum for node layers
-    class Layers(enum.Enum):
-        ROMOTE_ATTACKER = 0
-        CORPORATE_DMZ = 1
-        CORPORATE = 2
-        CONTROL_DMZ = 3
-        CONTROL = 4
-        PHY = 5
+    class Layers(Enum):
+        ROMOTE_ATTACKER = auto()
+        CORPORATE_FIREWALL_FW1 = auto()
+        CORPORATE_DMZ = auto()
+        CORPORATE_FIREWALL_FW2 = auto()
+        CORPORATE = auto()
+        CONTROL_SYSTEM_FIREWALL_FW1 = auto()
+        CONTROL_SYSTEM_DMZ = auto()
+        CONTROL_SYSTEM_FIREWALL_FW2 = auto()
+        CONTROL_SYSTEM = auto()
+        PHYSICAL = auto()
 
+    # object for nodes
     class Node:
-        def __init__(self):
-            edges = []              # array of edges
-            discription = str()     # node discription
-            layer = None            # what layer does node belong too
-            index = int()
+        def __init__(self, product, _layer, _index):
+            self.out_edges = []              # array of outgoing edges
+            self.in_edges = []               # array of incoming edges
+            self.discription = product       # node discription
+            self.layer = _layer              # what layer does node belong too
+            self.index = _index
 
-        class Edge:
-            def __init__(self, node_target):
-                weights = [0.0,0.0,0.0] # base, exploitability, impact scores
-                target = node_target    # target node (where the edge connect too)
-                source = None
+    # object for weighted edges nodes will use
+    class Edge:
+        def __init__(self, node_source, node_target):
+            self.weights = [0.0,0.0,0.0] # base, exploitability, impact scores
+            self.target = node_target    # target node (where the edge connect too)
+            self.source = node_source    # source node (where the edge starts)
+
+            target.in_edges.append(self)    # adding incoming edge to target
 
 ## depth first traversal
 # Will find all paths from origin to GoalNode 
 Solution_Path = []
-GoalNode = int()
+GoalNode = None
 def Depth_First_Traversal(node, path):
-    global GoalNode
-    if GoalNode == node.index:
+    # if reached attacker node, stop
+    if GoalNode.index == node.index:
         global Solution_Path
         Solution_Path.append(deepcopy(path))
-    
-    # verifying node is below goal node layer
-    elif node.layer < vulnerability_graph[GoalNode].layer:
+    elif node.layer > GoalNode.layer:
         # determining if deepcopy is needed
-        if len(node.edges) > 1:
-            for n in node.edges:
+        if len(node.in_edges) > 1:
+            for n in node.in_edges:
                 tmpPath = deepcopy(path)
                 tmpPath.append(n)
-                Depth_First_Traversal(n.target, n)
+                Depth_First_Traversal(n.source, tmpPath)
                 del tmpPath
-        elif len(node.edge) == 1:
-            path.append(node.edge[0])
-            Depth_First_Traversal(node.edge[0].target, path)
+        elif len(node.in_edges) == 1:
+            path.append(node.in_edges[0])
+            Depth_First_Traversal(node.in_edges[0].source, path)
 
 # find exploitability, impact, and base scoes from origin to node
 @analysis_bp.route('/model_driven/attack_paths/<node_index>')
 def origin_to_node_metrics(node_index):
     global Solution_Path
-    global GoalNode
     global vulnerability_graph
+    global GoalNode
 
     # setting calculation variables
-    GoalNode = node_index
     Solution_Path.clear()
+    GoalNode = vulnerability_graph[0] # romote attacker node
 
     # generates solution paths    
-    Depth_First_Traversal(vulnerability_graph[0], [])
+    Depth_First_Traversal(vulnerability_graph[node_index], [])
 
     # calculating metrics
     metrics_per_path = []           # scores from each solution path
@@ -268,6 +275,7 @@ def origin_to_node_metrics(node_index):
         # pairwise variables used to find top most vulnerable paths
         exploitability_pair = (len(metrics_per_path),0.0)
         impact_pair = (len(metrics_per_path),0.0)
+
         for edge in path:
             # summing scores from edges
             for i in len(score):
@@ -300,14 +308,14 @@ def origin_to_node_metrics(node_index):
         for i in range(5):
             path = []
             for edge in Solution_Path[exploitability_list[i][0]]:
-                path.append(edge.source.index)
+                path.append(edge.target.index)
             
             top_exploitable.append(path)
     else:
         for i in range(len(exploitability_list)):
             path = []
             for edge in Solution_Path[exploitability_list[i][0]]:
-                path.append(edge.source.index)
+                path.append(edge.target.index)
             
             top_exploitable.append(path) 
     
@@ -318,14 +326,14 @@ def origin_to_node_metrics(node_index):
         for i in range(5):
             path = []
             for edge in Solution_Path[impact_list[i][0]]:
-                path.append(edge.source.index)
+                path.append(edge.target.index)
             
             top_impactful.append(path)
     else:
         for i in range(len(exploitability_list)):
             path = []
             for edge in Solution_Path[impact_list[i][0]]:
-                path.append(edge.source.index)
+                path.append(edge.target.index)
             
             top_impactful.append(path) 
     
@@ -378,3 +386,125 @@ def vulnerable_host_percentage():
         'vulnerable_host_percentage': round(vulnerable_host_percentage,3),
         'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3)
         })
+
+
+## Centrality Metrics
+# Reference: http://www.uvm.edu/pdodds/research/papers/others/2001/brandes2001a.pdf
+shortest_paths = []     # matrix where each entry as shortest path value and multiplicity
+def betweenness_centrality(node_index):
+    global shortest_paths
+    global Solution_Path
+    global vulnerability_graph
+    global GoalNode
+
+    # if shortest_paths is empty, then calculate shortest_paths for all nodes
+    if len(shortest_paths) == 0:
+        # computing the length and number of shortest paths between all pairs
+        for source in vulnerability_graph:
+            GoalNode = source
+            shortest_paths.append([])
+            for target in vulnerability_graph:
+                if (source == target) or (source.layer >= target.layer):
+                    shortest_paths[-1].append((0,0))
+                else:
+                    Solution_Path.clear()
+                    Depth_First_Traversal(target, [])
+
+                    base_sum = []
+                    for path in Solution_Path:
+                        base_sum.append(0.0)
+                        for edge in path:
+                            base_sum[-1] += edge.weights[0]
+                    
+                    base_sum.sort()
+                    i = 1
+                    # counting number of shortest paths
+                    while(base_sum[0] == base_sum[i]):
+                        i += 1
+                    
+                    # adding shortest path
+                    shortest_paths[-1].append((base_sum[0],i))
+                    
+                    del base_sum
+    
+    # calculating betweeness
+    betweenness = 0.0
+    for source in vulnerability_graph:
+        GoalNode = source
+        source_to_v = (0.0,0)
+        if source.layer >= vulnerability_graph[node_index].layer or source == vulnerability_graph[node_index]:
+            break
+
+        Solution_Path.clear()
+
+        # calculating shortest path from source to v
+        Depth_First_Traversal(vulnerability_graph[node_index], [])
+
+        base_sum = []
+        for path in Solution_Path:
+            base_sum.append(0.0)
+            for edge in path:
+                base_sum[-1] += edge.weights[0]
+        
+        base_sum.sort()
+        source_to_v[1] = 1
+        # counting number of shortest paths
+        while(base_sum[0] == base_sum[source_to_v[1]]):
+            source_to_v[1] += 1
+        
+        # saving shortest path and multiplicity
+        source_to_v[0] = base_sum[0]
+
+        del base_sum
+
+        for target in vulnerability_graph:
+            v_to_target = (0.0,0)
+
+            # target cannot be before node and cannot equal node (node must be between source and target)
+            if (target.layer <= vulnerability_graph[node_index].layer or target.layer <= source.layer):
+                continue
+            
+            Solution_Path.clear()
+            Depth_First_Traversal(target, [])
+
+            base_sum = []
+            for path in Solution_Path:
+                base_sum.append(0.0)
+                for edge in path:
+                    base_sum[-1] += edge.weights[0]
+            
+            base_sum.sort()
+            i = 1
+            # counting number of shortest paths
+            while(base_sum[0] == base_sum[i]):
+                i += 1
+            
+            # adding shortest path
+            shortest_paths[-1].append((base_sum[0],i))
+            
+            del base_sum
+            
+            # testing v's betweenness
+            if shortest_paths[source.index][target.index] == (v_to_target[0] + source_to_v[0]):
+                betweenness += v_to_target[1] * source_to_v[1] / shortest_paths[source.index][target.index][1]
+
+def indegree_centrality(node_index):
+    global vulnerability_graph
+    return len(vulnerability_graph[node_index].in_edges)
+
+def outdegree_centrality(node_index):
+    global vulnerability_graph
+    return len(vulnerability_graph[node_index].out_edges) 
+
+def closeness_centrality(node_index):
+    pass
+
+def pagerank_centrality(node_index):
+    pass
+
+def katz_centrality(node_index):
+    pass
+
+@analysis_bp.route('/model_driven/centrality')   
+def centrality():
+    pass
