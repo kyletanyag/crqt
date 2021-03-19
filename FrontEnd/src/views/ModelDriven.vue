@@ -172,6 +172,7 @@
 
 <script>
 /* eslint-disable */ 
+//  JSON OBJECT layer, nodes, edges
 import http from "../http-common";
 // import { ref } from 'vue';
 export default {
