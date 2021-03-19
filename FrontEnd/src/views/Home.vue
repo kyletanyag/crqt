@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       team: [
-        'Gul Ayaz',
+        'Guul Ayaz',
         'Cierra Hall',
         'Thomas Laverghetta',
         'Alex Soliza',
