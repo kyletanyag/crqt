@@ -556,7 +556,12 @@ def closeness_centrality(node_index):
 
     return closeness
 
-# ref: https://www.geeksforgeeks.org/katz-centrality-centrality-measure/, https://en.wikipedia.org/wiki/Katz_centrality, https://www.youtube.com/watch?v=vSm1a0-VcMg, https://en.wikipedia.org/wiki/Centrality
+# ref: 
+# [1] https://ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/lecture-notes/MIT1_022F18_lec4.pdf, 
+# [2] https://www.nature.com/articles/s41598-017-15426-1
+# https://www.youtube.com/watch?v=vSm1a0-VcMg, 
+# [4] https://en.wikipedia.org/wiki/Centrality
+# 
 # calculates katz centrality for all nodes
 def katz_centrality_and_pagerank_centrality():
     global vulnerability_graph
@@ -570,26 +575,31 @@ def katz_centrality_and_pagerank_centrality():
 
     # creating adj_matrix
     adj_mat = np.array([])
-    katz = []
     pagerank = []
 
     for F in shortest_paths:
         adj_mat.append([])
         for T in F:
-            adj_mat[-1].append(T[1] > 0)
-        
+            adj_mat[-1].append(bool(T[1] > 0))
+    
+    # calculating eigenvectors/values
     eigvals, eigvecs = la.eig(adj_mat)
 
+    # finding max eigenvalue
     max_eigval = max(eigvals)
 
+    # calculating Katz = inv(I - a*A)*vec(n,1) Ref: [1][2]
+    katz = np.dot(la.inv(np.subtract(np.identity(len(adj_mat)), 1.0/max_eigval * adj_mat)),np.ones(len(adj_mat),1))
+
+    # calculating pagerank
     for i in range(len(adj_mat)):
-        katz_tmp = 0.0
+        # katz_tmp = 0.0
         pagarank_tmp = 0.0
         for j in range(len(adj_mat)):
-            katz_tmp += adj_mat[i][j] * eigvecs[j]
+            # katz_tmp += adj_mat[i][j] * eigvecs[j]
             pagarank_tmp += adj_mat[i][j] * eigvecs[j] / L(adj_mat, j) + (1 - 1.0 / max_eigval) / len(adj_mat)
 
-        katz.append(1/max_eigval*katz_tmp)
+        # katz.append(1/max_eigval*katz_tmp)
         pagerank.append(1/max_eigval*pagarank_tmp)
 
     return katz, pagerank
