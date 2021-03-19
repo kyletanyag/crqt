@@ -253,11 +253,7 @@ export default {
       ],
       
             progress: 0,
-<<<<<<< HEAD
-            numberServer:0,
-=======
             numberServer: 0,
->>>>>>> 3dbdc597fb0df5952c31505808eb614831a4f9f8
     };
   },  
 //   watch: {
