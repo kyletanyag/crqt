@@ -253,6 +253,7 @@ export default {
       ],
       
             progress: 0,
+            numberServer:0,
     };
   },  
 //   watch: {
