@@ -227,7 +227,9 @@ def Depth_First_Traversal(node, path):
     if GoalNode == node.index:
         global Solution_Path
         Solution_Path.append(deepcopy(path))
-    else:
+    
+    # verifying node is below goal node layer
+    elif node.layer < vulnerability_graph[GoalNode].layer:
         # determining if deepcopy is needed
         if len(node.edges) > 1:
             for n in node.edges:
@@ -257,6 +259,8 @@ def origin_to_node_metrics(node_index):
     metrics_per_path = []           # scores from each solution path
     exploitability_list = []
     impact_list = []
+    score_sum = [0.0,0.0,0.0]       # used for average length of attack paths
+
     for path in Solution_Path:
         # tuple for base, exploitability, impact
         score = (0.0,0.0,0.0)
@@ -269,6 +273,10 @@ def origin_to_node_metrics(node_index):
             for i in len(score):
                 score[i] += edge.weights[i]
         
+        # adding score to cumulative sum
+        for i in len(score):
+            score_sum[i] += score[i]
+
         metrics_per_path.append({
                 'base_score' : round(score[0],3),
                 'exploitability_score' : round(score[1],3),
@@ -324,6 +332,12 @@ def origin_to_node_metrics(node_index):
     
     return jsonify({
         'metrics_per_path': metrics_per_path,
+        'number_attack_paths' : len(Solution_Path),
+        'averge_length_attack_paths' : [
+            round(score_sum[0] / len(Solution_Path),3), 
+            round(score_sum[1] / len(Solution_Path),3), 
+            round(score_sum[2] / len(Solution_Path),3)
+            ],
         'top_exploitable': {
             "1" : top_exploitable[0],
             "2" : top_exploitable[1],
