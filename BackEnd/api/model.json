@@ -4,67 +4,67 @@
             "id": "1",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR_DMZ" 
+            "layer" : "corp_dmz" 
         },
         { 
             "id": "2",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR_DMZ" 
+            "layer" : "corp_dmz" 
         },
         { 
             "id": "3",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR_DMZ" 
+            "layer" : "corp_dmz" 
         },
         { 
             "id": "4",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR_DMZ" 
+            "layer" : "corp_dmz" 
         },
         { 
             "id": "5",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR" 
+            "layer" : "corp_lan" 
         },
         { 
             "id": "6",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR" 
+            "layer" : "corp_lan" 
         },
         { 
             "id": "7",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR" 
+            "layer" : "corp_lan" 
         },
         { 
             "id": "8",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR" 
+            "layer" : "corp_lan" 
         },
         { 
             "id": "9",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR" 
+            "layer" : "corp_lan" 
         },
         { 
             "id": "10",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR" 
+            "layer" : "corp_lan" 
         },
         { 
             "id": "11",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "COPR" 
+            "layer" : "corp_lan" 
         }
     ],
     "arcs": [ 

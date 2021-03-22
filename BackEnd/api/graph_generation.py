@@ -109,7 +109,9 @@ def network_topology_model_driven_input():
     vulnerability_graph.sort(key=lambda node: node.index)
 
     # edges
-    
+    for edges in network['arcs']:
+        ModelDriven.Edge(vulnerability_graph[int(edges["currNode"])], vulnerability_graph[int(edges["nextNode"])])
+
 
     # start generating shorest paths
     shortest_paths_gen()

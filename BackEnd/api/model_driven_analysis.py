@@ -77,17 +77,27 @@ shortest_paths = []     # matrix where each entry as shortest path value and mul
 class ModelDriven:
     # Enum for node layers
     class Layers(Enum):
-        REMOTE_ATTACKER = auto()
-        CORPORATE_FIREWALL_FW1 = auto()
-        CORPORATE_DMZ = auto()
-        CORPORATE_FIREWALL_FW2 = auto()
-        CORPORATE = auto()
-        CONTROL_SYSTEM_FIREWALL_FW1 = auto()
-        CONTROL_SYSTEM_DMZ = auto()
-        CONTROL_SYSTEM_FIREWALL_FW2 = auto()
-        CONTROL_SYSTEM = auto()
-        PHYSICAL = auto()
+        REMOTE_ATTACK = auto()
+        CORP_FW1 = auto()
+        CORP_DMZ = auto()
+        CORP_FW2 = auto()
+        CORP_LAN = auto()
+        CS_FW1 = auto()
+        CS_DMZ = auto()
+        CS_FW2 = auto()
+        CS_LAN = auto()
 
+    switch = {
+        "remote_attack" : Layers.REMOTE_ATTACK,
+        "corp_fw_1" : Layers.CORP_FW1,
+        "corp_dmz" : Layers.CORP_DMZ,
+        "corp_fw_2" : Layers.CORP_FW2,
+        "corp_lan" : Layers.CORP_LAN,
+        "cs_fw_1" : Layers.CS_FW1,
+        "cs_dmz" : Layers.CS_DMZ,
+        "cs_fw_2" : Layers.CS_FW2,
+        "cs_lan" : Layers.CS_LAN
+    }
     # object for nodes
     class Node:
         def __init__(self, product, vendor, layer, index):
@@ -95,12 +105,14 @@ class ModelDriven:
             self.in_edges = []              # array of incoming edges
             self.product = product          # node discription
             self.vendor = vendor
-            self.layer = layer              # what layer does node belong too
             self.index = index
             self.weights = [1.0,1.0,1.0]    # base, exploitability, impact scores
 
             if product and vendor:
                 self.weights = model_driven_cvss_query(vendor, product)
+
+            # determining what layer
+            self.layer = ModelDriven.switch[layer]  # what layer does node belong too
 
     # object for weighted edges nodes will use
     class Edge:
@@ -109,6 +121,7 @@ class ModelDriven:
             self.source = node_source    # source node (where the edge starts)
 
             target.in_edges.append(self)    # adding incoming edge to target
+            source.out_edges.append(self)
 
 ## depth first traversal
 # Will find all paths from origin to GoalNode 
