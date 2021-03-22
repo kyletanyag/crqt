@@ -1,6 +1,6 @@
 <template>
    <body>
-      <h3 style="padding-left:10px"> asInput Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
+      <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
       <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
       <table width=100% border="0" cellspacing="0" >
@@ -29,26 +29,38 @@
                   </div>
                </td>
             </tr>
-            <table>
+            <table width="100%">
                <tbody>
-               <tr width="100%">
-               <td width="33%">
-               <div class="form-group form-check" v-if="selectedVendor != -1">
+               <tr width="100%" ><div v-if="selectedVendor != -1" align="center">
+               <td>
+               
                <!-- <option v-for="option in L1VendorInput[selectedVendor].options" :key="option" :value="option">{{option}}</option>                -->
                <!-- <label class="form-check-label" v-for="option in L1VendorInput[selectedVendor].options" :key="option" >{{option.options}}</label> -->
             <!-- <label class="form-check-label" v-for="item in L1VendorInput" :key="item" :value="item "  >{{item.options}}</label> -->
             <!-- <input type="checkbox" v-model="selectedOption"> -->
+      <!-- <li :key="index" v-for="(agenda, index) in content.data.agendas"/>
       <Multiselect class="multiselect" align="center"
-      v-model="L1Vendor.options"
+      v-model="L1Vendor"
       mode="multiple"
       placeholder="Select your Vulnerabilites"
-      :options="L1VendorInput[selectedVendor]"
-      label="L1VendorInput[selectedVendor].options"/></div>
+      :options="L1VendorInput[selectedVendor].options"
+      label="L1VendorInput[selectedVendor].options">
+      </li> -->
+      
+				<Multiselect v-for="option in L1VendorInput[selectedVendor].options" :key="option"
+            v class="multiselect" align="center"
+            v-model="L1Vendor"
+            mode="multiple"
+            placeholder="Select your Vulnerabilites"
+            :options="L1VendorInput[selectedVendor].options"
+            label="L1VendorInput[selectedVendor].options">
+            </multiselect>
+         
                   <!-- <select v-model="selectedOption" v-if="selectedVendor != -1"> -->
                      <!-- <input type="checkbox" v-model="selectedOption" v-if="selectedVendor != -1"> -->
                      <!-- <option v-for="item in L1VendorInput" :key="item" :value="item">{{ item.options }}</option> -->
                   <!-- </select> -->
-               </td>
+               </td></div>
                </tr>
                </tbody>
             </table>
@@ -60,9 +72,10 @@
          <input type="button" @click="addRow(index)" value="Add Server">
          <input type="button" @click="removeRow(index)" value="Remove Server">
       </form>
-      <table id="AddServer" width="100%" border="0" cellspacing="0">
+      <v-table id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
+        selectedClass="table-info">
          <tbody>
-            <tr v-for="(row, index) in rows" :key="index">
+            <v-tr v-for="(row, index) in rows" :key="index" :row="row">
                <td width="25%">
                   <div align="center">
                      <p align="center">Server Type</p>
@@ -94,9 +107,9 @@
                          <input type="text" v-model="numberServer" placeholder="Number of Server" />      
                   </div>
                </td>
-            </tr>
+            </v-tr>
          </tbody>
-      </table>
+      </v-table>
       <h4> Corporate Firewall L2 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall L2.</p>
       <table width=100% border="0" cellspacing="0" >
@@ -177,10 +190,181 @@
             </tr>
          </tbody>
       </table>
- 
+      <h4>Control Systems Firewall L1 Settings:</h4>
+      <table id="AddServer" width="100%" border="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <td width="25%">
+                  <div align="center">
+                     <p align="center">Control Systems Firewall L1 Settings</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Corporate Firewall L1 Product</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <h4> Control Systems DMZ Settings:</h4>
+      <table id="AddServer" width="100%" border="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <td width="25%">
+                  <div align="center">
+                     <p align="center">Control Systems DMZ Settings</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Corporate Firewall L1 Product</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <h4>Control System Firewall 2 Settings:</h4>
+      <table id="AddServer" width="100%" border="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <td width="25%">
+                  <div align="center">
+                     <p align="center">Corporate Firewall L1 Vendor</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Corporate Firewall L1 Product</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <h4>Control System LAN Settings:</h4>
+      <table id="AddServer" width="100%" border="0" cellspacing="0">
+         <tbody>
+            <tr>
+               <td width="25%">
+                  <div align="center">
+                     <p align="center">Corporate Firewall L1 Vendor</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Corporate Firewall L1 Product</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+               <td width="25%">
+                  <div align="center">
+                     <p>Number of Coporate Firewall 1</p>
+                     <select>
+                        <option value="">Option 1</option>
+                        <option value="">Option 2</option>
+                     </select>
+                  </div>
+               </td>
+            </tr>
+         </tbody>
+      </table>
    <input type="button" @click="Submit()" value="Submit">
    
-                    <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
+          <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
           <div v-if="preview" class="card mx-2" :style="GetCardSize()">
             <div class="card-header">JSON Object Preview</div>
             <div class="card-body" style="overflow-y: auto;">
@@ -206,6 +390,7 @@ export default {
 
     return {
       preview: false,
+      
       L1VendorInput:[
       {
         label:"Cisco",
@@ -357,7 +542,7 @@ export default {
    padding-bottom:10px;
    }
    .multiselect{
-   
+   padding-top: 10px;
   color: black;
   text-decoration: none;
   display: block;
