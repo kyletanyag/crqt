@@ -5,6 +5,7 @@
     <div id="cy"></div>
   </div>
   <div class="col">hello</div> -->
+  <!-- <div id="example"></div> -->
 </div> 
 </template>
 
@@ -13,6 +14,20 @@
 import NetworkGraph from '../components/NetworkGraph.vue';
 import http from '../http-common.js';
 import { ref } from 'vue';
+import Handsontable from "handsontable";
+import 'handsontable/dist/handsontable.full.css';
+
+function hotExample(data) {
+  const container = document.getElementById('example');
+  const hot = new Handsontable(container, {
+    data: data,
+    rowHeaders: true,
+    colHeaders: true,
+    filters: true,
+    dropdownMenu: true,
+  });  
+  document.getElementById('hot-display-license-info').innerHTML = "";
+};
 
 function cytoExample(a) {
   var cy = cytoscape({
@@ -94,7 +109,7 @@ export default {
   },
 
   data() {
-
+    
     const nodes = ref([]);
     const edges = ref([]);
 
@@ -128,12 +143,20 @@ export default {
       });
 
       
-      cytoExample(array);
+      // cytoExample(array);
+      // hotExample(r.data.nodes);
     });
 
     return {
       nodes,
       edges,
+      params: {
+        data: [
+          ['Cell-1', 'Cell-2', 'Cell-3'],
+          ['Cell-4', 'Cell-5', 'Cell-6'],
+          ['Cell-7', 'Cell-8', 'Cell-9']
+        ]
+      }
     };
   },
 

@@ -10,17 +10,17 @@
       <table v-if="network" class="table table-hover" id="network-table">
         <thead style="display: block;">
           <tr>
-            <th scope="col" style="width: 5%">ID</th>
-            <th scope="col" style="width: 30%">Description</th>
-            <th scope="col" style="width: 16.6%">Node Type</th>
-            <th scope="col" style="width: 16.6%">Base Score</th>
-            <th scope="col" style="width: 16.6%">Exploitability Score</th>
-            <th scope="col" style="width: 16.6%">Impact Score</th>
+            <th @click="sort('id')" scope="col" style="width: 5%">ID</th>
+            <th @click="sort('Description')" scope="col" style="width: 30%">Description</th>
+            <th @click="sort('node_type')" scope="col" style="width: 16.6%">Node Type</th>
+            <th @click="sort('base_score')" scope="col" style="width: 16.6%">Base Score</th>
+            <th @click="sort('exploitability_score')" scope="col" style="width: 16.6%">Exploitability Score</th>
+            <th @click="sort('impact_score')" scope="col" style="width: 16.6%">Impact Score</th>
             <th scope="col"></th>
           </tr>
         </thead> 
         <div :style="`overflow-y: auto; height: ${height}px;`">
-          <tbody v-for="node in network.nodes" :key="node.id" 
+          <tbody v-for="node in sortedNodes" :key="node.id" 
             @mouseover="highlight(node.id)"
             @mouseleave="unhighlight(node.id)">
             <tr>
@@ -55,7 +55,21 @@ export default {
         nodes: undefined,
         links: undefined,
       },
+      currentSort: 'id',
+      currentSortDir: 'asc',
     }
+  },
+
+  computed: {
+    sortedNodes() {
+      return this.network.nodes.slice(0).sort((a,b) => {
+        let modifier = 1;
+        if(this.currentSortDir === 'desc') modifier = -1;
+        if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+        if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+        return 0;
+      });
+    },
   },
 
   components: {
@@ -79,7 +93,14 @@ export default {
 
     unhighlight(id) {
       document.getElementById(`node_${id}`).setAttribute('r', '5');
-    }
+    },
+
+    sort(s) {
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+      }
+      this.currentSort = s;
+    },
   },
 
   mounted() {

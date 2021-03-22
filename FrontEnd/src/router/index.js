@@ -27,36 +27,6 @@ const routes = [
       component: () => import(/* webpackChunkName: "SimulationResults" */ '../views/SimulationResults.vue')
     },
     {
-        path: '/TidyTree',
-        name: 'TidyTree',
-        component: () => import(/* webpackChunkName: "about" */ '../views/TidyTree.vue')
-    },
-    {
-        path: '/Robustness',
-        name: 'Robustness',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Robustness.vue')
-    },
-    {
-        path: '/Resourcefullness',
-        name: 'Resourcefullness',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Resourcefullness.vue')
-    },
-    {
-        path: '/ResilienceMetrics',
-        name: 'ResilienceMetrics',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ResilienceMetrics.vue')
-    },
-    {
-        path: '/Redundancy',
-        name: 'Redundancy',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Redundancy.vue')
-    },
-    {
-        path: '/Rapidity',
-        name: 'Rapidity',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Rapidity.vue')
-    },
-    {
         path: '/network-topology/data-driven',
         name: 'Data Driven',
         component: () => import(/* webpackChunkName: "Data-Driven-Input" */ '../views/DataDriven.vue')
@@ -65,21 +35,6 @@ const routes = [
         path: '/network-topology/model-driven',
         name: 'Model Driven',
         component: () => import(/* webpackChunkName: "Model-Driven-Input" */ '../views/ModelDriven.vue')
-    },
-    {
-        path: '/ForceLayout',
-        name: 'ForceLayout',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
-    },
-    {
-        path: '/hello',
-        name: 'hello',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
-    },
-    {
-        path: '/ColorGraphView',
-        name: 'ColorGraphView',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ColorGraphView.vue')
     },
     {
         path: '/',
