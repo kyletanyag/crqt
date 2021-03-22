@@ -16,7 +16,7 @@ export default defineComponent({
 
   props: {
     data: Array,
-    numBins: String, //Vue was giving me an error in SimulationResults.vue, saying that it expected a number but I was passing a string.
+    numBins: Number,
     name: String,
     barColor: String
   },
@@ -31,19 +31,10 @@ export default defineComponent({
     for (var i = 0; i < this.numBins; i++){
       binSizes[i] = binnedData[i].length;
     }
-
-    // Generate bin labels
-    var labelArray = new Array(this.numBins);
-    labelArray[0] = "[0, " + (1/this.numBins).toFixed(2).toString() + ")";
-    for (var j = 1; j < this.numBins; j++){
-      labelArray[j] = "[" + ((1/this.numBins)*j).toFixed(2).toString() + ", " + ((1/this.numBins) * (j+1)).toFixed(2).toString() + ")"; // Again, we've hard-coded the domain max as 1
-    }
-    console.log(labelArray);
-
     console.log(binSizes);
     this.renderChart({
       //labels: new Array(this.data.length),
-      labels: labelArray,
+      labels: ["0.1","0.2","0.3","0.4","0.5","0.6","0.7","0.8","0.9","1.0"],
       datasets: [
         {
           label: this.name,
