@@ -23,7 +23,7 @@ def network_topology_data_driven_input():
         node_id = int(node["id"])
         lag[node_id] = DataDriven.Node()
 
-        lag[node_id].discription = node["description"]
+        lag[node_id].description = node["description"]
 
         # setting logic
         if node["logic"] == "FLOW":
@@ -67,10 +67,10 @@ def network_topology_data_driven_input():
     for key in lag:
         if lag[key].node_type == DataDriven.Node_Type.PRIMITIVE_FACT:
             # searching for CVE ID
-            cve_index = lag[key].discription.find('CVE')
+            cve_index = lag[key].description.find('CVE')
             if cve_index != -1:
-                end_position = lag[key].discription.find('\'', cve_index)
-                cve_id = lag[key].discription[cve_index:end_position]
+                end_position = lag[key].description.find('\'', cve_index)
+                cve_id = lag[key].description[cve_index:end_position]
 
                 # getting CVSS scores
                 lag[key].derived_score = data_driven_cvss_query(cve_id)
@@ -88,4 +88,5 @@ def network_topology_data_driven_input():
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
 def network_topology_model_driven_input():
+    
     return {'message': 'Hello!'}
