@@ -91,7 +91,7 @@ def DerivedScore(lag_dict, leaf_queue):
                
     # return LAG
 
-@data_analysis_bp.route('/getDerivedScores', methods=['GET'])
+@data_analysis_bp.route('/data_driven/getDerivedScores', methods=['GET'])
 def getDerivedScores():
     global LAG
 
@@ -116,7 +116,7 @@ def getDerivedScores():
     
     return jsonify({'nodes': vertices, 'edges' : edges})
 
-@data_analysis_bp.route('/test-derived-scores', methods=['GET'])
+@data_analysis_bp.route('/data_driven/test-derived-scores', methods=['GET'])
 def test_Derived_Scores():
     nodes = [{
             'id': 1,
@@ -144,7 +144,7 @@ def test_Derived_Scores():
 
     return jsonify({'nodes': nodes, 'edges': links}), 200
 #################### DATA-DRIVEN LAG Metrics ########################
-@data_analysis_bp.route('/percentage_execCode_nodes', methods=['GET'])
+@data_analysis_bp.route('/data_driven/percentage_execCode_nodes', methods=['GET'])
 def percentage_execCode_nodes():
     global LAG
     sum = 0
@@ -155,8 +155,43 @@ def percentage_execCode_nodes():
     print(sum)
     return jsonify({'percentage_execCode_nodes': result})
 
+# returns the execCode nodes with their probabilities
+@data_analysis_bp.route('/data_driven/execCode_node_probabilities', methods=['GET'])
+def execCode_node_probabilities():
+    global LAG
 
-@data_analysis_bp.route('/percentage_rule_nodes', methods=['GET'])
+    vertices = []
+    for key in LAG: 
+        if LAG[key].isExecCode:
+            vertices.append({
+                'id' : key,
+                'discription' : LAG[key].discription,
+                'node_type' : 'Derived Fact', 
+                'base_score' : round(LAG[key].derived_score[0],3),
+                'exploitability_score' : round(LAG[key].derived_score[1],3),
+                'impact_score' : round(LAG[key].derived_score[2],3)})
+    
+    return jsonify({'nodes': vertices})
+
+# returns the derived nodes with their probabilities
+@data_analysis_bp.route('/data_driven/derived_node_probabilities', methods=['GET'])
+def derived_node_probabilities():
+    global LAG
+
+    vertices = []
+    for key in LAG: 
+        if LAG[key].node_type == DataDriven.Node_Type.DERIVED:
+            vertices.append({
+                'id' : key,
+                'discription' : LAG[key].discription,
+                'node_type' : 'Derived Fact', 
+                'base_score' : round(LAG[key].derived_score[0],3),
+                'exploitability_score' : round(LAG[key].derived_score[1],3),
+                'impact_score' : round(LAG[key].derived_score[2],3)})
+    
+    return jsonify({'nodes': vertices})
+
+@data_analysis_bp.route('/data_driven/percentage_rule_nodes', methods=['GET'])
 def percentage_rule_nodes():
     global LAG
     rules = 0
@@ -166,7 +201,7 @@ def percentage_rule_nodes():
     result=round((float(rules) / float(len(LAG)) * 100.0),3)
     return jsonify({'percentage_rule_nodes': result})
 
-@data_analysis_bp.route('/percentage_derived_nodes', methods=['GET'])
+@data_analysis_bp.route('/data_driven/percentage_derived_nodes', methods=['GET'])
 def percentage_derived_nodes():
     global LAG
     numDerived = 0
@@ -176,7 +211,7 @@ def percentage_derived_nodes():
     result=round((float(numDerived) / float(len(LAG)) * 100.0),3)
     return jsonify({'percentage_derived_nodes': result})
 
-@data_analysis_bp.route('/network_entropy', methods=['GET'])
+@data_analysis_bp.route('/data_driven/network_entropy', methods=['GET'])
 def network_entropy():
     global LAG
     net_entropy = [0.0,0.0,0.0]
