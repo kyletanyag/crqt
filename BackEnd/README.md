@@ -91,6 +91,8 @@ In new windows CMD start flask web server:
 In ubuntu terminal, test web server:
 ```
 $ curl http://127.0.0.1:5000/api/browse/zyxel
+$ curl http://127.0.0.1:5000/api/cve/CVE-2010-3333
+$ curl http://127.0.0.1:5000/api/search/zyxel/p-660hw
 ```
 
 ## To run server:
