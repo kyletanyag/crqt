@@ -77,7 +77,7 @@ function generateNetworkDiagram(data) {
             .style('background-color', 'rgba(211, 211, 211, 0.8)')
           tooltip.html(`<div style="width: 300px">\
 ID: ${d.id} <br>\
-Description: ${d.discription} <br>\
+Description: ${d.description} <br>\
 Type: ${d.node_type} <br>\
 Base Score: ${d.base_score} <br>\
 Exploitability Score: ${d.exploitability_score} <br>\

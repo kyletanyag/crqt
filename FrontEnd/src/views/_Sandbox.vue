@@ -39,7 +39,7 @@ function cytoExample(a) {
   style: cytoscape.stylesheet()
     .selector('node')
       .style({
-        'content': function(ele) {return `${ele.data('id')}: ${ele.data('discription')}`},
+        'content': function(ele) {return `${ele.data('id')}: ${ele.data('description')}`},
         // 'background-color': function(ele) {return getColor(ele.data('node_type'))}
       })
     .selector('edge')

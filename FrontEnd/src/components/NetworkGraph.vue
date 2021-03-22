@@ -10,12 +10,12 @@
       <table v-if="network" class="table table-hover" id="network-table">
         <thead style="display: block;">
           <tr>
-            <th @click="sort('id')" scope="col" style="width: 5%">ID</th>
-            <th @click="sort('Description')" scope="col" style="width: 30%">Description</th>
-            <th @click="sort('node_type')" scope="col" style="width: 16.6%">Node Type</th>
-            <th @click="sort('base_score')" scope="col" style="width: 16.6%">Base Score</th>
-            <th @click="sort('exploitability_score')" scope="col" style="width: 16.6%">Exploitability Score</th>
-            <th @click="sort('impact_score')" scope="col" style="width: 16.6%">Impact Score</th>
+            <th @click="sort('id')" scope="col" style="width: 7.5%">ID<i :class="sortDirection('id')"></i></th>
+            <th @click="sort('description')" scope="col" style="width: 30%">Description<i :class="sortDirection('description')"></i></th>
+            <th @click="sort('node_type')" scope="col" style="width: 16.6%">Node Type<i :class="sortDirection('node_type')"></i></th>
+            <th @click="sort('base_score')" scope="col" style="width: 16.6%">Base Score<i :class="sortDirection('base_score')"></i></th>
+            <th @click="sort('exploitability_score')" scope="col" style="width: 16.6%">Exploitability Score<i :class="sortDirection('exploitability_score')"></i></th>
+            <th @click="sort('impact_score')" scope="col" style="width: 16.6%">Impact Score<i :class="sortDirection('impact_score')"></i></th>
             <th scope="col"></th>
           </tr>
         </thead> 
@@ -25,7 +25,7 @@
             @mouseleave="unhighlight(node.id)">
             <tr>
               <td style="width: 5%; word-wrap: anywhere;">{{ node.id }}</td>
-              <td style="width: 30%; word-wrap: anywhere;">{{ node.discription }}</td>
+              <td style="width: 30%; word-wrap: anywhere;">{{ node.description }}</td>
               <td style="width: 16.6%; word-wrap: anywhere;">{{ node.node_type}}</td>
               <td style="width: 16.6%; word-wrap: anywhere;">{{ node.base_score }}</td>
               <td style="width: 16.6%; word-wrap: anywhere;">{{ node.exploitability_score }}</td>
@@ -42,7 +42,6 @@
 
 
 <script>
-
 import http from '../http-common.js';
 import { generateNetworkDiagram } from '../utilities/network-graph.js';
 
@@ -62,6 +61,7 @@ export default {
 
   computed: {
     sortedNodes() {
+      if (!this.network.nodes) return 0;
       return this.network.nodes.slice(0).sort((a,b) => {
         let modifier = 1;
         if(this.currentSortDir === 'desc') modifier = -1;
@@ -97,10 +97,19 @@ export default {
 
     sort(s) {
       if (s === this.currentSort) {
-        this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+        this.currentSortDir = this.currentSortDir ==='asc' ? 'desc':'asc';
       }
       this.currentSort = s;
     },
+
+    sortDirection(s) {
+      if (this.currentSortDir === 'asc' && s === this.currentSort)
+        return 'fa fa-fw fa-sort-asc';
+      else if (this.currentSortDir === 'desc' && s === this.currentSort)
+        return 'fa fa-fw fa-sort-desc';
+      else
+        return 'fa fa-fw fa-sort';
+    }
   },
 
   mounted() {
