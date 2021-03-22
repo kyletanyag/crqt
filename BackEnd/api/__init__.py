@@ -36,4 +36,3 @@ def create_app():
     app.register_blueprint(analysis_bp)
 
     return app
-

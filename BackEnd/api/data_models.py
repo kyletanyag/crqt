@@ -33,4 +33,4 @@ class NVD(db.Model):
     base_score = db.Column(db.Float)
     exploitabiliy_score_v2 = db.Column(db.Float)
     impact_score_v2 = db.Column(db.Float)
-    discription = db.Column(db.String(4000))
+    description = db.Column(db.String(4000))

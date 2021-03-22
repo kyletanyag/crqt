@@ -1,127 +1,125 @@
 <template>
 <div>
-  <h3>Network Graph</h3>
   <div class="row">
-    <div class="col">
-      <svg id="network" width="960" height="600"></svg>
+    <div class="col-5" id="networkContainer">
+      <h3>Network Graph</h3>
+      <svg id="network" :width="width" :height="height"></svg>
     </div>
-    <div class="col">
-      <ul v-if="network">
-        <li v-for="i in network.nodes" :key="i.id">
-          {{ i }}
-        </li>
-      </ul>
+    <div class="col-7">
+      <h3>Network Data</h3>
+      <table v-if="network" class="table table-hover" id="network-table">
+        <thead style="display: block;">
+          <tr>
+            <th @click="sort('id')" scope="col" style="width: 7.5%">ID<i :class="sortDirection('id')"></i></th>
+            <th @click="sort('description')" scope="col" style="width: 30%">Description<i :class="sortDirection('description')"></i></th>
+            <th @click="sort('node_type')" scope="col" style="width: 16.6%">Node Type<i :class="sortDirection('node_type')"></i></th>
+            <th @click="sort('base_score')" scope="col" style="width: 16.6%">Base Score<i :class="sortDirection('base_score')"></i></th>
+            <th @click="sort('exploitability_score')" scope="col" style="width: 16.6%">Exploitability Score<i :class="sortDirection('exploitability_score')"></i></th>
+            <th @click="sort('impact_score')" scope="col" style="width: 16.6%">Impact Score<i :class="sortDirection('impact_score')"></i></th>
+            <th scope="col"></th>
+          </tr>
+        </thead> 
+        <div :style="`overflow-y: auto; height: ${height}px;`">
+          <tbody v-for="node in sortedNodes" :key="node.id" 
+            @mouseover="highlight(node.id)"
+            @mouseleave="unhighlight(node.id)">
+            <tr>
+              <td style="width: 5%; word-wrap: anywhere;">{{ node.id }}</td>
+              <td style="width: 30%; word-wrap: anywhere;">{{ node.description }}</td>
+              <td style="width: 16.6%; word-wrap: anywhere;">{{ node.node_type}}</td>
+              <td style="width: 16.6%; word-wrap: anywhere;">{{ node.base_score }}</td>
+              <td style="width: 16.6%; word-wrap: anywhere;">{{ node.exploitability_score }}</td>
+              <td style="width: 16.6%; word-wrap: anywhere;">{{ node.impact_score }}</td>
+            </tr> 
+          </tbody>
+        </div>
+
+      </table>
     </div>
-  </div>
+  </div> 
 </div>
 </template>
 
 
 <script>
-/* eslint-disable */
-// import * as d3 from 'd3';
-
-function dothis(data) {
-var svg = d3.select("#network"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
-
-var color = d3.scaleOrdinal(d3.schemeCategory20);
-render(null, data);
-
-
-function render (error, graph) {
-
-var simulation = d3.forceSimulation()
-    .force("link", d3.forceLink().id(function(d) { return d.id; }))
-    .force("charge", d3.forceManyBody())
-    .force("center", d3.forceCenter(width / 2, height / 2));
-
-
-  if (error) throw error;
-
-    console.log(graph);
-  var link = svg.append("g")
-      .attr("class", "links")
-      .attr("stroke", "#999")
-    .selectAll("line")
-    .data(graph.edges)
-    .enter().append("line")
-      .attr("stroke-width", function(d) { return Math.sqrt(d.value); })
-      .attr('color', 'black');
-
-  var node = svg.append("g")
-      .attr("class", "nodes")
-    .selectAll("circle")
-    .data(graph.nodes)
-    .enter().append("circle")
-      .attr("r", 5)
-      .attr("fill", function(d) { return color(d.group); })
-      .call(d3.drag()
-          .on("start", dragstarted)
-          .on("drag", dragged)
-          .on("end", dragended));
-
-  node.append("title")
-      .text(function(d) { return d.id; });
-
-  simulation
-      .nodes(graph.nodes)
-      .on("tick", () => {
-        link
-            .attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
-
-        node
-            .attr("cx", function(d) { return d.x; })
-            .attr("cy", function(d) { return d.y; });
-      });
-
-  simulation.force("link")
-      .links(graph.edges);
-
-function dragstarted(d) {
-  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-  d.fx = d.x;
-  d.fy = d.y;
-}
-
-function dragged(d) {
-  d.fx = d3.event.x;
-  d.fy = d3.event.y;
-}
-
-function dragended(d) {
-  if (!d3.event.active) simulation.alphaTarget(0);
-  d.fx = null;
-  d.fy = null;
-}
-
-};
-
-
-}
-
 import http from '../http-common.js';
+import { generateNetworkDiagram } from '../utilities/network-graph.js';
+
 export default {
   name: 'Network Graph',
 
   data() {
     return {
-      network: undefined
+      network: {
+        nodes: undefined,
+        links: undefined,
+      },
+      currentSort: 'id',
+      currentSortDir: 'asc',
     }
   },
 
+  computed: {
+    sortedNodes() {
+      if (!this.network.nodes) return 0;
+      return this.network.nodes.slice(0).sort((a,b) => {
+        let modifier = 1;
+        if(this.currentSortDir === 'desc') modifier = -1;
+        if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+        if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+        return 0;
+      });
+    },
+  },
+
+  components: {
+  },
+
+  props: {
+    width: {
+      type: Number,
+      default: 600,
+    },
+    height: {
+      type: Number,
+      default: 600,
+    },
+  },
+
   methods: {
+    highlight(id) {
+      document.getElementById(`node_${id}`).setAttribute('r', '20');
+    },
+
+    unhighlight(id) {
+      document.getElementById(`node_${id}`).setAttribute('r', '5');
+    },
+
+    sort(s) {
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir ==='asc' ? 'desc':'asc';
+      }
+      this.currentSort = s;
+    },
+
+    sortDirection(s) {
+      if (this.currentSortDir === 'asc' && s === this.currentSort)
+        return 'fa fa-fw fa-sort-asc';
+      else if (this.currentSortDir === 'desc' && s === this.currentSort)
+        return 'fa fa-fw fa-sort-desc';
+      else
+        return 'fa fa-fw fa-sort';
+    }
   },
 
   mounted() {
-    http.get('test-derived-scores').then((r) => {
-      this.network = { links: r.data.jumbo, nodes: r.data.nodes };
-      dothis(r.data);
-    });
+    http.get('get-derived-scores').then((r) => {
+      this.network = { links: r.data.edges, nodes: r.data.nodes };
+      generateNetworkDiagram(r.data);
+    })
   }
 }
 </script>
+
+<style>
+</style>

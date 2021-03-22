@@ -1,119 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home'
 
+// Do we need these?
 import Callback from '@/views/Callback'
 import ErrorPage from '@/views/Error'
+import SecureComponent from "@/views/Secure.vue"
 
-import LoginComponent from "../views/Login.vue"
-import Login from "../views/Login.vue"
-import SecureComponent from "../views/Secure.vue"
-
+// Testing page for Kyle
 import Sandbox from "../views/_Sandbox.vue";
 
-//import { routeGuard } from '@/auth'
-
 const routes = [
-
-  {
+    {
       path: '/ContactUs',
       name: 'ContactUs',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
       component: () => import(/* webpackChunkName: "ContactUs" */ '../views/ContactUs.vue')
-   },
-  {
+    },
+    {
       path: '/SimulationResults',
       name: 'SimulationResults',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "SimulationResults" */ '../views/SimulationResults.vue')
+      component: () => import(/* webpackChunkName: "SimulationResults" */ '../views/SimulationResults/SimulationResults.vue')
     },
     {
-        path: '/TidyTree',
-        name: 'TidyTree',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/TidyTree.vue')
+        path: '/network-topology/data-driven',
+        name: 'Data Driven',
+        component: () => import(/* webpackChunkName: "Data-Driven-Input" */ '../views/NetworkTopology/DataDriven.vue')
     },
     {
-        path: '/Robustness',
-        name: 'Robustness',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/Robustness.vue')
-    },
-    {
-        path: '/Resourcefullness',
-        name: 'Resourcefullness',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/Resourcefullness.vue')
-    },
-    {
-        path: '/ResilienceMetrics',
-        name: 'ResilienceMetrics',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/ResilienceMetrics.vue')
-    },
-    {
-        path: '/Redundancy',
-        name: 'Redundancy',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/Redundancy.vue')
-    },
-    {
-        path: '/Rapidity',
-        name: 'Rapidity',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/Rapidity.vue')
-    },
-    {
-        path: '/NetworkTopology',
-        name: 'NetworkTopology',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "NetworkTopology" */ '../views/NetworkTopology.vue')
-    },
-    {
-        path: '/ForceLayout',
-        name: 'ForceLayout',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
-    },
-    {
-        path: '/hello',
-        name: 'hello',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
-    },
-    {
-        path: '/ColorGraphView',
-        name: 'ColorGraphView',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () => import(/* webpackChunkName: "about" */ '../views/ColorGraphView.vue')
+        path: '/network-topology/model-driven',
+        name: 'Model Driven',
+        component: () => import(/* webpackChunkName: "Model-Driven-Input" */ '../views/NetworkTopology/ModelDriven.vue')
     },
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: () => import(/* webpackChunkName: "Home" */ '@/views/Home.vue'),
     },
     {
         path: '/callback',
@@ -133,7 +52,18 @@ const routes = [
     {
         path: '/login',
         name: "Login",
-        component: Login, LoginComponent
+        component: () => import(/* webpackChunkName: "Login" */ '@/views/Login/Login.vue'),
+    },
+    {
+        path: '/login/qr/:id',
+        name: 'QR Login',
+        component: () => import(/* webpackChunkName: "QR Login" */ '@/views/Login/QRLogin.vue'),
+        props: true,
+    },
+    {
+        path: '/register',
+        name: "Register",
+        component: () => import(/* webpackChunkName: "Registration" */ '@/views/Login/Register.vue'),
     },
     {
         path: '/sandbox',
@@ -141,15 +71,15 @@ const routes = [
         component: Sandbox
     },
     {
-        path: '/2fa/:email',
-        name: '2FA',
-        component: () => import(/* webpackChunkName: "2FA" */ '../views/QRCode.vue'),
+        path: '/qr/:id',
+        name: 'QR Setup',
+        component: () => import(/* webpackChunkName: "QR Setup" */ '@/views/Login/QRCode.vue'),
         props: true
     },
     {
         path: '/admin',
         name: 'Admin',
-        component: () => import(/* webpackChunkName: "Admin" */ '../views/Admin.vue'),
+        component: () => import(/* webpackChunkName: "Admin" */ '@/views/Admin/Admin.vue'),
         props: true
     }
 ]
