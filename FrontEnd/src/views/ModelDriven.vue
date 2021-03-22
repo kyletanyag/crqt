@@ -9,14 +9,14 @@
                <td width="33%">
                   <div align="center">
                      <p align="center">Corporate Firewall L1 Vendor</p>
-                     <select v-model="L1Vendor">
-                        <option v-for="item in L1VendorInput" :key="item" :value="item">{{item}}</option>
+                     <select v-model="selectedVendor" @change="selectVendor">
+                        <option v-for="(L1Vend,item) in L1VendorInput" :key="item" :value="item">{{L1Vend.label}}</option>
                      </select>
                   </div>
                </td>
                <td align="center" width="33%">
                   <div align="center">
-                     <p>Corporate Firewall L1 Product</p>
+                     <p>Coorporate Firewall L1 Product</p>
                      <select v-model="L1Product">
                         <option v-for="item in L1ProductInput" :key="item" :value="item">{{item}}</option>               
                      </select>
@@ -29,7 +29,29 @@
                   </div>
                </td>
             </tr>
-                  <!-- {{ input }} -->
+            <table>
+               <tbody>
+               <tr width="100%">
+               <td width="33%">
+               <div class="form-group form-check" v-if="selectedVendor != -1">
+               <!-- <option v-for="option in L1VendorInput[selectedVendor].options" :key="option" :value="option">{{option}}</option>                -->
+               <!-- <label class="form-check-label" v-for="option in L1VendorInput[selectedVendor].options" :key="option" >{{option.options}}</label> -->
+            <!-- <label class="form-check-label" v-for="item in L1VendorInput" :key="item" :value="item "  >{{item.options}}</label> -->
+            <!-- <input type="checkbox" v-model="selectedOption"> -->
+      <Multiselect class="multiselect" align="center"
+      v-model="L1Vendor.options"
+      mode="multiple"
+      placeholder="Select your Vulnerabilites"
+      :options="L1VendorInput[selectedVendor]"
+      label="L1VendorInput[selectedVendor].options"/></div>
+                  <!-- <select v-model="selectedOption" v-if="selectedVendor != -1"> -->
+                     <!-- <input type="checkbox" v-model="selectedOption" v-if="selectedVendor != -1"> -->
+                     <!-- <option v-for="item in L1VendorInput" :key="item" :value="item">{{ item.options }}</option> -->
+                  <!-- </select> -->
+               </td>
+               </tr>
+               </tbody>
+            </table>
          </tbody>
       </table>
       <h4> Corporate DMZ Settings:</h4>
@@ -174,17 +196,32 @@
 /* eslint-disable */ 
 //  JSON OBJECT layer, nodes, edges
 import http from "../http-common";
+import Multiselect from '@vueform/multiselect'
 // import { ref } from 'vue';
 export default {
+   components: { Multiselect },
   data() {
    //   const coporateFirewall = ref([]);
    //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });
 
     return {
       preview: false,
-      L1VendorInput:['Cisco',
-         'Juniper',
-         'Microsoft',],
+      L1VendorInput:[
+      {
+        label:"Cisco",
+        options:["Cisco1","Cisco2","Cisco3"]
+      },
+      {
+        label:"Juniper",
+        options:["Juniper1","Juniper2","Juniper"]
+      },
+      {
+        label:"Microsoft",
+        options:["Microsoft1","Microsoft2","Microsoft3"]
+      }
+    ],
+     selectedVendor:-1, 
+     selectedOption:[],
       L1Vendor:[],
       NumberFireWall: 0,
       L1ProductInput: [
@@ -208,7 +245,7 @@ export default {
          "Emerson",
          "SchneiderElectric",], 
       serverVendor:[],                                    
-      progress: 1,
+      progress: 0,
       output: "",
       emailServerInput: [
          "Gmail",
@@ -231,7 +268,9 @@ export default {
          'Juniper',
          'Microsoft',
       ],
-      numberServer: 0,
+      
+            progress: 0,
+            numberServer: 0,
     };
   },  
 //   watch: {
@@ -279,17 +318,27 @@ export default {
             return false;  // kbt false
          }
     },  
+    
     GetCardSize() {
             return {
                 'width' :100,
                 'height' : 100
             };
         },
+   ValidateServerProduct(){
+   if (this.serverProduct!=""){
+      return false;  // kbt false
+   }
+    },  
+    selectVendor: function(){
+       this.selectedOption='';
+    },
   }
 };
 
        
 </script>
+
 <style>
    table, th, td {
    border: 1px solid rgb(5, 5, 5);
@@ -307,4 +356,23 @@ export default {
    padding-left: 10px;
    padding-bottom:10px;
    }
+   .multiselect{
+   
+  color: black;
+  text-decoration: none;
+  display: block;
+  text-align: center;
+  widows: 50%;
+  border-color:  black;
+  }
+  .multiselect:after {
+  position: absolute;
+  content: "";
+  top: 10px;
+  right: 5px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: rgb(3, 2, 2) transparent transparent transparent;
+}
 </style>
