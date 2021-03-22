@@ -1,6 +1,6 @@
 <template>
-   <body>
-      <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
+   <div>
+      <h3 style="padding-left:10px"> xaInput Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
       <h4 style="padding-left:10px"> If you would like to upload a CSV file, click the button below.</h4>
          <!-- HOLDEN REMOVED THIS BECAUSE HE MADE A NEW LINK. KEEPING THIS IN CASE YOU WANT TO REUSE THE FORMATTING.
          <form class="form-inline my-2 my-lg-0" action="/Sandbox" style="padding-left:10px">
@@ -40,7 +40,7 @@
                <tbody>
                <tr>
                   <select v-model="selectedOption" v-if="selectedVendor != -1">
-                     <option v-for="item in L1VendorInput" :key="item" :value="item">{{ item.options }}</option>
+                     <option v-for="item in L1VendorInput[0].options" :key="item" :value="item">{{ item }}</option>
                   </select>
                </tr>
                </tbody>
@@ -173,16 +173,16 @@
  
    <input type="button" @click="Submit()" value="Submit">
   
-   </body>
+   </div>
 </template>
 
 <script>
-import DataDrivenInput from '../components/DataDrivenInput.vue';
 /* eslint-disable */ 
 import http from "../http-common";
 // import { ref } from 'vue';
 export default {
-  components: { DataDrivenInput },
+
+  name: 'Network Topology',
 
   data() {
    //   const coporateFirewall = ref([]);
@@ -274,34 +274,37 @@ export default {
             };
         },
     },
-    methods:{
+    methods: {
       Submit() {
                this.Upload(this.input, (event) => {                  
                this.progress = Math.round(100 * event.loaded / event.total);
          })
-         
       },
+
       Upload(data, onUploadProgress) {
             return http.post("/upload", data , { onUploadProgress });
       }, 
-      addRow: function(_index){
-         this.rows.splice(_index+1,0, this.rows[_index]);
-    },
-    removeRow: function(_index){
-      console.log("index" + _index);
-      if(_index>1){
-         this.rows.splice(_index-1, 1);
-      }
-    },
+
+      addRow: function(_index) {
+          this.rows.splice(_index+1,0, this.rows[_index]);
+      },
+      removeRow: function(_index) {
+          console.log("index" + _index);
+          if(_index>1){
+            this.rows.splice(_index-1, 1);
+          }
+      },
+
       ValidateServerProduct(){
          if (this.serverProduct!=""){
             return false;  // kbt false
          }
     },  
-    selectVendor: function(){
+
+    selectVendor: function() {
        this.selectedOption='';
     }
-  }
+  },
 };
 </script>
 <style>

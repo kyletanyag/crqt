@@ -1,7 +1,10 @@
 <template>
 <div>
   <network-graph></network-graph>
-  <!-- <div id="cy"></div> -->
+  <!-- <div class="col" style="height: 500px;">
+    <div id="cy"></div>
+  </div>
+  <div class="col">hello</div> -->
 </div> 
 </template>
 
@@ -144,7 +147,7 @@ export default {
   height: 100%;
   width: 100%;
   position: absolute;
-  left: 0;
+  /* left: 0; */
   /* top: 0; */
   text-align: start;
 }
