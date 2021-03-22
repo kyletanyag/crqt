@@ -29,7 +29,6 @@
                   </div>
                </td>
             </tr>
-<<<<<<< HEAD
             <table width="100%">
                <tbody>
                <tr width="100%" ><div v-if="selectedVendor != -1" align="center">
@@ -62,20 +61,9 @@
                      <!-- <option v-for="item in L1VendorInput" :key="item" :value="item">{{ item.options }}</option> -->
                   <!-- </select> -->
                </td></div>
-=======
-               <tr width="100%">
-               <td>
-               <div v-if="selectedVendor != -1">
-                  <Multiselect 
-                     v-model="L1Vendor.options"
-                     mode="multiple"
-                     placeholder="Select your Vulnerabilites"
-                     :options="L1VendorInput[selectedVendor].options"
-                     />
-               </div>
-               </td>
->>>>>>> 1151b3fa270f5d0cd153652d80c5dc9ae21fa2cd
                </tr>
+               </tbody>
+            </table>
          </tbody>
       </table>
       <h4> Corporate DMZ Settings:</h4>
@@ -509,6 +497,7 @@ export default {
     removeRow: function(_index){
       //console.log(row);d
       this.rows.splice(_index-1, 1);
+      
     },
       ValidateServerProduct(){
          if (this.serverProduct!=""){
@@ -553,13 +542,8 @@ export default {
    padding-left: 10px;
    padding-bottom:10px;
    }
-<<<<<<< HEAD
    .multiselect{
    padding-top: 10px;
-=======
-   /* .multiselect{
-   
->>>>>>> 1151b3fa270f5d0cd153652d80c5dc9ae21fa2cd
   color: black;
   text-decoration: none;
   display: block;
@@ -576,6 +560,5 @@ export default {
   height: 0;
   border: 6px solid transparent;
   border-color: rgb(3, 2, 2) transparent transparent transparent;
-} */
+}
 </style>
-<style src="@vueform/multiselect/themes/default.css"></style>
