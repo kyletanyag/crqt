@@ -38,9 +38,7 @@ export default defineComponent({
     for (var j = 1; j < this.numBins; j++){
       labelArray[j] = "[" + ((1/this.numBins)*j).toFixed(2).toString() + ", " + ((1/this.numBins) * (j+1)).toFixed(2).toString() + ")"; // Again, we've hard-coded the domain max as 1
     }
-    console.log(labelArray);
 
-    console.log(binSizes);
     this.renderChart({
       //labels: new Array(this.data.length),
       labels: labelArray,
