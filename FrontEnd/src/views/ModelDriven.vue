@@ -29,29 +29,18 @@
                   </div>
                </td>
             </tr>
-            <table>
-               <tbody>
                <tr width="100%">
-               <td width="33%">
-               <div class="form-group form-check" v-if="selectedVendor != -1">
-               <!-- <option v-for="option in L1VendorInput[selectedVendor].options" :key="option" :value="option">{{option}}</option>                -->
-               <!-- <label class="form-check-label" v-for="option in L1VendorInput[selectedVendor].options" :key="option" >{{option.options}}</label> -->
-            <!-- <label class="form-check-label" v-for="item in L1VendorInput" :key="item" :value="item "  >{{item.options}}</label> -->
-            <!-- <input type="checkbox" v-model="selectedOption"> -->
-      <Multiselect class="multiselect" align="center"
-      v-model="L1Vendor.options"
-      mode="multiple"
-      placeholder="Select your Vulnerabilites"
-      :options="L1VendorInput[selectedVendor]"
-      label="L1VendorInput[selectedVendor].options"/></div>
-                  <!-- <select v-model="selectedOption" v-if="selectedVendor != -1"> -->
-                     <!-- <input type="checkbox" v-model="selectedOption" v-if="selectedVendor != -1"> -->
-                     <!-- <option v-for="item in L1VendorInput" :key="item" :value="item">{{ item.options }}</option> -->
-                  <!-- </select> -->
+               <td>
+               <div v-if="selectedVendor != -1">
+                  <Multiselect 
+                     v-model="L1Vendor.options"
+                     mode="multiple"
+                     placeholder="Select your Vulnerabilites"
+                     :options="L1VendorInput[selectedVendor].options"
+                     />
+               </div>
                </td>
                </tr>
-               </tbody>
-            </table>
          </tbody>
       </table>
       <h4> Corporate DMZ Settings:</h4>
@@ -356,7 +345,7 @@ export default {
    padding-left: 10px;
    padding-bottom:10px;
    }
-   .multiselect{
+   /* .multiselect{
    
   color: black;
   text-decoration: none;
@@ -374,5 +363,6 @@ export default {
   height: 0;
   border: 6px solid transparent;
   border-color: rgb(3, 2, 2) transparent transparent transparent;
-}
+} */
 </style>
+<style src="@vueform/multiselect/themes/default.css"></style>
