@@ -6,201 +6,78 @@ from . import db
 import math
 import scipy.linalg as la
 import numpy as np
+import http.client as hc
 
-# route for LAG generation module
-analysis_bp = Blueprint('analysis_bp', __name__)
-
-# namespace for data-driven objects
-class DataDriven:
-    # Enum for node relationships
-    class Node_Logic(Enum):
-        AND = 0
-        OR = 1
-        FLOW = 2
-        LEAF = 3
-
-    # Enum for Node Types
-    class Node_Type(Enum):
-        PRIMITIVE_FACT = 0
-        DERIVATION = 1
-        DERIVED = 2
-
-    # graph data structure (adjenency list) for DataDriven
-    class Node:
-        def __init__(self):
-            self.derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
-            self.discription = str()             # node discription
-            self.node_type = None                # type of node  
-            self.node_logic = None               # node relationship 
-            self.next_node = []                  # next nodes
-            self.calculations_remaining = 0      # number of nodes needed to calculate derived score
-            self.isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
-
-        def printFunc(self):
-            print(self.derived_score, self.discription, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
+# route for model driven analysis component
+model_analysis_bp = Blueprint('model_analysis_bp', __name__)
 
 
-'''
-Probability Formulas:
-For any n events e1, e2, ..., en:
-	1. P(e1, e2, ..., en)=product(P(ei),1,n)				    // product (expression, lower, upper)
-	2. P(e1 U e2 U ... U en) = 1 - product(P(NOT(ei)),1,n)		// http://people.duke.edu/~hpgavin/cee201/ProbabilityRules.pdf
-'''
-LAG = {}
-# scores is derived scores tuple
-# key is dictionary key to access node
-def Depth_First_Alg(scores, key): 
-    global LAG
+############# MODEL DRIVEN QUERY ###################
+httpHost    = "localhost"
+port        = 5000
+httpMethod  = "GET"
 
-    # reduce number of nodes needed to make calculation
-    LAG[key].calculations_remaining -= 1
+def score_to_weight(score):
+    if score >= 0.7:
+        return 0.5
+    elif score >= 0.4:
+        return 0.3
+    else:
+        return 0.2
 
-    # modifying score
-    if LAG[key].node_logic == DataDriven.Node_Logic.OR:
-        # OR = (1-p1)*...*(1-pn)
-        for i in range(3):
-            LAG[key].derived_score[i] = LAG[key].derived_score[i]*(1-scores[i])     # probability formula 2
-    else: # node_log == AND OR FLOW
-        # AND = p1*...*pn
-        for i in range(3):
-            LAG[key].derived_score[i] = LAG[key].derived_score[i]*scores[i]         # probability formula 1
+# @nvd_bp.route('/model_driven_cvss_query')
+def model_driven_cvss_query(vendor, product):
+    url = "/api/search/" + vendor + "/" + product
+
+    # Connect to a HTTP server
+    hcon = hc.HTTPConnection(httpHost,port)
+
+    # Request for a URL
+    hcon.request(httpMethod, url)
+
+    # Get the HTTP response
+    response = hcon.getresponse()
+
+    # # Read the HTTP response
+    _json = response.read().decode()
+
+    weights = []
+    scores = []
+
+    # getting scores
+    for data in _json["results"]:
+        weights.append((0.0,0.0,0.0))
+        scores.append((0.0,0.0,0.0))       # base, exploitability, impact
+
+        scores[-1][0] = float(data["cvss"]) / 10.0
+        weights[-1][0] = score_to_weight(scores[-1][0])
+
+        scores[-1][1] = float(data["exploitabilityScore"]) / 10.0
+        weights[-1][1] = score_to_weight(scores[-1][1])
+
+        scores[-1][2] = float(data["impactScore"]) / 10.0
+        weights[-1][2] = score_to_weight(scores[-1][2])
     
-    # if no more nodes are required to make calculation
-    if LAG[key].calculations_remaining == 0:
-        # if OR node, then finalize calculation
-        # 1 - (1-p1)*...*(1-pn)
-        if LAG[key].node_logic == DataDriven.Node_Logic.OR:
-            for i in range(3):
-                LAG[key].derived_score[i] = 1-LAG[key].derived_score[i]             # probability formula 2
-
-        # next node(s)
-        for k in LAG[key].next_node:
-            Depth_First_Alg(LAG[key].derived_score, k)
-    
-
-
-def DerivedScore(lag_dict, leaf_queue):
-    global LAG
-    LAG = lag_dict
-    
-    # modifying derived scores
-    while len(leaf_queue) > 0:
-        node = leaf_queue.pop()
-        for key in node.next_node:
-            Depth_First_Alg(node.derived_score, key)
-               
-    # return LAG
-
-@analysis_bp.route('/getDerivedScores', methods=['GET'])
-def getDerivedScores():
-    global LAG
-
-    # converting to JSON
-    node_type_to_str = {
-        DataDriven.Node_Type.DERIVATION : 'Derivation', 
-        DataDriven.Node_Type.DERIVED : 'Derived Fact',
-        DataDriven.Node_Type.PRIMITIVE_FACT: 'Primitive Fact'}
-
-    vertices = []
-    edges = []
-    for key in LAG: 
-        vertices.append({
-                'id' : key,
-                'discription' : LAG[key].discription,
-                'node_type' : node_type_to_str[LAG[key].node_type], 
-                'base_score' : round(LAG[key].derived_score[0],3),
-                'exploitability_score' : round(LAG[key].derived_score[1],3),
-                'impact_score' : round(LAG[key].derived_score[2],3)})
-        for e in LAG[key].next_node:
-            edges.append({'source' : key, 'target' : e})
-    
-    return jsonify({'nodes': vertices, 'edges' : edges})
-
-@analysis_bp.route('/test-derived-scores', methods=['GET'])
-def test_Derived_Scores():
-    nodes = [{
-            'id': 1,
-            'description': 'Something!',
-            'node_type' : 'Leaf',
-            'base_score' : 10,
-            'exploitability_score': 5,
-            'impact_score': 7
-        },
-        {
-            'id': 2,
-            'description': 'Something Part 2!',
-            'node_type' : 'Leaf',
-            'base_score' : 8,
-            'exploitability_score': 4,
-            'impact_score': 3
-        }
-    ]
-
-    links = [{
-            'source': '1',
-            'target': '2'
-        }
-    ]
-
-    return jsonify({'nodes': nodes, 'edges': links}), 200
-#################### DATA-DRIVEN LAG Metrics ########################
-@analysis_bp.route('/percentage_execCode_nodes', methods=['GET'])
-def percentage_execCode_nodes():
-    global LAG
-    sum = 0
-    for key in LAG:
-        sum += LAG[key].isExecCode
-
-    result=round((float(sum) / float(len(LAG)) * 100.0),3)
-    print(sum)
-    return jsonify({'percentage_execCode_nodes': result})
-
-
-@analysis_bp.route('/percentage_rule_nodes', methods=['GET'])
-def percentage_rule_nodes():
-    global LAG
-    rules = 0
-    for key in LAG:
-        rules += (LAG[key].node_type == DataDriven.Node_Type.DERIVATION)
-
-    result=round((float(rules) / float(len(LAG)) * 100.0),3)
-    return jsonify({'percentage_rule_nodes': result})
-
-@analysis_bp.route('/percentage_derived_nodes', methods=['GET'])
-def percentage_derived_nodes():
-    global LAG
-    numDerived = 0
-    for key in LAG:
-        numDerived += (LAG[key].node_type == DataDriven.Node_Type.DERIVED)
-    
-    result=round((float(numDerived) / float(len(LAG)) * 100.0),3)
-    return jsonify({'percentage_derived_nodes': result})
-
-@analysis_bp.route('/network_entropy', methods=['GET'])
-def network_entropy():
-    global LAG
-    net_entropy = [0.0,0.0,0.0]
-    for key in LAG:
-        for i in range(3):
-            net_entropy[i] += LAG[key].derived_score[i] * math.log2(LAG[key].derived_score[i])
+    result = [0.0,0.0,0.0]
+    weight_sum = [0.0,0.0,0.0]
+    # calculating weighted average
+    for i in range(len(weights)):
+        for j in range(3):
+            result[j] += (scores[i][j] * weights[i][j])
+            weight_sum[j] += weights[i][j]
     
     for i in range(3):
-        net_entropy[i] *= -1.0
-        
-    result = [] 
-    result.append({'base' : round(net_entropy[0],3)})
-    result.append({'exploitability' : round(net_entropy[1],3)})
-    result.append({'impact' : round(net_entropy[2],3)})
+        result[i] = result[i] / weight_sum[i]
 
-    return jsonify({'network_entropy': result})
-
+    return result
 
 ################## MODEL DRIVEN ##############################
 vulnerability_graph = []        # dictionary of nodes
+shortest_paths = []     # matrix where each entry as shortest path value and multiplicity
 class ModelDriven:
     # Enum for node layers
     class Layers(Enum):
-        ROMOTE_ATTACKER = auto()
+        REMOTE_ATTACKER = auto()
         CORPORATE_FIREWALL_FW1 = auto()
         CORPORATE_DMZ = auto()
         CORPORATE_FIREWALL_FW2 = auto()
@@ -213,17 +90,21 @@ class ModelDriven:
 
     # object for nodes
     class Node:
-        def __init__(self, product, _layer, _index):
-            self.out_edges = []              # array of outgoing edges
-            self.in_edges = []               # array of incoming edges
-            self.discription = product       # node discription
-            self.layer = _layer              # what layer does node belong too
-            self.index = _index
+        def __init__(self, product, vendor, layer, index):
+            self.out_edges = []             # array of outgoing edges
+            self.in_edges = []              # array of incoming edges
+            self.product = product          # node discription
+            self.vendor = vendor
+            self.layer = layer              # what layer does node belong too
+            self.index = index
+            self.weights = [1.0,1.0,1.0]    # base, exploitability, impact scores
+
+            if product and vendor:
+                self.weights = model_driven_cvss_query(vendor, product)
 
     # object for weighted edges nodes will use
     class Edge:
         def __init__(self, node_source, node_target):
-            self.weights = [0.0,0.0,0.0] # base, exploitability, impact scores
             self.target = node_target    # target node (where the edge connect too)
             self.source = node_source    # source node (where the edge starts)
 
@@ -251,7 +132,7 @@ def Depth_First_Traversal(node, path):
             Depth_First_Traversal(node.in_edges[0].source, path)
 
 # find exploitability, impact, and base scoes from origin to node
-@analysis_bp.route('/model_driven/attack_paths/<node_index>')
+@model_analysis_bp.route('/model_driven/attack_paths/<node_index>')
 def origin_to_node_metrics(node_index):
     global Solution_Path
     global vulnerability_graph
@@ -281,7 +162,7 @@ def origin_to_node_metrics(node_index):
         for edge in path:
             # summing scores from edges
             for i in len(score):
-                score[i] += edge.weights[i]
+                score[i] += edge.target.weights[i]
         
         # adding score to cumulative sum
         for i in len(score):
@@ -364,7 +245,7 @@ def origin_to_node_metrics(node_index):
         }})
 
 ## Vulnerable Host Percentage Metrics
-@analysis_bp.route('/model_driven/vulnerable_host_percentage')
+@model_analysis_bp.route('/model_driven/vulnerable_host_percentage')
 def vulnerable_host_percentage():
     global vulnerability_graph
     node_w_in_edge = set()
@@ -389,10 +270,8 @@ def vulnerable_host_percentage():
         'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3)
         })
 
-
 ## Centrality Metrics
 # Reference: http://www.uvm.edu/pdodds/research/papers/others/2001/brandes2001a.pdf
-shortest_paths = []     # matrix where each entry as shortest path value and multiplicity
 def betweenness_centrality(node_index):
     global shortest_paths
     global Solution_Path
@@ -416,7 +295,7 @@ def betweenness_centrality(node_index):
                     for path in Solution_Path:
                         base_sum.append(0.0)
                         for edge in path:
-                            base_sum[-1] += edge.weights[0]
+                            base_sum[-1] += edge.target.weights[0]
                     
                     base_sum.sort()
                     i = 1
@@ -446,7 +325,7 @@ def betweenness_centrality(node_index):
         for path in Solution_Path:
             base_sum.append(0.0)
             for edge in path:
-                base_sum[-1] += edge.weights[0]
+                base_sum[-1] += edge.target.weights[0]
         
         base_sum.sort()
         source_to_v[1] = 1
@@ -473,7 +352,7 @@ def betweenness_centrality(node_index):
             for path in Solution_Path:
                 base_sum.append(0.0)
                 for edge in path:
-                    base_sum[-1] += edge.weights[0]
+                    base_sum[-1] += edge.target.weights[0]
             
             base_sum.sort()
             i = 1
@@ -529,7 +408,7 @@ def closeness_centrality(node_index):
                     for path in Solution_Path:
                         base_sum.append(0.0)
                         for edge in path:
-                            base_sum[-1] += edge.weights[0]
+                            base_sum[-1] += edge.target.weights[0]
                     
                     base_sum.sort()
                     i = 1
@@ -604,6 +483,44 @@ def katz_centrality_and_pagerank_centrality():
 
     return katz, pagerank
 
-@analysis_bp.route('/model_driven/centrality')   
+# will generate shortest path
+def shortest_paths_gen():
+    global shortest_paths
+    global Solution_Path
+    global vulnerability_graph
+    global GoalNode
+
+    # computing the length and number of shortest paths between all pairs
+    for source in vulnerability_graph:
+        GoalNode = source
+        shortest_paths.append([])
+        for target in vulnerability_graph:
+            if (source == target) or (source.layer >= target.layer):
+                shortest_paths[-1].append((0,0))
+            else:
+                Solution_Path.clear()
+                Depth_First_Traversal(target, [])
+
+                base_sum = []
+                for path in Solution_Path:
+                    base_sum.append(0.0)
+                    for edge in path:
+                        base_sum[-1] += edge.target.weights[0]
+                
+                base_sum.sort()
+                i = 1
+                # counting number of shortest paths
+                while(base_sum[0] == base_sum[i]):
+                    i += 1
+                
+                # adding shortest path
+                shortest_paths[-1].append((base_sum[0],i))
+                
+                del base_sum
+
+@model_analysis_bp.route('/model_driven/centrality')   
 def centrality():
+    pass
+
+def TOPSIS():
     pass
