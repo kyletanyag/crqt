@@ -29,10 +29,12 @@ def create_app():
     from .user_db import user_bp
     from .nvd import nvd_bp
     from .graph_generation import graph_bp
-    from .analysis import analysis_bp
+    from .data_driven_analysis import data_analysis_bp
+    from .model_driven_analysis import model_analysis_bp
     app.register_blueprint(user_bp)
     app.register_blueprint(nvd_bp)
     app.register_blueprint(graph_bp)
-    app.register_blueprint(analysis_bp)
+    app.register_blueprint(data_analysis_bp)
+    app.register_blueprint(model_analysis_bp)
 
     return app

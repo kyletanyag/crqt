@@ -42,7 +42,7 @@
 
 
 <script>
-import http from '../http-common.js';
+import http from '@/http-common.js';
 import { generateNetworkDiagram } from '../utilities/network-graph.js';
 
 export default {
@@ -88,7 +88,7 @@ export default {
 
   methods: {
     highlight(id) {
-      document.getElementById(`node_${id}`).setAttribute('r', '20');
+      document.getElementById(`node_${id}`).setAttribute('r', '10');
     },
 
     unhighlight(id) {
@@ -113,7 +113,7 @@ export default {
   },
 
   mounted() {
-    http.get('get-derived-scores').then((r) => {
+    http.get('data_driven/get_derived_scores').then((r) => {
       this.network = { links: r.data.edges, nodes: r.data.nodes };
       generateNetworkDiagram(r.data);
     })

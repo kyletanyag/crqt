@@ -1,8 +1,8 @@
 <template>
 <div class="row">
   <div class="col d-flex justify-content-center">
-    <div class="card mx-2" id="maincard">
-      <div class="card-header font-weight-bold">Data-Driven Input</div>
+    <div class="card mx-2 mb-2" id="maincard">
+      <div class="card-header font-weight-bold">File Input</div>
         <div class="card-body text-left">
           <h5 class="card-title">Two Input files required:</h5>
           <div class="pr-3 py-2">
@@ -33,6 +33,10 @@
             </vue-csv-import>
           </div>
           <div class="pr-3 py-2">
+            <h6 class="font-weight-bold">Network Title</h6>
+            <input v-model="networkTitle" placeholder="Title of Network" type="text">
+          </div>
+          <div class="pr-3 py-2">
             <h6 class="font-weight-bold">Derivation Node Probability</h6>
             <input v-model.number="simConfig" placeholder="0.8" step="0.1" min="0" max="1" type="number" maxlength="2"
                 onkeyup="if(this.value > 1) this.value = 1; else if(this.value < 0) this.value = 0;">
@@ -54,8 +58,8 @@
           </div>
       </div>
     </div>
-    <div v-if="preview" class="card mx-2" :style="GetCardSize()">
-      <div class="card-header">JSON Object Preview</div>
+    <div v-if="preview" class="card mx-2 mb-2" :style="GetCardSize()">
+      <div class="card-header font-weight-bold">JSON Object Preview</div>
       <div class="card-body" style="overflow-y: auto;">
         <div>
           {{ network }}
@@ -95,16 +99,20 @@ export default {
         arcs: null,
         progress: 0,
         preview: false,
-        simConfig: 0.8
+        simConfig: 0.8,
+        networkTitle: "",
       };
     },
 
     computed: {
       network() {
+        const d = new Date();
         return {
           vertices: this.vertices,
           arcs: this.arcs,
-          sim_config: this.simConfig > 1 ? 1 : this.simConfig < 0 ? 0 : this.simConfig
+          sim_config: this.simConfig > 1 ? 1 : this.simConfig < 0 ? 0 : this.simConfig,
+          network_title: this.networkTitle,
+          date: `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`,
         };
       },
     },
@@ -117,6 +125,15 @@ export default {
         } else if (this.network.sim_config === '') {
           alert('Error with Derivation Node Probability input. Please recheck input.');
           return;
+        }
+
+        if (!this.networkTitle)
+        {
+          const d = new Date();
+          var hr = d.getHours() < 10 ? `0${d.getHours()}` : d.getHours();
+
+          this.networkTitle = `Data-Driven_Network_${d.getFullYear()}${d.getMonth()+1}${d.getDate()}_${hr}${d.getMinutes()}`
+          console.log(this.networkTitle);
         }
 
         this.Upload(this.network, (event) => {

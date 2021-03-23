@@ -119,11 +119,15 @@ Impact Score ${d.impact_score}\
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
       d.fx = d.x;
       d.fy = d.y;
+      d3.select(this).classed('fixed', true);
     }
   
     function dragged(d) {
       d.fx = d3.event.x;
       d.fy = d3.event.y;
+    //   d.fx = clamp(event.x, 0, width);
+    //   d.fy = clamp(event.y, 0, height);
+    //   simulation.alpha(1).restart();
     }
   
     function dragended(d) {
@@ -131,6 +135,11 @@ Impact Score ${d.impact_score}\
       d.fx = null;
       d.fy = null;
     }
+
+    // function clamp(x, lo, hi) {
+    //   return x < lo ? lo : x > hi ? hi : x;
+    // }
+
     }
   }
 

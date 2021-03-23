@@ -1,10 +1,10 @@
 <template>
 <div>
-  <network-graph></network-graph>
-  <!-- <div class="col" style="height: 500px;">
+  <!-- <network-graph></network-graph> -->
+  <div class="col" style="height: 500px;">
     <div id="cy"></div>
   </div>
-  <div class="col">hello</div> -->
+  <div class="col">hello</div>
   <!-- <div id="example"></div> -->
 </div> 
 </template>
@@ -40,6 +40,7 @@ function cytoExample(a) {
     .selector('node')
       .style({
         'content': function(ele) {return `${ele.data('id')}: ${ele.data('description')}`},
+        'style': {'height': '1px', 'width': '2px'}
         // 'background-color': function(ele) {return getColor(ele.data('node_type'))}
       })
     .selector('edge')
@@ -113,7 +114,7 @@ export default {
     const nodes = ref([]);
     const edges = ref([]);
 
-    http.get('get-derived-scores').then((r) => {
+    http.get('data_driven/get_derived_scores').then((r) => {
 
       console.log(r.data)
       nodes.value = r.data.nodes;
@@ -143,7 +144,7 @@ export default {
       });
 
       
-      // cytoExample(array);
+      cytoExample(array);
       // hotExample(r.data.nodes);
     });
 
