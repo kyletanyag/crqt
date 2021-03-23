@@ -29,7 +29,7 @@ class DataDriven:
     class Node:
         def __init__(self):
             self.derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
-            self.discription = str()             # node discription
+            self.description = str()             # node description
             self.node_type = None                # type of node  
             self.node_logic = None               # node relationship 
             self.next_node = []                  # next nodes
@@ -37,7 +37,7 @@ class DataDriven:
             self.isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
 
         def printFunc(self):
-            print(self.derived_score, self.discription, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
+            print(self.derived_score, self.description, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
 
 
 '''
@@ -91,7 +91,7 @@ def DerivedScore(lag_dict, leaf_queue):
                
     # return LAG
 
-@data_analysis_bp.route('/data_driven/getDerivedScores', methods=['GET'])
+@data_analysis_bp.route('/data_driven/get_derive_scores', methods=['GET'])
 def getDerivedScores():
     global LAG
 
@@ -106,7 +106,7 @@ def getDerivedScores():
     for key in LAG: 
         vertices.append({
                 'id' : key,
-                'discription' : LAG[key].discription,
+                'description' : LAG[key].description,
                 'node_type' : node_type_to_str[LAG[key].node_type], 
                 'base_score' : round(LAG[key].derived_score[0],3),
                 'exploitability_score' : round(LAG[key].derived_score[1],3),
@@ -165,7 +165,7 @@ def execCode_node_probabilities():
         if LAG[key].isExecCode:
             vertices.append({
                 'id' : key,
-                'discription' : LAG[key].discription,
+                'description' : LAG[key].description,
                 'node_type' : 'Derived Fact', 
                 'base_score' : round(LAG[key].derived_score[0],3),
                 'exploitability_score' : round(LAG[key].derived_score[1],3),
@@ -183,7 +183,7 @@ def derived_node_probabilities():
         if LAG[key].node_type == DataDriven.Node_Type.DERIVED:
             vertices.append({
                 'id' : key,
-                'discription' : LAG[key].discription,
+                'description' : LAG[key].description,
                 'node_type' : 'Derived Fact', 
                 'base_score' : round(LAG[key].derived_score[0],3),
                 'exploitability_score' : round(LAG[key].derived_score[1],3),

@@ -114,7 +114,7 @@ export default {
     const nodes = ref([]);
     const edges = ref([]);
 
-    http.get('get-derived-scores').then((r) => {
+    http.get('data_driven/get_derived_scores').then((r) => {
 
       console.log(r.data)
       nodes.value = r.data.nodes;
