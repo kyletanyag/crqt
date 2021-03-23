@@ -1,20 +1,20 @@
-from flask import Blueprint, jsonify, request
-from enum import Enum, auto
+from flask import Blueprint, jsonify
+from enum import IntEnum, auto
 from copy import deepcopy 
 from collections import deque
-from . import db 
 import math
 import scipy.linalg as la
 import numpy as np
 import http.client as hc
+import json
 
 # route for model driven analysis component
-model_analysis_bp = Blueprint('model_analysis_bp', __name__)
+# model_analysis_bp = Blueprint('model_analysis_bp', __name__)
 
 
 ############# MODEL DRIVEN QUERY ###################
 httpHost    = "localhost"
-port        = 5000
+port        = 2000
 httpMethod  = "GET"
 
 def score_to_weight(score):
@@ -39,15 +39,15 @@ def model_driven_cvss_query(vendor, product):
     response = hcon.getresponse()
 
     # # Read the HTTP response
-    _json = response.read().decode()
+    _json = json.loads(response.read().decode('utf-8'))
 
     weights = []
     scores = []
 
     # getting scores
     for data in _json["results"]:
-        weights.append((0.0,0.0,0.0))
-        scores.append((0.0,0.0,0.0))       # base, exploitability, impact
+        weights.append([0.0,0.0,0.0])
+        scores.append([0.0,0.0,0.0])       # base, exploitability, impact
 
         scores[-1][0] = float(data["cvss"]) / 10.0
         weights[-1][0] = score_to_weight(scores[-1][0])
@@ -73,10 +73,10 @@ def model_driven_cvss_query(vendor, product):
 
 ################## MODEL DRIVEN ##############################
 vulnerability_graph = []        # dictionary of nodes
-shortest_paths = []     # matrix where each entry as shortest path value and multiplicity
+shortest_paths = {}             # matrix where each entry as shortest path value and multiplicity
 class ModelDriven:
     # Enum for node layers
-    class Layers(Enum):
+    class Layers(IntEnum):
         REMOTE_ATTACK = auto()
         CORP_FW1 = auto()
         CORP_DMZ = auto()
@@ -120,8 +120,8 @@ class ModelDriven:
             self.target = node_target    # target node (where the edge connect too)
             self.source = node_source    # source node (where the edge starts)
 
-            target.in_edges.append(self)    # adding incoming edge to target
-            source.out_edges.append(self)
+            self.target.in_edges.append(self)    # adding incoming edge to target
+            self.source.out_edges.append(self)
 
 ## depth first traversal
 # Will find all paths from origin to GoalNode 
@@ -144,8 +144,42 @@ def Depth_First_Traversal(node, path):
             path.append(node.in_edges[0])
             Depth_First_Traversal(node.in_edges[0].source, path)
 
+# will generate shortest path
+def shortest_paths_gen():
+    global shortest_paths
+    global Solution_Path
+    global vulnerability_graph
+    global GoalNode
+
+    # computing the length and number of shortest paths between all pairs
+    for source in vulnerability_graph:
+        GoalNode = source
+        for target in vulnerability_graph:
+            if (source == target) or (source.layer >= target.layer):
+                continue # shortest_paths[(source.index,target.index)] = (0,0)
+            else:
+                Solution_Path.clear()
+                Depth_First_Traversal(target, [])
+
+                if len(Solution_Path) > 0:
+                    base_sum = []
+                    for path in Solution_Path:
+                        base_sum.append(0.0)
+                        for edge in path:
+                            base_sum[-1] += edge.target.weights[0]
+                    
+                    base_sum.sort()
+                    i = 1
+                    # counting number of shortest paths
+                    while(not(i == len(base_sum)) and base_sum[0] == base_sum[i]):
+                        i += 1
+                    
+                    # adding shortest path
+                    shortest_paths[(source.index,target.index)] = (base_sum[0],i)
+                    del base_sum                
+
 # find exploitability, impact, and base scoes from origin to node
-@model_analysis_bp.route('/model_driven/attack_paths/<node_index>')
+# @model_analysis_bp.route('/model_driven/attack_paths/<node_index>')
 def origin_to_node_metrics(node_index):
     global Solution_Path
     global vulnerability_graph
@@ -166,19 +200,15 @@ def origin_to_node_metrics(node_index):
 
     for path in Solution_Path:
         # tuple for base, exploitability, impact
-        score = (0.0,0.0,0.0)
-
-        # pairwise variables used to find top most vulnerable paths
-        exploitability_pair = (len(metrics_per_path),0.0)
-        impact_pair = (len(metrics_per_path),0.0)
+        score = [0.0,0.0,0.0]
 
         for edge in path:
             # summing scores from edges
-            for i in len(score):
+            for i in range(len(score)):
                 score[i] += edge.target.weights[i]
         
         # adding score to cumulative sum
-        for i in len(score):
+        for i in range(len(score)):
             score_sum[i] += score[i]
 
         metrics_per_path.append({
@@ -186,11 +216,9 @@ def origin_to_node_metrics(node_index):
                 'exploitability_score' : round(score[1],3),
                 'impact_score' : round(score[2],3)
                 })
-        exploitability_pair[1] = round(score[1],3)
-        impact_pair[1] = round(score[2],3)
 
-        exploitability_list.append(exploitability_pair)
-        impact_list.append(impact_pair)
+        exploitability_list.append([len(metrics_per_path) - 1,round(score[1],3)])
+        impact_list.append([len(metrics_per_path) - 1,round(score[2],3)])
 
     
     ## finding top 5 most vulnerable paths
@@ -206,14 +234,14 @@ def origin_to_node_metrics(node_index):
             for edge in Solution_Path[exploitability_list[i][0]]:
                 path.append(edge.target.index)
             
-            top_exploitable.append(path)
+            top_exploitable.append({str(i) : path})
     else:
         for i in range(len(exploitability_list)):
             path = []
             for edge in Solution_Path[exploitability_list[i][0]]:
                 path.append(edge.target.index)
             
-            top_exploitable.append(path) 
+            top_exploitable.append({str(i) : path}) 
     
     # impactful paths
     top_impactful = []
@@ -224,14 +252,14 @@ def origin_to_node_metrics(node_index):
             for edge in Solution_Path[impact_list[i][0]]:
                 path.append(edge.target.index)
             
-            top_impactful.append(path)
+            top_impactful.append({str(i) : path})
     else:
         for i in range(len(exploitability_list)):
             path = []
             for edge in Solution_Path[impact_list[i][0]]:
                 path.append(edge.target.index)
             
-            top_impactful.append(path) 
+            top_impactful.append({str(i) : path})
     
     
     return jsonify({
@@ -242,23 +270,12 @@ def origin_to_node_metrics(node_index):
             round(score_sum[1] / len(Solution_Path),3), 
             round(score_sum[2] / len(Solution_Path),3)
             ],
-        'top_exploitable': {
-            "1" : top_exploitable[0],
-            "2" : top_exploitable[1],
-            "3" : top_exploitable[2],
-            "4" : top_exploitable[3],
-            "5" : top_exploitable[4],
-        }, 
-        'top_impactful': {
-            "1" : top_impactful[0],
-            "2" : top_impactful[1],
-            "3" : top_impactful[2],
-            "4" : top_impactful[3],
-            "5" : top_impactful[4],
-        }})
+        'top_exploitable': top_exploitable, 
+        'top_impactful': top_impactful
+        })
 
 ## Vulnerable Host Percentage Metrics
-@model_analysis_bp.route('/model_driven/vulnerable_host_percentage')
+# @model_analysis_bp.route('/model_driven/vulnerable_host_percentage')
 def vulnerable_host_percentage():
     global vulnerability_graph
     node_w_in_edge = set()
@@ -293,94 +310,21 @@ def betweenness_centrality(node_index):
 
     # if shortest_paths is empty, then calculate shortest_paths for all nodes
     if len(shortest_paths) == 0:
-        # computing the length and number of shortest paths between all pairs
-        for source in vulnerability_graph:
-            GoalNode = source
-            shortest_paths.append([])
-            for target in vulnerability_graph:
-                if (source == target) or (source.layer >= target.layer):
-                    shortest_paths[-1].append((0,0))
-                else:
-                    Solution_Path.clear()
-                    Depth_First_Traversal(target, [])
-
-                    base_sum = []
-                    for path in Solution_Path:
-                        base_sum.append(0.0)
-                        for edge in path:
-                            base_sum[-1] += edge.target.weights[0]
-                    
-                    base_sum.sort()
-                    i = 1
-                    # counting number of shortest paths
-                    while(base_sum[0] == base_sum[i]):
-                        i += 1
-                    
-                    # adding shortest path
-                    shortest_paths[-1].append((base_sum[0],i))
-                    
-                    del base_sum
+        shortest_paths_gen()
     
     # calculating betweeness
     betweenness = 0.0
     for source in vulnerability_graph:
-        GoalNode = source
-        source_to_v = (0.0,0)
-        if source.layer >= vulnerability_graph[node_index].layer or source == vulnerability_graph[node_index]:
+        # source cannot goto node if on same or greater layer
+        if source.layer == vulnerability_graph[node_index].layer:
             break
 
-        Solution_Path.clear()
-
-        # calculating shortest path from source to v
-        Depth_First_Traversal(vulnerability_graph[node_index], [])
-
-        base_sum = []
-        for path in Solution_Path:
-            base_sum.append(0.0)
-            for edge in path:
-                base_sum[-1] += edge.target.weights[0]
-        
-        base_sum.sort()
-        source_to_v[1] = 1
-        # counting number of shortest paths
-        while(base_sum[0] == base_sum[source_to_v[1]]):
-            source_to_v[1] += 1
-        
-        # saving shortest path and multiplicity
-        source_to_v[0] = base_sum[0]
-
-        del base_sum
-
-        for target in vulnerability_graph:
-            v_to_target = (0.0,0)
-
-            # target cannot be before node and cannot equal node (node must be between source and target)
-            if (target.layer <= vulnerability_graph[node_index].layer or target.layer <= source.layer):
-                continue
-            
-            Solution_Path.clear()
-            Depth_First_Traversal(target, [])
-
-            base_sum = []
-            for path in Solution_Path:
-                base_sum.append(0.0)
-                for edge in path:
-                    base_sum[-1] += edge.target.weights[0]
-            
-            base_sum.sort()
-            i = 1
-            # counting number of shortest paths
-            while(base_sum[0] == base_sum[i]):
-                i += 1
-            
-            # adding shortest path
-            shortest_paths[-1].append((base_sum[0],i))
-            
-            del base_sum
-            
-            # testing v's betweenness
-            if shortest_paths[source.index][target.index] == (v_to_target[0] + source_to_v[0]):
-                betweenness += v_to_target[1] * source_to_v[1] / shortest_paths[source.index][target.index][1]
+        for target_id in range(node_index,len(vulnerability_graph)):            
+            # testing if path exist between source to node && node to target
+            if (all(x in shortest_paths.keys() for x in [(source.index,target_id), (source.index,node_index), (node_index,target_id)])):
+                # testing v's betweenness
+                if shortest_paths[(source.index,target_id)][0] == (shortest_paths[(source.index,node_index)][0] + shortest_paths[(node_index,target_id)][0]):
+                    betweenness += shortest_paths[(source.index,node_index)][1] * shortest_paths[(node_index,target_id)][1] / shortest_paths[(source.index,target_id)][1]
     
     return betweenness
 
@@ -406,45 +350,19 @@ def closeness_centrality(node_index):
 
     # if shortest_paths is empty, then calculate shortest_paths for all nodes
     if len(shortest_paths) == 0:
-        # computing the length and number of shortest paths between all pairs
-        for source in vulnerability_graph:
-            GoalNode = source
-            shortest_paths.append([])
-            for target in vulnerability_graph:
-                if (source == target) or (source.layer >= target.layer):
-                    shortest_paths[-1].append((0,0))
-                else:
-                    Solution_Path.clear()
-                    Depth_First_Traversal(target, [])
-
-                    base_sum = []
-                    for path in Solution_Path:
-                        base_sum.append(0.0)
-                        for edge in path:
-                            base_sum[-1] += edge.target.weights[0]
-                    
-                    base_sum.sort()
-                    i = 1
-                    # counting number of shortest paths
-                    while(base_sum[0] == base_sum[i]):
-                        i += 1
-                    
-                    # adding shortest path
-                    shortest_paths[-1].append((base_sum[0],i))
-                    
-                    del base_sum
+        shortest_paths_gen()
     
     # calculating closeness centrality
     closeness = 0.0
     for y in len(vulnerability_graph):
-        dom = 0
+        dist = 0
         if y < node_index:
-            dom = shortest_paths[y][node_index][0]
+            dist = shortest_paths[(y,node_index)][0]
         else:
-            dom = shortest_paths[node_index][y][0]
+            dist = shortest_paths[(node_index,y)][0]
 
-        if dom > 0:
-            closeness += 1/dom
+        if dist > 0:
+            closeness += 1.0/dist
 
     return closeness
 
@@ -461,18 +379,18 @@ def katz_centrality_and_pagerank_centrality():
     
     def L(mat, row):
         result = 0.0
-        for i in len(mat):
+        for i in range(len(mat)):
             result += mat[row][i]
         return result
 
     # creating adj_matrix
-    adj_mat = np.array([])
+    adj_mat = np.zeros((len(vulnerability_graph),len(vulnerability_graph)),dtype=np.uint8)
     pagerank = []
 
-    for F in shortest_paths:
-        adj_mat.append([])
-        for T in F:
-            adj_mat[-1].append(bool(T[1] > 0))
+
+    for node in vulnerability_graph:
+        for edge in node.out_edges:
+            adj_mat[node.index][edge.target.index] = 1
     
     # calculating eigenvectors/values
     eigvals, eigvecs = la.eig(adj_mat)
@@ -480,8 +398,16 @@ def katz_centrality_and_pagerank_centrality():
     # finding max eigenvalue
     max_eigval = max(eigvals)
 
+    alpha = 0.0 
+    if max_eigval == 0j:    # if eigenval is zero
+        alpha = 1.0
+    else:
+        alpha = 1.0/max_eigval
+        if alpha > 1:
+            alpha = 1.0
+
     # calculating Katz = inv(I - a*A)*vec(n,1) Ref: [1][2]
-    katz = np.dot(la.inv(np.subtract(np.identity(len(adj_mat)), 1.0/max_eigval * adj_mat)),np.ones(len(adj_mat),1))
+    katz = np.dot(la.inv(np.subtract(np.identity(len(adj_mat)), 1.0/alpha * adj_mat)),np.ones((len(adj_mat),1)))
 
     # calculating pagerank
     for i in range(len(adj_mat)):
@@ -489,49 +415,14 @@ def katz_centrality_and_pagerank_centrality():
         pagarank_tmp = 0.0
         for j in range(len(adj_mat)):
             # katz_tmp += adj_mat[i][j] * eigvecs[j]
-            pagarank_tmp += adj_mat[i][j] * eigvecs[j] / L(adj_mat, j) + (1 - 1.0 / max_eigval) / len(adj_mat)
+            pagarank_tmp += adj_mat[i][j] * eigvecs[j] / L(adj_mat, j) + (1 - 1.0 / alpha) / len(adj_mat)
 
         # katz.append(1/max_eigval*katz_tmp)
-        pagerank.append(1/max_eigval*pagarank_tmp)
+        pagerank.append(1/alpha*pagarank_tmp)
 
     return katz, pagerank
 
-# will generate shortest path
-def shortest_paths_gen():
-    global shortest_paths
-    global Solution_Path
-    global vulnerability_graph
-    global GoalNode
-
-    # computing the length and number of shortest paths between all pairs
-    for source in vulnerability_graph:
-        GoalNode = source
-        shortest_paths.append([])
-        for target in vulnerability_graph:
-            if (source == target) or (source.layer >= target.layer):
-                shortest_paths[-1].append((0,0))
-            else:
-                Solution_Path.clear()
-                Depth_First_Traversal(target, [])
-
-                base_sum = []
-                for path in Solution_Path:
-                    base_sum.append(0.0)
-                    for edge in path:
-                        base_sum[-1] += edge.target.weights[0]
-                
-                base_sum.sort()
-                i = 1
-                # counting number of shortest paths
-                while(base_sum[0] == base_sum[i]):
-                    i += 1
-                
-                # adding shortest path
-                shortest_paths[-1].append((base_sum[0],i))
-                
-                del base_sum
-
-@model_analysis_bp.route('/model_driven/centrality')   
+# @model_analysis_bp.route('/model_driven/centrality')   
 def centrality():
     pass
 

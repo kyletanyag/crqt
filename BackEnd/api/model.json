@@ -1,7 +1,7 @@
 {
     "vertices":[
         { 
-            "id": "1",
+            "id": "4",
             "vendor": "microsoft",
             "product": "xbox_360",
             "layer" : "corp_dmz" 
@@ -19,13 +19,13 @@
             "layer" : "corp_dmz" 
         },
         { 
-            "id": "4",
+            "id": "1",
             "vendor": "microsoft",
             "product": "xbox_360",
             "layer" : "corp_dmz" 
         },
         { 
-            "id": "5",
+            "id": "8",
             "vendor": "microsoft",
             "product": "xbox_360",
             "layer" : "corp_lan" 
@@ -43,7 +43,7 @@
             "layer" : "corp_lan" 
         },
         { 
-            "id": "8",
+            "id": "5",
             "vendor": "microsoft",
             "product": "xbox_360",
             "layer" : "corp_lan" 
@@ -55,13 +55,13 @@
             "layer" : "corp_lan" 
         },
         { 
-            "id": "10",
+            "id": "11",
             "vendor": "microsoft",
             "product": "xbox_360",
             "layer" : "corp_lan" 
         },
         { 
-            "id": "11",
+            "id": "10",
             "vendor": "microsoft",
             "product": "xbox_360",
             "layer" : "corp_lan" 
