@@ -1,90 +1,38 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home'
 
+// Do we need these?
 import Callback from '@/views/Callback'
 import ErrorPage from '@/views/Error'
+import SecureComponent from "@/views/Secure.vue"
 
-import LoginComponent from "../views/Login.vue"
-import Login from "../views/Login.vue"
-import SecureComponent from "../views/Secure.vue"
-import QRLogin from '../views/QRLogin.vue'
-
+// Testing page for Kyle
 import Sandbox from "../views/_Sandbox.vue";
-import Register from "../views/Register.vue"
-
-//import { routeGuard } from '@/auth'
 
 const routes = [
-
-  {
+    {
       path: '/ContactUs',
       name: 'ContactUs',
       component: () => import(/* webpackChunkName: "ContactUs" */ '../views/ContactUs.vue')
-   },
-  {
+    },
+    {
       path: '/SimulationResults',
       name: 'SimulationResults',
-      component: () => import(/* webpackChunkName: "SimulationResults" */ '../views/SimulationResults.vue')
-    },
-    {
-        path: '/TidyTree',
-        name: 'TidyTree',
-        component: () => import(/* webpackChunkName: "about" */ '../views/TidyTree.vue')
-    },
-    {
-        path: '/Robustness',
-        name: 'Robustness',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Robustness.vue')
-    },
-    {
-        path: '/Resourcefullness',
-        name: 'Resourcefullness',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Resourcefullness.vue')
-    },
-    {
-        path: '/ResilienceMetrics',
-        name: 'ResilienceMetrics',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ResilienceMetrics.vue')
-    },
-    {
-        path: '/Redundancy',
-        name: 'Redundancy',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Redundancy.vue')
-    },
-    {
-        path: '/Rapidity',
-        name: 'Rapidity',
-        component: () => import(/* webpackChunkName: "about" */ '../views/Rapidity.vue')
+      component: () => import(/* webpackChunkName: "SimulationResults" */ '../views/SimulationResults/SimulationResults.vue')
     },
     {
         path: '/network-topology/data-driven',
         name: 'Data Driven',
-        component: () => import(/* webpackChunkName: "Data-Driven-Input" */ '../views/DataDriven.vue')
+        component: () => import(/* webpackChunkName: "Data-Driven-Input" */ '../views/NetworkTopology/DataDriven.vue')
     },
     {
         path: '/network-topology/model-driven',
         name: 'Model Driven',
-        component: () => import(/* webpackChunkName: "Model-Driven-Input" */ '../views/ModelDriven.vue')
-    },
-    {
-        path: '/ForceLayout',
-        name: 'ForceLayout',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
-    },
-    {
-        path: '/hello',
-        name: 'hello',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ForceLayout.vue')
-    },
-    {
-        path: '/ColorGraphView',
-        name: 'ColorGraphView',
-        component: () => import(/* webpackChunkName: "about" */ '../views/ColorGraphView.vue')
+        component: () => import(/* webpackChunkName: "Model-Driven-Input" */ '../views/NetworkTopology/ModelDriven.vue')
     },
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: () => import(/* webpackChunkName: "Home" */ '@/views/Home.vue'),
     },
     {
         path: '/callback',
@@ -104,18 +52,18 @@ const routes = [
     {
         path: '/login',
         name: "Login",
-        component: Login, LoginComponent
+        component: () => import(/* webpackChunkName: "Login" */ '@/views/Login/Login.vue'),
     },
     {
         path: '/login/qr/:id',
         name: 'QR Login',
-        component: QRLogin,
+        component: () => import(/* webpackChunkName: "QR Login" */ '@/views/Login/QRLogin.vue'),
         props: true,
     },
     {
         path: '/register',
         name: "Register",
-        component: Register
+        component: () => import(/* webpackChunkName: "Registration" */ '@/views/Login/Register.vue'),
     },
     {
         path: '/sandbox',
@@ -125,14 +73,19 @@ const routes = [
     {
         path: '/qr/:id',
         name: 'QR Setup',
-        component: () => import(/* webpackChunkName: "QR Setup" */ '../views/QRCode.vue'),
+        component: () => import(/* webpackChunkName: "QR Setup" */ '@/views/Login/QRCode.vue'),
         props: true
     },
     {
         path: '/admin',
         name: 'Admin',
-        component: () => import(/* webpackChunkName: "Admin" */ '../views/Admin.vue'),
+        component: () => import(/* webpackChunkName: "Admin" */ '@/views/Admin/Admin.vue'),
         props: true
+    },
+    {
+        path: '/simulation-results/data-driven',
+        name: 'Data Driven Results',
+        component: () => import(/* webpackChunkName: "Data Driven Results" */ '@/views/SimulationResults/DataDrivenResults.vue')
     }
 ]
 

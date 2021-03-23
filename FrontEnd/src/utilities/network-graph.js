@@ -77,7 +77,7 @@ function generateNetworkDiagram(data) {
             .style('background-color', 'rgba(211, 211, 211, 0.8)')
           tooltip.html(`<div style="width: 300px">\
 ID: ${d.id} <br>\
-Description: ${d.discription} <br>\
+Description: ${d.description} <br>\
 Type: ${d.node_type} <br>\
 Base Score: ${d.base_score} <br>\
 Exploitability Score: ${d.exploitability_score} <br>\
@@ -115,22 +115,31 @@ Impact Score ${d.impact_score}\
           .links(graph.edges);
   
   
-    function dragstarted(d) {
-      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
+    function dragstarted() {
+      // if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+      // d.fx = d.x;
+      // d.fy = d.y;
+      d3.select(this).classed('fixed', true);
     }
   
     function dragged(d) {
-      d.fx = d3.event.x;
-      d.fy = d3.event.y;
+      // d.fx = d3.event.x;
+      // d.fy = d3.event.y;
+      d.fx = clamp(event.x, 0, width);
+      d.fy = clamp(event.y, 0, height);
+      simulation.alpha(1).restart();
     }
   
-    function dragended(d) {
-      if (!d3.event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
+    function dragended() {
+      // if (!d3.event.active) simulation.alphaTarget(0);
+      // d.fx = null;
+      // d.fy = null;
     }
+
+    function clamp(x, lo, hi) {
+      return x < lo ? lo : x > hi ? hi : x;
+    }
+
     }
   }
 
