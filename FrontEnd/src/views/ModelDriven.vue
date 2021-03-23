@@ -274,7 +274,7 @@
                   <div align="center">
                      <p align="center">Server Type</p>
                      <select v-model="emailServer[index]">
-                        <option v-for="item in emailServerInput" :key="item" :value="item">{{item}}</option>
+                        <option v-for="item in CSLanSystemServerInput" :key="item" :value="item">{{item}}</option>
                         
                      </select>
                   </div>
@@ -304,12 +304,17 @@
             </tr>
          </tbody>
       </table>
+      <button type="button" class="btn btn-secondary mx-2" @click="nodeSelect =!nodeSelect">Continue</button>
+      <table>
+      </table>
    <input type="button" @click="Submit()" value="Submit">
    
           <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
+          
           <div v-if="preview" class="card mx-2" :style="GetCardSize()">
             <div class="card-header">JSON Object Preview</div>
             <div class="card-body" style="overflow-y: auto;">
+            
                 <div>
                     {{ input }}
                 </div>
@@ -333,6 +338,7 @@ export default {
 
     return {
       preview: false,
+      nodeSelect: false,
       L1VendorInput:[
       {
         label:"Cisco",
@@ -395,6 +401,14 @@ export default {
          'Juniper',
          'Microsoft',
       ],
+      CSLanSystemServer:[],
+      CSLanSystemServerInput:["Application Server",
+                           "Historian",
+                           "Database Server",
+                           "Configuration Server",
+                           "HMI Computers",
+                           "Engineering Workstation",
+      ],
       
             progress: 0,
             numberServer: 0,
@@ -440,11 +454,7 @@ export default {
       //console.log(row);d
       this.rows.splice(_index-1, 1);
     },
-      ValidateServerProduct(){
-         if (this.serverProduct!=""){
-            return false;  // kbt false
-         }
-    },  
+ 
     
     GetCardSize() {
             return {
@@ -458,6 +468,9 @@ export default {
    }
     },  
     selectVendor: function(){
+       this.selectedOption='';
+    },
+    nodeSelection: function(){
        this.selectedOption='';
     },
   }
