@@ -7,6 +7,7 @@
 from flask import Blueprint, jsonify, request
 from .data_models import NVD
 
+
 nvd_bp = Blueprint('nvd_bp', __name__)
 
 # query with database to get cve_ids
@@ -26,10 +27,6 @@ def cvss_query():
 
 ####### STILL IN WORK:
 
-# @nvd_bp.route('/model_driven_cvss_query')
-def model_driven_cvss_query(cve_ids):
-    pass
-
 # updates database with latest nvd
 # @nvd_bp.route('/update_nvd')
 # def update_nvd(cve_ids):
@@ -37,3 +34,6 @@ def model_driven_cvss_query(cve_ids):
 #         if cve_ids not in data:
 #             nvd.add(cve_ids)
 #             nvd.commit()
+
+
+
