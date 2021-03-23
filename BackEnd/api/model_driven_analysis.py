@@ -416,6 +416,7 @@ def katz_centrality_and_pagerank_centrality():
     katz *= 1.0 / math.sqrt(norm)
 
     # calculating pagerank
+    norm = 0.0
     for i in range(len(adj_mat)):
         # katz_tmp = 0.0
         pagarank_tmp = 0.0
@@ -425,6 +426,12 @@ def katz_centrality_and_pagerank_centrality():
 
         # katz.append(1/max_eigval*katz_tmp)
         pagerank.append(1/alpha*pagarank_tmp)
+        norm += (1/alpha*pagarank_tmp) ** 2 
+
+    # normalizing pagerank 
+    norm = 1.0/math.sqrt(norm)
+    for page in pagerank:
+        page *= norm
 
     return katz, pagerank
 
