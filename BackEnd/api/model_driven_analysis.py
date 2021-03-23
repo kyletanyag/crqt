@@ -5,7 +5,7 @@ from collections import deque
 import math
 import scipy.linalg as la
 import numpy as np
-import http.client as hc
+import requests
 import json
 
 # route for model driven analysis component
@@ -27,20 +27,12 @@ def score_to_weight(score):
 
 # @nvd_bp.route('/model_driven_cvss_query')
 def model_driven_cvss_query(vendor, product):
-    url = "/api/search/" + vendor + "/" + product
+    url = "http://127.0.0.1:2000/api/search/" + vendor + "/" + product
 
-    # Connect to a HTTP server
-    hcon = hc.HTTPConnection(httpHost,port)
-
-    # Request for a URL
-    hcon.request(httpMethod, url)
-
-    # Get the HTTP response
-    response = hcon.getresponse()
-
-    # # Read the HTTP response
-    _json = json.loads(response.read().decode('utf-8'))
-
+    # making request to CVE ID
+    r = requests.get(url)
+    _json = json.loads(r.text)
+    
     weights = []
     scores = []
 
@@ -370,12 +362,11 @@ def closeness_centrality(node_index):
 # [1] https://ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/lecture-notes/MIT1_022F18_lec4.pdf, 
 # [2] https://www.nature.com/articles/s41598-017-15426-1
 # https://www.youtube.com/watch?v=vSm1a0-VcMg, 
-# [4] https://en.wikipedia.org/wiki/Centrality
+# [4] https://en.wikipedia.org/wiki/Centrality (pagerank)
 # 
 # calculates katz centrality for all nodes
 def katz_centrality_and_pagerank_centrality():
     global vulnerability_graph
-    global shortest_paths
     
     def L(mat, row):
         result = 0.0
@@ -400,11 +391,11 @@ def katz_centrality_and_pagerank_centrality():
 
     alpha = 0.0 
     if max_eigval == 0j:    # if eigenval is zero
-        alpha = 1.0
+        alpha = 0.1
     else:
-        alpha = 1.0/max_eigval - 0.01
+        alpha = 1.0/max_eigval
         if alpha > 1:
-            alpha = 1.0
+            alpha = 0.1
 
     # calculating Katz = inv(I - a*A)*vec(n,1) Ref: [1][2]
     katz = np.dot(la.inv(np.subtract(np.identity(len(adj_mat)), 1.0/alpha * adj_mat)),np.ones((len(adj_mat),1)))

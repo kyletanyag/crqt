@@ -28,10 +28,16 @@ def network_topology_model_driven_input():
 
     # start generating shorest paths
     shortest_paths_gen()
-    katz_centrality_and_pagerank_centrality()
+    # katz_centrality_and_pagerank_centrality()
     
 
     return {'Done': '21'}
 
 
 network_topology_model_driven_input()
+
+# import requests
+# import json
+
+# r = requests.get('http://127.0.0.1:2000/api/search/microsoft/xbox_360')
+# print(json.loads(r.text)["results"])
