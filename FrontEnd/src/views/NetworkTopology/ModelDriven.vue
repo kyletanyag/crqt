@@ -1,7 +1,7 @@
 <template>
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-      <h4> Corporate Firewall L1 Settings:</h4>
+      <!-- <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
       <table width=100% border="0" cellspacing="0" >
          <tbody>
@@ -42,7 +42,8 @@
                </td>
                </tr>
          </tbody>
-      </table>
+      </table> -->
+      <model-driven-row layer="Corporate Firewall L1" :vendors="coporateFirewall"> </model-driven-row>
       <!-- <option v-for="option in L1VendorInput[selectedVendor].options" :key="option" :value="option">{{option}}</option>                -->
                <!-- <label class="form-check-label" v-for="option in L1VendorInput[selectedVendor].options" :key="option" >{{option.options}}</label> -->
             <!-- <label class="form-check-label" v-for="item in L1VendorInput" :key="item" :value="item "  >{{item.options}}</label> -->
@@ -329,9 +330,13 @@
 //  JSON OBJECT layer, nodes, edges
 import http from "../../http-common";
 import Multiselect from '@vueform/multiselect'
+import ModelDrivenRow from '@/components/ModelDrivenRow.vue';
 // import { ref } from 'vue';
 export default {
-   components: { Multiselect },
+   components: { 
+      Multiselect,
+      ModelDrivenRow
+   },
   data() {
    //   const coporateFirewall = ref([]);
    //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });
@@ -423,7 +428,7 @@ export default {
     computed: {
         input() {
             return {
-               L1Vendor: this.L1Vendor,
+               L1Vendor: this.selectedVendor,
                NumberFireWall: this.NumberFireWall,
                L1Product: this.L1Product,
                emailServer:this.emailServer,
@@ -432,6 +437,25 @@ export default {
                numberServer:this.numberServer
             };
         },
+
+        nodes() {
+           
+           var nodes = [];
+
+           for (let i = 0; i < this.NumberFireWall; i++) {
+              nodes.push( {
+                 layer: 'corp_fw_1',
+                 id: i,
+                 vendor: 'Cisco', // Changes to be consitent with var
+                 product: this.L1Product,
+                 vulnerabilites: 'x'
+              })
+           }
+
+           return {
+              nodes
+           };
+        }
     },
     methods:{
       Submit() {
