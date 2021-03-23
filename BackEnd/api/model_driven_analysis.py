@@ -13,8 +13,7 @@ import json
 
 
 ############# MODEL DRIVEN QUERY ###################
-httpHost    = "localhost"
-port        = 2000
+httpHost    = "http://127.0.0.1:2000"
 httpMethod  = "GET"
 
 def score_to_weight(score):
@@ -27,7 +26,8 @@ def score_to_weight(score):
 
 # @nvd_bp.route('/model_driven_cvss_query')
 def model_driven_cvss_query(vendor, product):
-    url = "http://127.0.0.1:2000/api/search/" + vendor + "/" + product
+    global httpHost
+    url = httpHost + "/api/search/" + vendor + "/" + product
 
     # making request to CVE ID
     r = requests.get(url)
