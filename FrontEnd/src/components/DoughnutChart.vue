@@ -13,15 +13,26 @@ export default defineComponent({
     labels: Array
   },
 
-  mounted() {
+  options: {
+    responsive: true,
+    maintainAspectRatio: true
+  },
 
+  mounted() {
     this.renderChart({
       datasets: [
         {
-          labels: ["a","b","c"],
-          data: this.data
+          data: this.data,
+          label: this.name,
+          backgroundColor: [  // add more background colors !!!
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+          ],
         }
-      ]
+      ],
+
+      labels: this.labels,
     })
   }
 })

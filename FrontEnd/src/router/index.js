@@ -81,6 +81,11 @@ const routes = [
         name: 'Admin',
         component: () => import(/* webpackChunkName: "Admin" */ '@/views/Admin/Admin.vue'),
         props: true
+    },
+    {
+        path: '/simulation-results/data-driven',
+        name: 'Data Driven Results',
+        component: () => import(/* webpackChunkName: "Data Driven Results" */ '@/views/SimulationResults/DataDrivenResults.vue')
     }
 ]
 

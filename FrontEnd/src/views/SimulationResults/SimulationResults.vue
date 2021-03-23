@@ -14,9 +14,9 @@
 </div> 
 </template>
 <script>
-import Histogram from '../components/Histogram.vue'
-import DoughnutChart from '../components/DoughnutChart.vue'
-import http from '../http-common.js';
+import Histogram from '@/components/Histogram.vue'
+import DoughnutChart from '@/components/DoughnutChart.vue'
+import http from '@/http-common.js';
 
 export default {
 
