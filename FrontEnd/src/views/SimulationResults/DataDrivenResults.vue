@@ -264,7 +264,7 @@ export default
         btns.forEach((b) => {
           b.disabled = false;
         });
-      }, 1200)
+      }, 1500)
 
       if (type === 'Base')
         this.histogramScoreData = this.baseScores;
