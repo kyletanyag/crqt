@@ -211,7 +211,7 @@ export default
     getData() {
       this.loading = true;
 
-      http.get('get-derived-scores').then((r) => {
+      http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
         this.nodes = r.data.nodes;
         this.edges = r.data.edges;
@@ -241,7 +241,7 @@ export default
         this.loading = false;
       });
 
-      http.get('network_entropy').then((r) => {
+      http.get('/data_driven/network_entropy').then((r) => {
         console.log(r);
         this.networkEntropy = {
           base: r.data.network_entropy[0].base,
@@ -264,7 +264,7 @@ export default
         btns.forEach((b) => {
           b.disabled = false;
         });
-      }, 1200)
+      }, 1500)
 
       if (type === 'Base')
         this.histogramScoreData = this.baseScores;

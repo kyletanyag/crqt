@@ -113,7 +113,7 @@ export default {
   },
 
   mounted() {
-    http.get('get-derived-scores').then((r) => {
+    http.get('data_driven/get_derived_scores').then((r) => {
       this.network = { links: r.data.edges, nodes: r.data.nodes };
       generateNetworkDiagram(r.data);
     })

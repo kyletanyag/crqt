@@ -89,7 +89,7 @@ export default {
 
   data() {
 
-    http.get('get-derived-scores').then((r) => {
+    http.get('data_driven/get_derived_scores').then((r) => {
 
       console.log(r.data)
       var array = [];

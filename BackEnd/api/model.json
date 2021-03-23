@@ -1,0 +1,85 @@
+{
+    "vertices":[
+        { 
+            "id": "4",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_dmz" 
+        },
+        { 
+            "id": "2",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_dmz" 
+        },
+        { 
+            "id": "3",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_dmz" 
+        },
+        { 
+            "id": "1",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_dmz" 
+        },
+        { 
+            "id": "8",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_lan" 
+        },
+        { 
+            "id": "6",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_lan" 
+        },
+        { 
+            "id": "7",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_lan" 
+        },
+        { 
+            "id": "5",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_lan" 
+        },
+        { 
+            "id": "9",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_lan" 
+        },
+        { 
+            "id": "11",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_lan" 
+        },
+        { 
+            "id": "10",
+            "vendor": "microsoft",
+            "product": "xbox_360",
+            "layer" : "corp_lan" 
+        }
+    ],
+    "arcs": [ 
+        { "currNode": "0", "nextNode": "1" }, 
+        { "currNode": "0", "nextNode": "2" }, 
+        { "currNode": "0", "nextNode": "3" }, 
+        { "currNode": "0", "nextNode": "4" }, 
+        { "currNode": "1", "nextNode": "5" }, 
+        { "currNode": "1", "nextNode": "6" }, 
+        { "currNode": "1", "nextNode": "7" }, 
+        { "currNode": "2", "nextNode": "7" }, 
+        { "currNode": "2", "nextNode": "8" }, 
+        { "currNode": "2", "nextNode": "9" }, 
+        { "currNode": "3", "nextNode": "8" }, 
+        { "currNode": "3", "nextNode": "10" }, 
+        { "currNode": "3", "nextNode": "11" }
+    ]
+}

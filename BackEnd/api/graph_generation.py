@@ -7,7 +7,8 @@ from flask import Blueprint, jsonify, request
 from .nvd import data_driven_cvss_query, model_driven_cvss_query
 import enum
 from collections import deque
-from .analysis import DataDriven, DerivedScore
+from .data_driven_analysis import DataDriven, DerivedScore
+from .model_driven_analysis import vulnerability_graph, ModelDriven, shortest_paths_gen
 
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
@@ -88,5 +89,30 @@ def network_topology_data_driven_input():
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
 def network_topology_model_driven_input():
-    
-    return {'message': 'Hello!'}
+    # test file opening
+    import json
+    with open('./model.json') as f:
+        network = json.load(f)
+
+    # creating remote attacker node
+    vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0))
+
+    for node in network["vertices"]:
+        vulnerability_graph.append(ModelDriven.Node(
+            product=node["product"], 
+            vendor=node["vendor"],
+            layer=node["layer"],
+            index=int(node["id"])
+            ))
+
+    # sorting vulnerability node list by index ascending order
+    vulnerability_graph.sort(key=lambda node: node.index)
+
+    # edges
+    for edges in network['arcs']:
+        ModelDriven.Edge(vulnerability_graph[int(edges["currNode"])], vulnerability_graph[int(edges["nextNode"])])
+
+
+    # start generating shorest paths
+    shortest_paths_gen()
+    return 'Done', 21
