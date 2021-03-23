@@ -402,12 +402,18 @@ def katz_centrality_and_pagerank_centrality():
     if max_eigval == 0j:    # if eigenval is zero
         alpha = 1.0
     else:
-        alpha = 1.0/max_eigval
+        alpha = 1.0/max_eigval - 0.01
         if alpha > 1:
             alpha = 1.0
 
     # calculating Katz = inv(I - a*A)*vec(n,1) Ref: [1][2]
     katz = np.dot(la.inv(np.subtract(np.identity(len(adj_mat)), 1.0/alpha * adj_mat)),np.ones((len(adj_mat),1)))
+
+    norm = 0.0
+    # normalizing katz vector
+    for val in katz:
+        norm += val**2
+    katz *= 1.0 / math.sqrt(norm)
 
     # calculating pagerank
     for i in range(len(adj_mat)):

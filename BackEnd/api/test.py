@@ -1,3 +1,4 @@
+# this is a test file for testing/debugging analysis module
 from model_driven_analysis import vulnerability_graph, ModelDriven, shortest_paths_gen, katz_centrality_and_pagerank_centrality
 
 def network_topology_model_driven_input():

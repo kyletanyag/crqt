@@ -95,7 +95,7 @@ def network_topology_model_driven_input():
         network = json.load(f)
 
     # creating remote attacker node
-    vulnerability_graph.append(ModelDriven.Node(None, None, "REMOTE_ATTACKER", 0))
+    vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0))
 
     for node in network["vertices"]:
         vulnerability_graph.append(ModelDriven.Node(
@@ -115,4 +115,4 @@ def network_topology_model_driven_input():
 
     # start generating shorest paths
     shortest_paths_gen()
-    return {'Done': '21'}
+    return 'Done', 21
