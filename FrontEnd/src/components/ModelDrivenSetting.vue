@@ -13,32 +13,31 @@
                <td width="25%">
                   <div align="center">
                      <p align="center">Server Type</p>
-                     <select v-model="emailServer[index]">
-                        <option v-for="item in emailServer" :key="item" :value="item">{{item}}</option>
-                        
+                     <select v-model="selectedServerType[index]">
+                        <option v-for="item in serverType" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>
                      </select>
                   </div>
                </td>
                <td width="25%">
                   <div align="center">
                      <p>Server Vendor</p>
-                     <select v-model="serverVendor[index]">
-                        <option v-for="item in vendorServer" :key="item" :value="item">{{item}}</option>
+                     <select v-model="selectedVendor[index]">
+                        <option v-for="item in vendorServer" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>
                      </select>
                   </div>
                </td>
                <td width="25%">
                   <div align="center">
                      <p>Server Product</p>
-                     <select v-model="serverProduct[index]">
-                        <option v-for="item in serverProduct" :key="item" :value="item">{{item}}</option>                        
+                     <select v-model="selectedProduct[index]">
+                        <option v-for="item in serverProduct" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>                        
                      </select>
                   </div>
                </td>
                <td width="25%">
                   <div align="center">
                      <p>Number of Servers</p>
-                         <input type="text" v-model="numberServer" placeholder="Number of Server" />      
+                         <input type="text" v-model="numProducts" placeholder="Number of Server" @change="sendDataParent()"/>      
                   </div>
                </td>
             </tr>
@@ -49,6 +48,7 @@
 <script>
 /* eslint-disable */ 
 import Multiselect from '@vueform/multiselect'
+import http from '@/http-common.js';
 export default {
   
   name: 'Model Driven Setting',
@@ -61,10 +61,7 @@ export default {
     products:Array,
     servers: Number,
     vendorServer: Array,
-    emailServer: Array,
-    serverProduct: Array,
-    numberServer: Array,
-    serverVendor: Array,
+    serverType: Array,
   },
   
   component: {
@@ -73,15 +70,31 @@ export default {
   
   computed: {
     rowData() {
+      var nodes = [];
+      // nested for loop for numProducts !!!
+      for (let i = 0; i < this.numProducts; i++) {
+        nodes.push({
+          layer: this.layer,
+          id: i, // change per layer
+          vendor: this.selectedVendor[i],
+          // product: this.selectedProduct[i],
+          // vulnerabilities: this.selectedVulnerabilities[i]
+        });
+      }
       return {
-
+        nodes
       };
+    },
+  },
+
+  watch: {
+    selectedVendor() { // double check this !!!
+      this.getProducts();
     },
   },
 
   methods: {
     sendDataParent() {
-
       this.$emit('DataCall', this.rowData);
     },
 
@@ -92,12 +105,20 @@ export default {
       //console.log(row);d
       this.rows.splice(_index-1, 1);
     },
+
+    getProducts() {
+      console.log('Getting products');
+      // http.get(/* Some route name */)
+    }
   },
  
   data() {
     return{
       rows: [1],
-      selectedVendor:-1, 
+      selectedServerType: [],
+      selectedVendor: [],
+      selectedProduct: [],
+      numProducts: [],
     };
   }
   

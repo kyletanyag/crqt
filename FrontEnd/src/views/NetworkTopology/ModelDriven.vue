@@ -2,8 +2,9 @@
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
       <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" :products="L1ProductInput" :layer="corp_fw_1"> </model-driven-firewall>
-      <model-driven-setting title="Corporate DMZ" :emailServer="emailServerInput" :vendorServer="serverVendorInput" 
-                           :serverProduct="serverProductInput" :numberServer="numberServer"></model-driven-setting>
+      <model-driven-setting title="Corporate DMZ" :serverType="emailServerInput" :vendorServer="serverVendorInput" layer="corp_dmz" 
+         @DataCall="addNodes"
+      ></model-driven-setting>
 
       <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
@@ -484,7 +485,11 @@ export default {
       //console.log(row);d
       this.rows.splice(_index-1, 1);
     },
- 
+
+   addNodes(n) {
+      console.log('Got event!')
+      console.log(n);
+   },
     
     GetCardSize() {
             return {
