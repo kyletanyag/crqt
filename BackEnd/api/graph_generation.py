@@ -4,7 +4,7 @@
 
 '''
 from flask import Blueprint, jsonify, request
-from .nvd import data_driven_cvss_query, model_driven_cvss_query
+from .nvd import data_driven_cvss_query#, model_driven_cvss_query
 import enum
 from collections import deque
 from .data_driven_analysis import DataDriven, DerivedScore

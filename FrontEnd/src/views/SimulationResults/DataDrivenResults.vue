@@ -47,8 +47,8 @@
       </p>
       <p>
         Your total network severity breakdown:
-        <br><strong>{{ highSeverityNodes.length }}</strong> nodes are marked as <strong>high</strong> severity. (Base Score > 0.7)
-        <br><strong>{{ mediumServerityNodes.length }}</strong> nodes are marked as <strong>medium</strong> severity. (0.4 &lt; Base Score &lt; 0.7)
+        <br><strong>{{ highSeverityNodes.length }}</strong> nodes are marked as <strong>high</strong> severity. (Base Score &#8805; 0.7)
+        <br><strong>{{ mediumServerityNodes.length }}</strong> nodes are marked as <strong>medium</strong> severity. (0.4 &#8804; Base Score &lt; 0.7)
         <br><strong>{{ lowSeverityNodes.length }}</strong> nodes are marked as <strong>low</strong> severity. (Base Score &lt; 0.4)
       </p>
       <p>
@@ -60,7 +60,7 @@
     <div class="col" v-if="!loading">
       <Histogram
         :data="histogramScoreData" 
-        numBins="10" 
+        numBins="5" 
         :name="histogramScoreName" 
         barColor='#f87979'
         style="width: 60%"

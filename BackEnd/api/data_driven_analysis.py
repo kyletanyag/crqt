@@ -91,7 +91,7 @@ def DerivedScore(lag_dict, leaf_queue):
                
     # return LAG
 
-@data_analysis_bp.route('/data_driven/get_derive_scores', methods=['GET'])
+@data_analysis_bp.route('/data_driven/get_derived_scores', methods=['GET'])
 def getDerivedScores():
     global LAG
 

@@ -36,7 +36,7 @@
                      v-model="L1Vendor.options"
                      mode="multiple"
                      placeholder="Select your Vulnerabilites"
-                     :options="L1VendorInput[selectedVendor].options"
+                     :options="L1VendorInput[selectedVendor]..0"
                      />
                </div>
                </td>
