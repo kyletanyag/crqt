@@ -5,7 +5,7 @@
       <model-driven-setting title="Corporate DMZ" :emailServer="emailServerInput" :vendorServer="serverVendorInput" 
                            :serverProduct="serverProductInput" :numberServer="numberServer"></model-driven-setting>
 
-      <!-- <h4> Corporate Firewall L1 Settings:</h4>
+      <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
       <table width=100% border="0" cellspacing="0" >
          <tbody>
@@ -14,7 +14,7 @@
                   <div align="center">
                      <p align="center">Corporate Firewall L1 Vendor</p>
                      <select v-model="selectedVendor">
-                        <option v-for="(L1Vend,item) in L1VendorInput" :key="item" :value="item">{{L1Vend.label}}</option>
+                        <option v-for="(L1Vend,item) in L1VendorInput" :key="item" :value="L1Vend.label">{{L1Vend.label}}</option>
                      </select>
                   </div>
                </td>
@@ -35,7 +35,7 @@
             </tr>
                  <tr width="100%">
                <td>
-               <div v-if="selectedVendor != -1">
+               <div v-if="selectedVendor">
                   <Multiselect 
                      v-model="L1Vendor.options"
                      mode="multiple"
@@ -46,7 +46,7 @@
                </td>
                </tr>
          </tbody>
-      </table> -->
+      </table>
       
       <!-- <option v-for="option in L1VendorInput[selectedVendor].options" :key="option" :value="option">{{option}}</option>                -->
                <!-- <label class="form-check-label" v-for="option in L1VendorInput[selectedVendor].options" :key="option" >{{option.options}}</label> -->
@@ -364,7 +364,7 @@ export default {
         options:["Microsoft1","Microsoft2","Microsoft3"]
       }
     ],
-     selectedVendor:-1, 
+     selectedVendor:undefined, 
      selectedOption:[],
       L1Vendor:[],
       NumberFireWall: 0,
@@ -464,7 +464,7 @@ export default {
         }
     },
     methods:{
-      Submit() {
+   Submit() {
                this.Upload(this.input, (event) => {
                 this.progress = Math.round(100 * event.loaded / event.total);
             })
@@ -474,10 +474,10 @@ export default {
             })
             
         },
-      Upload(data, onUploadProgress) {
+   Upload(data, onUploadProgress) {
             return http.post("/network_topology_model_driven_input", data , { onUploadProgress });
         }, 
-      addRow: function(_index){
+   addRow: function(_index){
          this.rows.splice(_index+1,0, this.rows[_index]);
     },
     removeRow: function(_index){
