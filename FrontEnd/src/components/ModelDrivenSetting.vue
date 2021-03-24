@@ -47,7 +47,7 @@
 </div>
 </template>
 <script>
-
+/* eslint-disable */ 
 import Multiselect from '@vueform/multiselect'
 export default {
   
@@ -59,7 +59,12 @@ export default {
     type: Array,
     vendor: Array,
     products:Array,
-    servers: Number
+    servers: Number,
+    vendorServer: Array,
+    emailServer: Array,
+    serverProduct: Array,
+    numberServer: Array,
+    serverVendor: Array,
   },
   
   component: {
@@ -78,9 +83,7 @@ export default {
     sendDataParent() {
 
       this.$emit('DataCall', this.rowData);
-    }
-  },
-  methods:{
+    },
 
     addRow: function(_index){
          this.rows.splice(_index+1,0, this.rows[_index]);
@@ -91,16 +94,10 @@ export default {
     },
   },
  
-  data(){
+  data() {
     return{
-      
       rows: [1],
       selectedVendor:-1, 
-      vendorServer:[],
-      emailServer:[],
-      serverProduct:[],
-      numberServer:[],
-      
     };
   }
   
