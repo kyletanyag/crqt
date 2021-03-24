@@ -1,6 +1,10 @@
 <template>
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
+      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" :products="L1ProductInput" :layer="corp_fw_1"> </model-driven-firewall>
+      <model-driven-setting title="Corporate DMZ" :emailServer="emailServerInput" :vendorServer="serverVendorInput" 
+                           :serverProduct="serverProductInput" :numberServer="numberServer"></model-driven-setting>
+
       <!-- <h4> Corporate Firewall L1 Settings:</h4>
       <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
       <table width=100% border="0" cellspacing="0" >
@@ -9,7 +13,7 @@
                <td width="33%">
                   <div align="center">
                      <p align="center">Corporate Firewall L1 Vendor</p>
-                     <select v-model="selectedVendor" @change="selectVendor">
+                     <select v-model="selectedVendor">
                         <option v-for="(L1Vend,item) in L1VendorInput" :key="item" :value="item">{{L1Vend.label}}</option>
                      </select>
                   </div>
@@ -43,7 +47,7 @@
                </tr>
          </tbody>
       </table> -->
-      <model-driven-row layer="Corporate Firewall L1" :vendors="coporateFirewall"> </model-driven-row>
+      
       <!-- <option v-for="option in L1VendorInput[selectedVendor].options" :key="option" :value="option">{{option}}</option>                -->
                <!-- <label class="form-check-label" v-for="option in L1VendorInput[selectedVendor].options" :key="option" >{{option.options}}</label> -->
             <!-- <label class="form-check-label" v-for="item in L1VendorInput" :key="item" :value="item "  >{{item.options}}</label> -->
@@ -330,12 +334,14 @@
 //  JSON OBJECT layer, nodes, edges
 import http from "../../http-common";
 import Multiselect from '@vueform/multiselect'
-import ModelDrivenRow from '@/components/ModelDrivenRow.vue';
+import ModelDrivenFirewall from '@/components/ModelDrivenFirewall.vue';
+import ModelDrivenSetting from '@/components/ModelDrivenSetting.vue';
 // import { ref } from 'vue';
 export default {
    components: { 
       Multiselect,
-      ModelDrivenRow
+      ModelDrivenFirewall,
+      ModelDrivenSetting
    },
   data() {
    //   const coporateFirewall = ref([]);
@@ -428,7 +434,7 @@ export default {
     computed: {
         input() {
             return {
-               L1Vendor: this.selectedVendor,
+               selectedVendor: this.selectedVendor,
                NumberFireWall: this.NumberFireWall,
                L1Product: this.L1Product,
                emailServer:this.emailServer,
@@ -491,10 +497,8 @@ export default {
       return false;  // kbt false
    }
     },  
-    selectVendor: function(){
-       this.selectedOption='';
-    },
-    nodeSelection: function(){
+    selectVendor: function(selectedVendor){
+       this.selectedVendor = selectedVendor;
        this.selectedOption='';
     },
   }
