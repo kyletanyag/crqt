@@ -4,7 +4,7 @@
     <p> Please select the product vendor, model, and quantity for your {{ title }}. Use the "Add Server" button to add and "Remove Server" button to remove</p>
     <form>
       <input type="button" @click="addRow(index)" value="Add Server">
-      <input type="button" @click="removeRow(index)" value="Remove Server">
+      <!-- <input type="button" @click="removeRow(index)" value="Remove Server"> -->
     </form>
       <table id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
         selectedClass="table-info">
@@ -13,7 +13,7 @@
                <td width="25%">
                   <div align="center">
                      <p align="center">Server Type</p>
-                     <select v-model="selectedServerType[index]">
+                     <select v-model="rows[index][0]">
                         <option v-for="item in serverType" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>
                      </select>
                   </div>
@@ -21,7 +21,7 @@
                <td width="25%">
                   <div align="center">
                      <p>Server Vendor</p>
-                     <select v-model="selectedVendor[index]">
+                     <select v-model="rows[index][1]">
                         <option v-for="item in vendorServer" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>
                      </select>
                   </div>
@@ -29,7 +29,7 @@
                <td width="25%">
                   <div align="center">
                      <p>Server Product</p>
-                     <select v-model="selectedProduct[index]">
+                     <select v-model="rows[index][2]">
                         <option v-for="item in serverProduct" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>                        
                      </select>
                   </div>
@@ -37,8 +37,11 @@
                <td width="25%">
                   <div align="center">
                      <p>Number of Servers</p>
-                         <input type="text" v-model="numProducts" placeholder="Number of Server" @change="sendDataParent()"/>      
+                         <input type="text" v-model="rows[index][3]" placeholder="Number of Server" @change="sendDataParent()"/>      
                   </div>
+               </td>
+               <td>
+                 <input type="button" @click="removeRow(index)" value="Remove Server">
                </td>
             </tr>
          </tbody>
@@ -85,6 +88,18 @@ export default {
         nodes
       };
     },
+
+    selectedType() {
+      var x = [];
+
+      this.rows.forEach((i) => {
+        x.push(i[0]);
+      });
+
+      return {
+        x
+      };
+    }
   },
 
   watch: {
@@ -99,11 +114,12 @@ export default {
     },
 
     addRow: function(_index){
-         this.rows.splice(_index+1,0, this.rows[_index]);
+      this.rows.push([undefined, undefined, undefined, undefined]);
     },
     removeRow: function(_index){
-      //console.log(row);d
-      this.rows.splice(_index-1, 1);
+      console.log(_index);
+
+      this.rows.splice(_index, 1);
     },
 
     getProducts() {
@@ -114,7 +130,7 @@ export default {
  
   data() {
     return{
-      rows: [1],
+      rows: [[undefined, undefined, undefined, undefined]],
       selectedServerType: [],
       selectedVendor: [],
       selectedProduct: [],
