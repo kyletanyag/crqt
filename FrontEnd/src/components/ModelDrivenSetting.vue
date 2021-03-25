@@ -6,7 +6,8 @@
       <input type="button" @click="addRow(index)" value="Add Server">
       <input type="button" @click="removeRow(index)" value="Remove Server">
     </form>
-      <table id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
+
+      <table :has-checkbox="true" id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
         selectedClass="table-info">
          <tbody>
             <tr v-for="(row, index) in rows" :key="index" :row="row">
@@ -49,10 +50,18 @@
 /* eslint-disable */ 
 import Multiselect from '@vueform/multiselect'
 import http from '@/http-common.js';
-export default {
-  
-  name: 'Model Driven Setting',
+import { defineComponent, reactive } from "vue";
+import TableLite from "@/components/TableLite.vue";
 
+export default {
+  name: 'Model Driven Setting',
+    
+  component: {
+    Multiselect,
+    TableLite,
+    defineComponent
+
+  },
   props: {
     title: String,
     layer: String,
@@ -62,12 +71,7 @@ export default {
     servers: Number,
     vendorServer: Array,
     serverType: Array,
-  },
-  
-  component: {
-    Multiselect,
-  },
-  
+  },  
   computed: {
     rowData() {
       var nodes = [];
@@ -120,10 +124,12 @@ export default {
       selectedProduct: [],
       numProducts: [],
     };
-  }
+  },
   
 }
 </script>
+
 <style>
-  
+
 </style>
+
