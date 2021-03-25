@@ -1,318 +1,21 @@
 <template>
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" :products="L1ProductInput" :layer="corp_fw_1"> </model-driven-firewall>
-      <model-driven-setting title="Corporate DMZ" :serverType="emailServerInput" :vendorServer="serverVendorInput" layer="corp_dmz" 
-         @DataCall="addNodes"
-      ></model-driven-setting>
+      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" :products="L1ProductInput" :layer="corp_fw_1"/>
+      <model-driven-setting title="Corporate DMZ" :serverType="DMZServerType" 
+      :vendorServer="serverVendorInput" :layer="corp_dmz" @DataCall="addNodes"/>
+      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" :layer="corp_fw_2"/>
+      <model-driven-setting title="Corporate LAN" :serverType="LANServerVendorInput" 
+      :vendorServer="serverVendorInput" :layer="corp_lan" @DataCall="addNodes"/>
 
-      <h4> Corporate Firewall L1 Settings:</h4>
-      <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall 1.</p>
-      <table width=100% border="0" cellspacing="0" >
-         <tbody>
-            <tr>
-               <td width="33%">
-                  <div align="center">
-                     <p align="center">Corporate Firewall L1 Vendor</p>
-                     <select v-model="selectedVendor">
-                        <option v-for="(L1Vend,item) in L1VendorInput" :key="item" :value="L1Vend.label">{{L1Vend.label}}</option>
-                     </select>
-                  </div>
-               </td>
-               <td align="center" width="33%">
-                  <div align="center">
-                     <p>Coorporate Firewall L1 Product</p>
-                     <select v-model="L1Product">
-                        <option v-for="item in L1ProductInput" :key="item" :value="item">{{item}}</option>               
-                     </select>
-                  </div>
-               </td>
-               <td width="33%">
-                  <div align="center">
-                     <p>Number of Coporate Firewall 1</p>                     
-                        <input type="text" v-model="NumberFireWall" placeholder="Number of Firewalls 1" />        
-                  </div>
-               </td>
-            </tr>
-                 <tr width="100%">
-               <td>
-               <div v-if="selectedVendor">
-                  <Multiselect 
-                     v-model="L1Vendor.options"
-                     mode="multiple"
-                     placeholder="Select your Vulnerabilites"
-                     :options="L1VendorInput[selectedVendor]"
-                     />
-               </div>
-               </td>
-               </tr>
-         </tbody>
-      </table>
-      
-      <!-- <option v-for="option in L1VendorInput[selectedVendor].options" :key="option" :value="option">{{option}}</option>                -->
-               <!-- <label class="form-check-label" v-for="option in L1VendorInput[selectedVendor].options" :key="option" >{{option.options}}</label> -->
-            <!-- <label class="form-check-label" v-for="item in L1VendorInput" :key="item" :value="item "  >{{item.options}}</label> -->
-            <!-- <input type="checkbox" v-model="selectedOption"> -->
-      <!-- <li :key="index" v-for="(agenda, index) in content.data.agendas"/>
-      <Multiselect class="multiselect" align="center"
-      v-model="L1Vendor"
-      mode="multiple"
-      placeholder="Select your Vulnerabilites"
-      :options="L1VendorInput[selectedVendor].options"
-      label="L1VendorInput[selectedVendor].options">
-      </li> -->
-      <h4> Corporate DMZ Settings:</h4>
-      <p> Please select the poduct vendor, model, and quantity for your Corporate DMZ Network. Use the "Add Server" button to add and "Remove Server" button to remove </p>
-      <form>
-         <input type="button" @click="addRow(index)" value="Add Server">
-         <input type="button" @click="removeRow(index)" value="Remove Server">
-      </form>
-      <table id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
-        selectedClass="table-info">
-         <tbody>
-            <tr v-for="(row, index) in rows" :key="index" :row="row">
-               <td width="25%">
-                  <div align="center">
-                     <p align="center">Server Type</p>
-                     <select v-model="emailServer[index]">
-                        <option v-for="item in emailServerInput" :key="item" :value="item">{{item}}</option>
-                        
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Server Vendor</p>
-                     <select v-model="serverVendor[index]">
-                        <option v-for="item in serverVendorInput" :key="item" :value="item">{{item}}</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Server Product</p>
-                     <select v-model="serverProduct[index]">
-                        <option v-for="item in serverProductInput" :key="item" :value="item">{{item}}</option>                        
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Number of Servers</p>
-                         <input type="text" v-model="numberServer" placeholder="Number of Server" />      
-                  </div>
-               </td>
-            </tr>
-         </tbody>
-      </table>
-      <h4> Corporate Firewall L2 Settings:</h4>
-      <p> Please select the poduct vendor, model, and quantity for your Corporate Firewall L2.</p>
-      <table width=100% border="0" cellspacing="0" >
-         <tbody>
-            <tr>
-               <td width="33%">
-                  <div align="center">
-                     <p align="center">Corporate Firewall L2 Vendor</p>
-                     <select>
-                        <option value="">Option 1</option>
-                        <option value="">Option 2</option>
-                     </select>
-                  </div>
-               </td>
-               <td align="center" width="33%">
-                  <div align="center">
-                     <p>Corporate Firewall L2 Product</p>
-                     <select>
-                        <option value="">Option 1</option>
-                        <option value="">Option 2</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="33%">
-                  <div align="center">
-                     <p>Number of Coporate Firewall L2</p>
-                     <input type="text" v-model="numberServer" placeholder="Number of Corporate Firewall L2" />    
-                  </div>
-               </td>
-            </tr>
-         </tbody>
-      </table>
-      <h4> Corporate LAN Settings</h4>
-      <p> Please select the poduct vendor, model, and quantity for your Corporate LAN Network.  Use the "Add Server" button to add and "Remove Server" button to remove </p>
-            <form>
-         <input type="button" @click="addRow(index)" value="Add Server">
-         <input type="button" @click="removeRow(index)" value="Remove Server">
-      </form>
-      <table id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
-        selectedClass="table-info">
-         <tbody>
-            <tr v-for="(row, index) in rows" :key="index" :row="row">
-               <td width="25%">
-                  <div align="center">
-                     <p align="center">Server Type</p>
-                     <select v-model="emailServer[index]">
-                        <option v-for="item in emailServerInput" :key="item" :value="item">{{item}}</option>
-                        
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Server Vendor</p>
-                     <select v-model="serverVendor[index]">
-                        <option v-for="item in serverVendorInput" :key="item" :value="item">{{item}}</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Server Product</p>
-                     <select v-model="serverProduct[index]">
-                        <option v-for="item in serverProductInput" :key="item" :value="item">{{item}}</option>                        
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Number of Servers</p>
-                         <input type="text" v-model="numberServer" placeholder="Number of Server" />      
-                  </div>
-               </td>
-            </tr>
-         </tbody>
-      </table>
-      <h4> Control Systems DMZ Settings:</h4>
-            <form>
-         <input type="button" @click="addRow(index)" value="Add Server">
-         <input type="button" @click="removeRow(index)" value="Remove Server">
-      </form>
-      <table id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
-        selectedClass="table-info">
-         <tbody>
-            <tr v-for="(row, index) in rows" :key="index" :row="row">
-               <td width="25%">
-                  <div align="center">
-                     <p align="center">Server Type</p>
-                     <select v-model="emailServer[index]">
-                        <option v-for="item in emailServerInput" :key="item" :value="item">{{item}}</option>
-                        
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Server Vendor</p>
-                     <select v-model="serverVendor[index]">
-                        <option v-for="item in serverVendorInput" :key="item" :value="item">{{item}}</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Server Product</p>
-                     <select v-model="serverProduct[index]">
-                        <option v-for="item in serverProductInput" :key="item" :value="item">{{item}}</option>                        
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Number of Servers</p>
-                         <input type="text" v-model="numberServer" placeholder="Number of Server" />      
-                  </div>
-               </td>
-            </tr>
-         </tbody>
-      </table>
-      <h4>Control System Firewall 2 Settings:</h4>
-      <table id="AddServer" width="100%" border="0" cellspacing="0">
-         <tbody>
-            <tr>
-               <td width="25%">
-                  <div align="center">
-                     <p align="center">Corporate Firewall L1 Vendor</p>
-                     <select>
-                        <option value="">Option 1</option>
-                        <option value="">Option 2</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Corporate Firewall L1 Product</p>
-                     <select>
-                        <option value="">Option 1</option>
-                        <option value="">Option 2</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Number of Coporate Firewall 1</p>
-                     <select>
-                        <option value="">Option 1</option>
-                        <option value="">Option 2</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Number of Coporate Firewall 1</p>
-                     <select>
-                        <option value="">Option 1</option>
-                        <option value="">Option 2</option>
-                     </select>
-                  </div>
-               </td>
-            </tr>
-         </tbody>
-      </table>
-      <h4>Control System LAN Settings:</h4>
-            <form>
-         <input type="button" @click="addRow(index)" value="Add Server">
-         <input type="button" @click="removeRow(index)" value="Remove Server">
-      </form>
-      <table id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
-        selectedClass="table-info">
-         <tbody>
-            <tr v-for="(row, index) in rows" :key="index" :row="row">
-               <td width="25%">
-                  <div align="center">
-                     <p align="center">Server Type</p>
-                     <select v-model="emailServer[index]">
-                        <option v-for="item in CSLanSystemServerInput" :key="item" :value="item">{{item}}</option>
-                        
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Server Vendor</p>
-                     <select v-model="serverVendor[index]">
-                        <option v-for="item in serverVendorInput" :key="item" :value="item">{{item}}</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Server Product</p>
-                     <select v-model="serverProduct[index]">
-                        <option v-for="item in serverProductInput" :key="item" :value="item">{{item}}</option>                        
-                     </select>
-                  </div>
-               </td>
-               <td width="25%">
-                  <div align="center">
-                     <p>Number of Servers</p>
-                         <input type="text" v-model="numberServer" placeholder="Number of Server" />      
-                  </div>
-               </td>
-            </tr>
-         </tbody>
-      </table>
-      <button type="button" class="btn btn-secondary mx-2" @click="nodeSelect =!nodeSelect">Continue</button>
-      <table>
-      </table>
+
+      <model-driven-firewall title="Control System Firewall L1" :vendors="L1VendorInput" :layer="cs_fw_1"/>
+      <model-driven-setting title="Control System DMZ" :serverType="CSDMZserverType" 
+      :vendorServer="serverVendorInput" :layer="cs_dmz" @DataCall="addNodes"/>
+      <model-driven-firewall title="Control System Firewall L2" :vendors="L2VendorInput" :layer="cs_fw_2"/>
+      <model-driven-setting title="Control System LAN" :serverType="CSLanSystemServerType" 
+      :vendorServer="serverVendorInput" :layer="corp_lan" @DataCall="addNodes"/>
+
    <input type="button" @click="Submit()" value="Submit">
    
           <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
@@ -342,7 +45,7 @@ export default {
    components: { 
       Multiselect,
       ModelDrivenFirewall,
-      ModelDrivenSetting
+      ModelDrivenSetting,
    },
   data() {
    //   const coporateFirewall = ref([]);
@@ -365,19 +68,33 @@ export default {
         options:["Microsoft1","Microsoft2","Microsoft3"]
       }
     ],
+      L2VendorInput:[
+      {
+        label:"Cisco",
+        options:["Cisco1","Cisco2","Cisco3"]
+      },
+      {
+        label:"Juniper",
+        options:["Juniper1","Juniper2","Juniper"]
+      },
+      {
+        label:"Microsoft",
+        options:["Microsoft1","Microsoft2","Microsoft3"]
+      }
+    ],
      selectedVendor:undefined, 
      selectedOption:[],
       L1Vendor:[],
       NumberFireWall: 0,
-      L1ProductInput: [
-         "ASA5500",
-         "ASA5505",
-         "ASA5510",
-         "ASA5520",
-         "ASA5540",
-         "ASA5550",
-         "ASA5580",
-         "ASA5585X" ],
+      // L1ProductInput: [
+      //    "ASA5500",
+      //    "ASA5505",
+      //    "ASA5510",
+      //    "ASA5520",
+      //    "ASA5540",
+      //    "ASA5550",
+      //    "ASA5580",
+      //    "ASA5585X" ],
       L1Product:[],
       serverVendorInput: [
          "Cisco",
@@ -389,12 +106,21 @@ export default {
          "Semens",
          "Emerson",
          "SchneiderElectric",], 
-      serverVendor:[],                                    
+      LANServerVendorInput:[
+         "Business Server",
+         "Business Workstation",
+         "Web Application Server"
+      ],
+      DMZserverVendor:[],                                    
       progress: 0,
       output: "",
-      emailServerInput: [
-         "Gmail",
-         "Outlook",],
+      DMZServerType: [
+         "Email Server",
+         "Web Server",
+         "FTP Server",
+         "DNS Server",
+         "WAP Server",
+         "AUTHENTICATION Server"],
       emailServer:[],
       serverProductInput: [
          "windowsxp",
@@ -413,8 +139,14 @@ export default {
          'Juniper',
          'Microsoft',
       ],
+      CSDMZserverType:["Ext Business COMM Server",
+                     "WWW Server",
+                     "Database Server",
+                     "Security Server",
+                     "Authentication Server",
+      ],
       CSLanSystemServer:[],
-      CSLanSystemServerInput:["Application Server",
+      CSLanSystemServerType:["Application Server",
                            "Historian",
                            "Database Server",
                            "Configuration Server",
@@ -516,6 +248,7 @@ export default {
    table, th, td {
    border: 1px solid rgb(5, 5, 5);
    border-collapse: collapse;
+   margin-left:7px;
    }
    th, td {
    padding: 5px;
@@ -527,7 +260,7 @@ export default {
    }
    p{
    padding-left: 10px;
-   padding-bottom:10px;
+   padding-bottom:5px;
    }
   
 </style>
