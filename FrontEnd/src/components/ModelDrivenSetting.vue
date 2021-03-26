@@ -3,13 +3,16 @@
   <h4> {{ title }} Settings:</h4>
     <p> Please select the product vendor, model, and quantity for your {{ title }}. Use the "Add Server" button to add and "Remove Server" button to remove</p>
     <form>
-      <input type="button" @click="addRow(index)" value="Add Server">
+      <input type="button" style="margin-bottom:5px;" class="btn btn-secondary mx-2" @click="addRow(index)" value="Add Server">
       <!-- <input type="button" @click="removeRow(index)" value="Remove Server"> -->
     </form>
-      <table id="AddServer" class="table-hover" width="100%" border="0" cellspacing="0" selectionMode="multiple"
-        selectedClass="table-info">
+
+      <table id="AddServer" width="100%">
          <tbody>
             <tr v-for="(row, index) in rows" :key="index" :row="row">
+                <td>
+                 <input type="button" class="btn btn-secondary mx-2" @click="removeRow(index)" value="Remove">
+               </td>
                <td width="25%">
                   <div align="center">
                      <p align="center">Server Type</p>
@@ -40,9 +43,7 @@
                          <input type="text" v-model="rows[index][3]" placeholder="Number of Server" @change="sendDataParent()"/>      
                   </div>
                </td>
-               <td>
-                 <input type="button" @click="removeRow(index)" value="Remove Server">
-               </td>
+
             </tr>
          </tbody>
       </table>
@@ -52,10 +53,18 @@
 /* eslint-disable */ 
 import Multiselect from '@vueform/multiselect'
 import http from '@/http-common.js';
-export default {
-  
-  name: 'Model Driven Setting',
+import { defineComponent, reactive } from "vue";
+import TableLite from "@/components/TableLite.vue";
 
+export default {
+  name: 'Model Driven Setting',
+    
+  component: {
+    Multiselect,
+    TableLite,
+    defineComponent
+
+  },
   props: {
     title: String,
     layer: String,
@@ -65,12 +74,7 @@ export default {
     servers: Number,
     vendorServer: Array,
     serverType: Array,
-  },
-  
-  component: {
-    Multiselect,
-  },
-  
+  },  
   computed: {
     rowData() {
       var nodes = [];
@@ -134,10 +138,12 @@ export default {
       selectedProduct: [],
       numProducts: [],
     };
-  }
+  },
   
 }
 </script>
+
 <style>
-  
+
 </style>
+

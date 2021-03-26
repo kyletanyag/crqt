@@ -34,6 +34,7 @@
     "vue-csv-import": "^4.0.1",
     "vue-dropdowns": "^1.1.2",
     "vue-multiselect": "^2.1.6",
+    "vue-next-select": "^1.3.6",
     "vue-router": "^4.0.0-0",
     "vue-select": "^3.11.2",
     "vue-table-dynamic": "^0.4.4",
