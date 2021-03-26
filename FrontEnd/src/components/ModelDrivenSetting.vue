@@ -91,11 +91,9 @@ export default {
 
     selectedType() {
       var x = [];
-
       this.rows.forEach((i) => {
         x.push(i[0]);
       });
-
       return {
         x
       };
