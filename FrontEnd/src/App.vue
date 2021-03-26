@@ -37,7 +37,7 @@
                         <li class="nav-item">
                             <router-link class="nav-link"
                                          active-class="active"
-                                         to="/SimulationResults">Simulation Results</router-link>
+                                         :to="getSimulationResultsRoute()">Simulation Results</router-link>
                         </li>
                         <!-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown">Resilience Metrics</a>
@@ -95,7 +95,7 @@
         </header>
     </div>
     <div>
-      <router-view @authenticated="setAuthenticated" />
+      <router-view @authenticated="setAuthenticated" @inputApproach="setInputApproach" />
     </div>
 </div>
 </template>
@@ -106,6 +106,7 @@
     data() {
       return {
         authenticated: true, // change to true when developing
+        inputApproach: undefined,
         mockAccount: {
           emailAddress: "email",
           password: "password"
@@ -123,9 +124,18 @@
         this.authenticated = status;
       },
 
+      setInputApproach(approach) {
+        console.log(approach);
+        this.inputApproach = approach;
+      },
+
       logout() {
         this.authenticated = false;
+      },
 
+      getSimulationResultsRoute(){
+        console.log(`/simulation-results/${this.inputApproach}`);
+        return `/simulation-results/${this.inputApproach}`;
       }
     }
   }
