@@ -142,6 +142,7 @@ export default {
         .then((response) => {
           console.log(response.data.message);
           // this.$router.push({name: 'Sandbox'});
+          this.$emit('inputApproach', 'data-driven')
         })
         .catch((response) => {
           this.progress = 0;

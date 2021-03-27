@@ -15,8 +15,8 @@ export default defineComponent({
   props: {
     data: Array,
     binNames: {
-      type: Array(),
-      default: ['automatic']
+      type: Array,
+      default: function() {return ['automatic'] } 
     },
     numBins: String, //Vue was giving me an error in SimulationResults.vue, saying that it expected a number but I was passing a string.
     name: String,
