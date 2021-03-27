@@ -1,12 +1,12 @@
 <template>
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" :products="L1ProductInput" :layer="corp_fw_1"/>
+      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" :products="L1ProductInput" layer="corp_fw_1"/>
       <model-driven-setting title="Corporate DMZ" :serverType="DMZServerType" 
-      :vendorServer="serverVendorInput" :layer="corp_dmz" @DataCall="addNodes"/>
-      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" :layer="corp_fw_2"/>
+      :vendorServer="serverVendorInput" layer="corp_dmz" @DataCall="addNodes"/>
+      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2"/>
       <model-driven-setting title="Corporate LAN" :serverType="LANServerVendorInput" 
-      :vendorServer="serverVendorInput" :layer="corp_lan" @DataCall="addNodes"/>
+      :vendorServer="serverVendorInput" layer="corp_lan" @DataCall="addNodes"/>
 
 
       <model-driven-firewall title="Control System Firewall L1" :vendors="L1VendorInput" :layer="cs_fw_1"/>

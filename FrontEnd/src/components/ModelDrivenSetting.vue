@@ -74,16 +74,36 @@ export default {
     servers: Number,
     vendorServer: Array,
     serverType: Array,
+    // x: {
+    //   type: Array(),
+    //   default: ['automatic']
+    // },
   },  
   computed: {
+    selectedType() {
+    this.x = [];
+    this.rows.forEach((i) => {
+        this.x.push(i[0]);
+      });
+    console.log(this.x)
+
+    return {
+         
+      };
+    },
+
     rowData() {
       var nodes = [];
+      
       // nested for loop for numProducts !!!
-      for (let i = 0; i < this.numProducts; i++) {
+    
+      for (let i = 0; i < this.x.length; i++) {
+        console.log("Current index = " + i + " : "+this.x[i]);
         nodes.push({
           layer: this.layer,
           id: i, // change per layer
-          vendor: this.selectedVendor[i],
+          type:this.x[i],
+          vendor: "hello",
           // product: this.selectedProduct[i],
           // vulnerabilities: this.selectedVulnerabilities[i]
         });
@@ -93,20 +113,7 @@ export default {
       };
     },
 
-    selectedType() {
-      var x = [];
-      this.rows.forEach((i) => {
-        x.push(i[0]);
-      });
-<<<<<<< HEAD
-console.log(x)
-=======
->>>>>>> e02f6495b17436821e4dfd4945a0c35aa8e45f30
-      return {
-        x
-    
-      };
-    }
+
   },
 
   watch: {
@@ -142,6 +149,7 @@ console.log(x)
       selectedVendor: [],
       selectedProduct: [],
       numProducts: [],
+      x: []
     };
   },
   
