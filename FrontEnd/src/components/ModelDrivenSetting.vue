@@ -99,9 +99,10 @@ export default {
       this.rows.forEach((i) => {
         x.push(i[0]);
       });
-
+console.log(x)
       return {
         x
+    
       };
     }
   },
