@@ -9,12 +9,12 @@
       :vendorServer="serverVendorInput" layer="corp_lan" @DataCall="addNodes"/>
 
 
-      <model-driven-firewall title="Control System Firewall L1" :vendors="L1VendorInput" :layer="cs_fw_1"/>
+      <model-driven-firewall title="Control System Firewall L1" :vendors="L1VendorInput" layer="cs_fw_1"/>
       <model-driven-setting title="Control System DMZ" :serverType="CSDMZserverType" 
-      :vendorServer="serverVendorInput" :layer="cs_dmz" @DataCall="addNodes"/>
-      <model-driven-firewall title="Control System Firewall L2" :vendors="L2VendorInput" :layer="cs_fw_2"/>
+      :vendorServer="serverVendorInput" layer="cs_dmz" @DataCall="addNodes"/>
+      <model-driven-firewall title="Control System Firewall L2" :vendors="L2VendorInput" layer="cs_fw_2"/>
       <model-driven-setting title="Control System LAN" :serverType="CSLanSystemServerType" 
-      :vendorServer="serverVendorInput" :layer="corp_lan" @DataCall="addNodes"/>
+      :vendorServer="serverVendorInput" layer="corp_lan" @DataCall="addNodes"/>
 
    <input type="button" @click="Submit()" value="Submit">
    
@@ -221,6 +221,25 @@ export default {
    addNodes(n) {
       console.log('Got event!')
       console.log(n);
+      var nodes = [];
+
+         //   for (let i = 0; i < this.NumberFireWall; i++) {
+              nodes.push( {
+                 n
+               //   layer: n[0],
+               //   id: n.id,
+               //   type: n.type,
+               //   vendor:n.vendor, // Changes to be consitent with var
+               //   product: n.product,
+               //   vulnerabilites: 'x'
+              })
+           //}
+           console.log(nodes)
+
+           return {
+              nodes
+           };
+        }
    },
     
     GetCardSize() {
@@ -238,7 +257,7 @@ export default {
        this.selectedVendor = selectedVendor;
        this.selectedOption='';
     },
-  }
+  
 };
 
        
