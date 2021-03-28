@@ -34,3 +34,10 @@ class NVD(db.Model):
     exploitabiliy_score_v2 = db.Column(db.Float)
     impact_score_v2 = db.Column(db.Float)
     discription = db.Column(db.String(4000))
+
+# Products Table
+class Products(db.Model):
+    __bind_key__ = 'products'
+    vendor = db.Column(db.String(64))
+    type = db.Column(db.String(64))
+    product = db.Column(db.String(64))
