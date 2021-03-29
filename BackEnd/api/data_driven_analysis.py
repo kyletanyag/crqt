@@ -4,11 +4,11 @@ from copy import deepcopy
 from collections import deque
 from . import db 
 import math
-import scipy.linalg as la
-import numpy as np
+import requests
 
 # route for LAG generation module
 data_analysis_bp = Blueprint('data_analysis_bp', __name__)
+LAG = {}
 
 # namespace for data-driven objects
 class DataDriven:
@@ -39,6 +39,9 @@ class DataDriven:
         def printFunc(self):
             print(self.derived_score, self.discription, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
 
+def DataDriven_init():
+    global LAG
+    LAG.clear()
 
 '''
 Probability Formulas:
@@ -46,7 +49,7 @@ For any n events e1, e2, ..., en:
 	1. P(e1, e2, ..., en)=product(P(ei),1,n)				    // product (expression, lower, upper)
 	2. P(e1 U e2 U ... U en) = 1 - product(P(NOT(ei)),1,n)		// http://people.duke.edu/~hpgavin/cee201/ProbabilityRules.pdf
 '''
-LAG = {}
+
 # scores is derived scores tuple
 # key is dictionary key to access node
 def Depth_First_Alg(scores, key): 
@@ -76,8 +79,6 @@ def Depth_First_Alg(scores, key):
         # next node(s)
         for k in LAG[key].next_node:
             Depth_First_Alg(LAG[key].derived_score, k)
-    
-
 
 def DerivedScore(lag_dict, leaf_queue):
     global LAG

@@ -1,71 +1,20 @@
 from flask import Blueprint, jsonify
+from .nvd import model_driven_cvss_query
 from enum import IntEnum, auto
 from copy import deepcopy 
 from collections import deque
 import math
 import scipy.linalg as la
 import numpy as np
-import requests
-import json
 
 # route for model driven analysis component
-# model_analysis_bp = Blueprint('model_analysis_bp', __name__)
-
-
-############# MODEL DRIVEN QUERY ###################
-httpHost    = "http://127.0.0.1:2000"
-httpMethod  = "GET"
-
-def score_to_weight(score):
-    if score >= 0.7:
-        return 0.5
-    elif score >= 0.4:
-        return 0.3
-    else:
-        return 0.2
-
-# @nvd_bp.route('/model_driven_cvss_query')
-def model_driven_cvss_query(vendor, product):
-    global httpHost
-    url = httpHost + "/api/search/" + vendor + "/" + product
-
-    # making request to CVE ID
-    r = requests.get(url)
-    _json = json.loads(r.text)
-    
-    weights = []
-    scores = []
-
-    # getting scores
-    for data in _json["results"]:
-        weights.append([0.0,0.0,0.0])
-        scores.append([0.0,0.0,0.0])       # base, exploitability, impact
-
-        scores[-1][0] = float(data["cvss"]) / 10.0
-        weights[-1][0] = score_to_weight(scores[-1][0])
-
-        scores[-1][1] = float(data["exploitabilityScore"]) / 10.0
-        weights[-1][1] = score_to_weight(scores[-1][1])
-
-        scores[-1][2] = float(data["impactScore"]) / 10.0
-        weights[-1][2] = score_to_weight(scores[-1][2])
-    
-    result = [0.0,0.0,0.0]
-    weight_sum = [0.0,0.0,0.0]
-    # calculating weighted average
-    for i in range(len(weights)):
-        for j in range(3):
-            result[j] += (scores[i][j] * weights[i][j])
-            weight_sum[j] += weights[i][j]
-    
-    for i in range(3):
-        result[i] = result[i] / weight_sum[i]
-
-    return result
+model_analysis_bp = Blueprint('model_analysis_bp', __name__)
 
 ################## MODEL DRIVEN ##############################
 vulnerability_graph = []        # dictionary of nodes
 shortest_paths = {}             # matrix where each entry as shortest path value and multiplicity
+Solution_Path = []              # used for depth-first traversal, gives solution paths from target to goal (source)
+GoalNode = None                 # goal (source) node for depth-first traversal
 class ModelDriven:
     # Enum for node layers
     class Layers(IntEnum):
@@ -92,7 +41,7 @@ class ModelDriven:
     }
     # object for nodes
     class Node:
-        def __init__(self, product, vendor, layer, index):
+        def __init__(self, product, vendor, layer, index, cve_ids):
             self.out_edges = []             # array of outgoing edges
             self.in_edges = []              # array of incoming edges
             self.product = product          # node discription
@@ -100,8 +49,8 @@ class ModelDriven:
             self.index = index
             self.weights = [1.0,1.0,1.0]    # base, exploitability, impact scores
 
-            if product and vendor:
-                self.weights = model_driven_cvss_query(vendor, product)
+            if cve_ids:
+                self.weights = model_driven_cvss_query(cve_ids)
 
             # determining what layer
             self.layer = ModelDriven.switch[layer]  # what layer does node belong too
@@ -115,10 +64,19 @@ class ModelDriven:
             self.target.in_edges.append(self)    # adding incoming edge to target
             self.source.out_edges.append(self)
 
+# initializing all global variables
+def ModelDriven_init():
+    global vulnerability_graph
+    global shortest_paths
+    global Solution_Path
+
+    vulnerability_graph.clear()
+    shortest_paths.clear()
+    Solution_Path.clear()
+
 ## depth first traversal
-# Will find all paths from origin to GoalNode 
-Solution_Path = []
-GoalNode = None
+# Will find all paths from target to source (goal node) 
+# starts at target node and traverses backwords through network (i.e., target to source)
 def Depth_First_Traversal(node, path):
     # if reached attacker node, stop
     if GoalNode.index == node.index:
@@ -136,7 +94,7 @@ def Depth_First_Traversal(node, path):
             path.append(node.in_edges[0])
             Depth_First_Traversal(node.in_edges[0].source, path)
 
-# will generate shortest path
+# will generate shortest paths
 def shortest_paths_gen():
     global shortest_paths
     global Solution_Path
@@ -171,7 +129,7 @@ def shortest_paths_gen():
                     del base_sum                
 
 # find exploitability, impact, and base scoes from origin to node
-# @model_analysis_bp.route('/model_driven/attack_paths/<node_index>')
+@model_analysis_bp.route('/model_driven/attack_paths/<node_index>')
 def origin_to_node_metrics(node_index):
     global Solution_Path
     global vulnerability_graph
@@ -267,7 +225,7 @@ def origin_to_node_metrics(node_index):
         })
 
 ## Vulnerable Host Percentage Metrics
-# @model_analysis_bp.route('/model_driven/vulnerable_host_percentage')
+@model_analysis_bp.route('/model_driven/vulnerable_host_percentage')
 def vulnerable_host_percentage():
     global vulnerability_graph
     node_w_in_edge = set()
@@ -431,4 +389,5 @@ def centrality():
     pass
 
 def TOPSIS():
-    pass
+    from .topsis import topsis
+    t = topsis()

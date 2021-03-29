@@ -4,11 +4,11 @@
 
 '''
 from flask import Blueprint, jsonify, request
-from .nvd import data_driven_cvss_query, model_driven_cvss_query
+from .nvd import data_driven_cvss_query
 import enum
 from collections import deque
-from .data_driven_analysis import DataDriven, DerivedScore
-from .model_driven_analysis import vulnerability_graph, ModelDriven, shortest_paths_gen
+from .data_driven_analysis import DataDriven, DerivedScore, DataDriven_init
+from .model_driven_analysis import vulnerability_graph, ModelDriven, shortest_paths_gen, ModelDriven_init
 
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
@@ -17,6 +17,9 @@ graph_bp = Blueprint('graph_bp', __name__)
 def network_topology_data_driven_input():
     network = request.get_json()  # json network topology data driven
 
+    # initializing data-driven
+    DataDriven_init()
+    
     lag = {}
 
     # vertices
@@ -93,6 +96,9 @@ def network_topology_model_driven_input():
     import json
     with open('./model.json') as f:
         network = json.load(f)
+
+    # initializing model-driven 
+    ModelDriven_init() 
 
     # creating remote attacker node
     vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0))
