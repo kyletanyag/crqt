@@ -40,4 +40,4 @@ class Products(db.Model):
     __bind_key__ = 'products'
     vendor = db.Column(db.String(64))
     type = db.Column(db.String(64))
-    product = db.Column(db.String(64))
+    product = db.Column(db.String(64), primary_key=True)
