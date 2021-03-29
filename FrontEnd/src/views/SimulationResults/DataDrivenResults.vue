@@ -114,6 +114,7 @@
         numBins="3"
         :binNames="['Low', 'Medium', 'High']" 
         :name="histogramNodeName" 
+        :binLimits="[0.4, 0.7, 1]"
         barColor='#f87979'
         style="width: 60%"
         class="container"
