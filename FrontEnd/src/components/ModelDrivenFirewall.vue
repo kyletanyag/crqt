@@ -47,7 +47,8 @@
 </template>
 <script>
 
-import Multiselect from '@vueform/multiselect'
+import Multiselect from '@vueform/multiselect';
+import http from '@/http-common.js';
 export default {
   
   name: 'Model Driven Firewall',
@@ -85,7 +86,21 @@ export default {
 
   watch: {
     selectedVendor() { // double check this !!!
-      this.getProducts();
+      http.get(`product_query/firewall/${this.selectedVendor}`)
+      .then((r) => {
+        if (r.data.error)
+          console.log(r.data.error);
+          
+        var temp = [];
+        r.data.query.forEach((e) => {
+          temp.push(e.product)
+        });
+
+        this.products = temp;
+      })
+      .catch(() => {
+        console.log('Cannot complete query. Invalid data.');
+      });
     },
   },
 
@@ -94,7 +109,6 @@ export default {
     layer: String,
     vendors: Array,
     vendor: Array,
-    products: Array,
     product:Array,
     firewalls: Number,
   },
@@ -106,7 +120,6 @@ export default {
 
   methods: {
     sendDataParent() {
-
       this.$emit('DataCall', this.rowData);
     }
   },
@@ -116,6 +129,7 @@ export default {
       selectedProduct:[],
       L1Vendor:[],
       numfirewalls:[],
+      products: [],
     };
   }
 }
