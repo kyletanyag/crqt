@@ -104,7 +104,7 @@ $ sudo service redis-server start
 In Windows CMD:
 ```
 > cd <path>\cve_search
-> python .\web\index.py # this will start flask server on port 5000
+> python .\web\index.py # this will start flask server on port 2000
 ```
 
 ## Updating Databases

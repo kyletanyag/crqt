@@ -34,7 +34,7 @@ class topsis:
 		self.w=self.floater(w)
 		print(self.a)
 		self.w=self.w/sum(self.w)
-		self.j=np.array(j)
+		self.j=j
 		#print self.a
 		#print self.w
 		#print self.j
