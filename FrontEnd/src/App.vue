@@ -1,7 +1,10 @@
 <template>
-<div>
-    <div class="row"  v-show="this.$route.name != 'Login'">
-        <header class="col">
+<div class="container-fluid">
+    <div class="row" v-show="this.$route.name != 'Login'
+       && this.$route.name != 'Register'
+       && this.$route.name != 'QR Login'
+       && this.$route.name != 'QR Setup'">
+        <header class="col-12 px-0">
             <nav class="navbar navbar-expand navbar-dark bg-dark mb-3" variant="dark" >
                 <strong class="mr-3" style="color:white; font-size:30px;">CRQT |</strong>
                 <button class="navbar-toggler"
@@ -20,20 +23,25 @@
                                          active-class="active"
                                          to="/">Home</router-link>
                         </li>
-                        <li class="nav-item" >
-                            <router-link class="nav-link"
-                                         active-class="active"
-                                         to="/NetworkTopology">Network Topology</router-link>
+                        <li class="nav-item dropdown" >
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown">Network Topology</a>
+                          <div class="dropdown-menu" >
+                            <router-link class="nav-link" style="color: black;"
+                                         active-class="bg-primary text-white"
+                                         to="/network-topology/data-driven">Data-Driven</router-link>
+                            <router-link class="nav-link" style="color: black;"
+                                         active-class="bg-primary text-white"
+                                         to="/network-topology/model-driven">Model-Driven</router-link>                                         
+                          </div>
                         </li>
                         <li class="nav-item">
                             <router-link class="nav-link"
                                          active-class="active"
-                                         to="/SimulationResults">Simulation Results</router-link>
+                                         :to="getSimulationResultsRoute()">Simulation Results</router-link>
                         </li>
-
-                        <li class="nav-item dropdown">
+                        <!-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown">Resilience Metrics</a>
-                            <div class="dropdown-menu" style="width: 20em " >
+                            <div class="dropdown-menu" style="width: 20em;" >
                                 <router-link class="nav-link" style="color:black;"
                                              active-class="bg-primary text-white"
                                              to="/Robustness">Robustness</router-link>
@@ -47,8 +55,8 @@
                                              active-class="bg-primary text-white"
                                              to="/Rapidity">Rapidity</router-link>
                             </div>
-                        </li>
-                        <li class="nav-item dropdown">
+                        </li> -->
+                        <!-- <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-toggle="dropdown">Visualization</a>
                             <div class="dropdown-menu" style="width: 20em">
                                 <router-link class="nav-link" style="color:black;"
@@ -67,7 +75,7 @@
                                              active-class="bg-primary text-white"
                                              to="/TidyTree">Tidy Tree Layout</router-link>
                             </div>
-                        </li>
+                        </li> -->
                         <li class="nav-item">
                             <router-link class="nav-link"
                                          active-class="active"
@@ -87,7 +95,7 @@
         </header>
     </div>
     <div>
-      <router-view @authenticated="setAuthenticated" />
+      <router-view @authenticated="setAuthenticated" @inputApproach="setInputApproach" />
     </div>
 </div>
 </template>
@@ -98,6 +106,7 @@
     data() {
       return {
         authenticated: true, // change to true when developing
+        inputApproach: undefined,
         mockAccount: {
           emailAddress: "email",
           password: "password"
@@ -105,16 +114,28 @@
       }
     },
     mounted() {
-      if (!this.authenticated) {
+      if (!this.authenticated && this.$route.name != 'Login' && this.$route.name != 'Register') {
         this.$router.replace({ name: "Login" });
       }
     },
+    
     methods: {
       setAuthenticated(status) {
         this.authenticated = status;
       },
+
+      setInputApproach(approach) {
+        console.log(approach);
+        this.inputApproach = approach;
+      },
+
       logout() {
         this.authenticated = false;
+      },
+
+      getSimulationResultsRoute(){
+        console.log(`/simulation-results/${this.inputApproach}`);
+        return `/simulation-results/${this.inputApproach}`;
       }
     }
   }
