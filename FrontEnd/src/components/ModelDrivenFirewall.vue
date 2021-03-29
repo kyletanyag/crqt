@@ -9,15 +9,15 @@
                 <div align="center">
                     <p align="center">{{ title }} Vendor</p>
                     <select v-model="selectedVendor">
-                      <option v-for="(L1Vend,item) in vendors" :key="item" :value="item">{{L1Vend.label}}</option>
+                      <option v-for="(L1Vend,item) in vendors" :key="item" :value="L1Vend.label" @change="sendDataParentFirwall">{{L1Vend.label}}</option>
                     </select>
                 </div>
               </td> 
               <td align="center" width="33%">
                 <div align="center">
                     <p> {{ title }} Product</p>
-                    <select>
-                      <option v-for="item in products" :key="item" :value="item">{{item}}</option>               
+                    <select v-model="selectedProduct">
+                      <option v-for="item in products" :key="item" :value="item" @change="sendDataParentFirwall">{{item}}</option>               
                     </select>
                 </div>
               </td>
@@ -25,20 +25,20 @@
                 <div align="center">
                     <p>Number of Coporate Firewall 1</p>                     
                       <!-- <input type="text" v-model="NumberFireWall" placeholder="Number of Firewalls 1" />         -->
-                      <input type="text" placeholder="Number of Firewalls" />
+                      <input type="text" v-model="numfirewalls" placeholder="Number of Firewalls" @change="sendDataParentFirwall" />
                 </div>
               </td> 
           </tr>
           <tr width="100%">
               <td>
-              <div v-if="selectedVendor != -1">
+              <!-- <div v-if="selectedVendor != -1">
                 <Multiselect 
                     v-model="L1Vendor"
                     mode="multiple"
                     placeholder="Select your Vulnerabilites"
                     :options="vendors[selectedVendor].options"
                     />
-              </div>
+              </div> -->
               </td>
               </tr>
         </tbody>
@@ -51,26 +51,58 @@ import Multiselect from '@vueform/multiselect'
 export default {
   
   name: 'Model Driven Firewall',
+  computed: {
+
+    rowData() {
+      var nodes = [];
+      
+        for(let j=0; j< this.numfirewalls;j++){
+          
+          nodes.push({
+            layer: this.layer,
+            id: j, 
+            vendors: this.selectedVendor,
+            products: this.selectedProduct,
+            firewalls: this.numfirewalls,      
+            // vulnerabilities: this.selectedVulnerabilities[i]
+          });
+          console.log(nodes)
+        }
+      
+      return {
+        nodes
+      };
+    },
+    sendDataParentFirwall(){
+      console.log("Sending data to the parent")
+      this.$emit('DataCall', this.rowData);
+      return{
+        
+      }
+    }
+
+  },
+
+  watch: {
+    selectedVendor() { // double check this !!!
+      this.getProducts();
+    },
+  },
 
   props: {
     title:String,
     layer: String,
     vendors: Array,
+    vendor: Array,
     products: Array,
-    servers: Number,
+    product:Array,
+    firewalls: Number,
   },
   
   component: {
     Multiselect,
   },
   
-  computed: {
-    rowData() {
-      return {
-
-      };
-    },
-  },
 
   methods: {
     sendDataParent() {
@@ -80,8 +112,10 @@ export default {
   },
   data(){
     return{
-      selectedVendor:-1, 
+      selectedVendor:[], 
+      selectedProduct:[],
       L1Vendor:[],
+      numfirewalls:[],
     };
   }
 }

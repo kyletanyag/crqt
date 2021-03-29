@@ -54,14 +54,12 @@
 import Multiselect from '@vueform/multiselect'
 import http from '@/http-common.js';
 import { defineComponent, reactive } from "vue";
-import TableLite from "@/components/TableLite.vue";
 
 export default {
   name: 'Model Driven Setting',
     
   component: {
     Multiselect,
-    TableLite,
     defineComponent
 
   },
@@ -82,10 +80,10 @@ export default {
   computed: {
     selectedType() { //Called when user selects anything on table: Reads current state of table
    
-    this.userInputTable = new Array(this.rows.length);
-    
-    for(let i=0; i<this.rows.length; i++){
-        this.userInputTable[i] = this.rows[i];
+      this.userInputTable = new Array(this.rows.length);
+      
+      for(let i=0; i<this.rows.length; i++){
+          this.userInputTable[i] = this.rows[i];
     }
 
     return {
@@ -103,11 +101,11 @@ export default {
         for(let j=0; j< this.userInputTable[i][3];j++){
           nodes.push({
             layer: this.layer,
-            id: i, 
+            id: j, 
             type:this.userInputTable[i][0],
             vendor: this.userInputTable[i][1],
             product: this.userInputTable[i][2],
-            servers: this.userInputTable[i][3],      
+            //servers: this.userInputTable[i][3],      
             // vulnerabilities: this.selectedVulnerabilities[i]
           });
         }
@@ -118,8 +116,7 @@ export default {
     },
   sendDataParent(){
       console.log("Sending data to the parent")
-      this.$emit('DataCall', this.rowData);
-      
+      this.$emit('DataCall', this.rowData);      
   }
 
   },

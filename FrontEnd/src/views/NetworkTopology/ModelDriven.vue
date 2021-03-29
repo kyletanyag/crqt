@@ -220,11 +220,10 @@ export default {
 
    addNodes(n) {
       console.log('Got event!')
-      console.log(n);
+      //console.log(n);
       var nodes = [];
-
          //   for (let i = 0; i < this.NumberFireWall; i++) {
-              nodes.push( {
+              nodes.push( 
                  n
                //   layer: n[0],
                //   id: n.id,
@@ -232,7 +231,7 @@ export default {
                //   vendor:n.vendor, // Changes to be consitent with var
                //   product: n.product,
                //   vulnerabilites: 'x'
-              })
+              )
            //}
            console.log(nodes)
 
