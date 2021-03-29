@@ -17,7 +17,7 @@
                   <div align="center">
                      <p align="center">Server Type</p>
                      <select v-model="rows[index][0]">
-                        <option v-for="item in serverType" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>
+                        <option v-for="item in serverType" :key="item" :value="item" @change="sendDataParent">{{item}}</option>
                      </select>
                   </div>
                </td>
@@ -25,7 +25,7 @@
                   <div align="center">
                      <p>Server Vendor</p>
                      <select v-model="rows[index][1]">
-                        <option v-for="item in vendorServer" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>
+                        <option v-for="item in vendorServer" :key="item" :value="item" @change="sendDataParent">{{item}}</option>
                      </select>
                   </div>
                </td>
@@ -33,14 +33,14 @@
                   <div align="center">
                      <p>Server Product</p>
                      <select v-model="rows[index][2]">
-                        <option v-for="item in serverProduct" :key="item" :value="item" @change="sendDataParent()">{{item}}</option>                        
+                        <option v-for="item in serverProduct" :key="item" :value="item" @change="sendDataParent">{{item}}</option>                        
                      </select>
                   </div>
                </td>
                <td width="25%">
                   <div align="center">
                      <p>Number of Servers</p>
-                         <input type="text" v-model="rows[index][3]" placeholder="Number of Server" @change="sendDataParent()"/>      
+                         <input type="text" v-model="rows[index][3]" placeholder="None" @change="sendDataParent"/>      
                   </div>
                </td>
 
@@ -54,14 +54,12 @@
 import Multiselect from '@vueform/multiselect'
 import http from '@/http-common.js';
 import { defineComponent, reactive } from "vue";
-import TableLite from "@/components/TableLite.vue";
 
 export default {
   name: 'Model Driven Setting',
     
   component: {
     Multiselect,
-    TableLite,
     defineComponent
 
   },
@@ -74,39 +72,53 @@ export default {
     servers: Number,
     vendorServer: Array,
     serverType: Array,
+    // userInputTable: {
+    //   type: Array(),
+    //   default: ['automatic']
+    // },
   },  
   computed: {
+    selectedType() { //Called when user selects anything on table: Reads current state of table
+   
+      this.userInputTable = new Array(this.rows.length);
+      
+      for(let i=0; i<this.rows.length; i++){
+          this.userInputTable[i] = this.rows[i];
+    }
+
+    return {
+         
+      };
+    },
+
     rowData() {
       var nodes = [];
+      
       // nested for loop for numProducts !!!
-      for (let i = 0; i < this.numProducts; i++) {
-        nodes.push({
-          layer: this.layer,
-          id: i, // change per layer
-          vendor: this.selectedVendor[i],
-          // product: this.selectedProduct[i],
-          // vulnerabilities: this.selectedVulnerabilities[i]
-        });
+    
+      for (let i = 0; i < this.userInputTable.length; i++) {
+        console.log("Current index = " + i + " : "+this.userInputTable[i]);
+        for(let j=0; j< this.userInputTable[i][3];j++){
+          nodes.push({
+            layer: this.layer,
+            id: j, 
+            type:this.userInputTable[i][0],
+            vendor: this.userInputTable[i][1],
+            product: this.userInputTable[i][2],
+            //servers: this.userInputTable[i][3],      
+            // vulnerabilities: this.selectedVulnerabilities[i]
+          });
+        }
       }
       return {
         nodes
       };
     },
+  sendDataParent(){
+      console.log("Sending data to the parent")
+      this.$emit('DataCall', this.rowData);      
+  }
 
-    selectedType() {
-      var x = [];
-      this.rows.forEach((i) => {
-        x.push(i[0]);
-      });
-<<<<<<< HEAD
-console.log(x)
-=======
->>>>>>> e02f6495b17436821e4dfd4945a0c35aa8e45f30
-      return {
-        x
-    
-      };
-    }
   },
 
   watch: {
@@ -116,12 +128,14 @@ console.log(x)
   },
 
   methods: {
-    sendDataParent() {
-      this.$emit('DataCall', this.rowData);
-    },
+    // sendDataParent() {
+    //   console.log("Sending data to the parent")
+    //   this.$emit('DataCall', this.rowData);
+      
+    // },
 
     addRow: function(_index){
-      this.rows.push([undefined, undefined, undefined, undefined]);
+      this.rows.push([undefined, undefined, undefined, 1]);
     },
     removeRow: function(_index){
       console.log(_index);
@@ -137,11 +151,12 @@ console.log(x)
  
   data() {
     return{
-      rows: [[undefined, undefined, undefined, undefined]],
+      rows: [[undefined, undefined, undefined, 1]],
       selectedServerType: [],
       selectedVendor: [],
       selectedProduct: [],
       numProducts: [],
+      userInputTable:[]
     };
   },
   

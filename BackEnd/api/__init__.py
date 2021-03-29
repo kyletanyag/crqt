@@ -20,7 +20,8 @@ def create_app():
     # for multiple databases
     app.config['SQLALCHEMY_BINDS'] = {
         'users':     app.config['SQLALCHEMY_DATABASE_URI'],
-        'nvd':      'sqlite:///../dms/nvd.db'
+        'nvd':      'sqlite:///../dms/nvd.db',
+        'products': 'sqlite:///../dms/products.db'
     }
 
     db.init_app(app)
@@ -31,10 +32,12 @@ def create_app():
     from .graph_generation import graph_bp
     from .data_driven_analysis import data_analysis_bp
     from .model_driven_analysis import model_analysis_bp
+    from .products import product_bp
     app.register_blueprint(user_bp)
     app.register_blueprint(nvd_bp)
     app.register_blueprint(graph_bp)
     app.register_blueprint(data_analysis_bp)
     app.register_blueprint(model_analysis_bp)
+    app.register_blueprint(product_bp)
 
     return app
