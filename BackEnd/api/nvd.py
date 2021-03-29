@@ -11,8 +11,6 @@ import requests
 import json
 
 httpHost    = "http://127.0.0.1:2000"       # ip and port of CVE Search
-# nvd_bp = Blueprint('nvd_bp', __name__)
-
 nvd_bp = Blueprint('nvd_bp', __name__)
 
 # query with NVD database to get cve_ids
@@ -81,7 +79,7 @@ def model_driven_cvss_query(cve_ids):
         result[i] = result[i] / weight_sum[i]
 
     return result
-    
+
 # # query with Products database to get vendor products by vendor name
 # @nvd_bp.route('/product_query_by_vendor/', methods=['POST'])
 # def query_by_vendor():
@@ -127,15 +125,5 @@ def model_driven_cvss_query(cve_ids):
 #                 'product': results.product})
 
 #     return jsonify({'Query': results})
-
-####### STILL IN WORK:
-
-# updates database with latest nvd
-# @nvd_bp.route('/update_nvd')
-# def update_nvd(cve_ids):
-#     for data in nvd.query.filter(nvd["cve id"]).all():
-#         if cve_ids not in data:
-#             nvd.add(cve_ids)
-#             nvd.commit()
 
 
