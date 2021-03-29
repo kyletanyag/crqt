@@ -31,8 +31,8 @@ def query_by_vendor(input):
 
 # query with Products database to get vendor products by product type
 @product_bp.route('/product_query_by_type/<input_type>', methods=['GET'])
-def query_by_type(input):
-    filter = Products.query.filter(func.lower(Products.type) == func.lower(input))
+def query_by_type(input_type):
+    filter = Products.query.filter(func.lower(Products.type) == func.lower(input_type))
     results = []
 
     for i in filter:
@@ -44,7 +44,7 @@ def query_by_type(input):
     if results:
         return jsonify({'query': results}), 200
 
-    return {'error': f'Cannot query by the type: {input}'}, 200
+    return {'error': f'Cannot query by the type: {input_type}'}, 200
 
 
 # query with Products database to get vendor products by product name
