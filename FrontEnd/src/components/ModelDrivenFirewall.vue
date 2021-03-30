@@ -49,6 +49,7 @@
 
 import Multiselect from '@vueform/multiselect';
 import http from '@/http-common.js';
+import axios from 'axios';
 export default {
   
   name: 'Model Driven Firewall',
@@ -124,6 +125,9 @@ export default {
     }
   },
   data(){
+    axios.get('http://localhost:2000/api/search/microsoft/windows_xp').then((r) => {
+        r.data.results.forEach((e) => {console.log(e.id)});
+    });
     return{
       selectedVendor:[], 
       selectedProduct:[],
