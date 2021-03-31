@@ -1,5 +1,5 @@
-from flask import Blueprint, jsonify
-from .nvd import model_driven_cvss_query
+# from flask import Blueprint, jsonify
+from nvd import model_driven_cvss_query
 from enum import IntEnum, auto
 from copy import deepcopy 
 from collections import deque
@@ -8,14 +8,14 @@ import scipy.linalg as la
 import numpy as np
 
 # route for model driven analysis component
-model_analysis_bp = Blueprint('model_analysis_bp', __name__)
+# model_analysis_bp = Blueprint('model_analysis_bp', __name__)
 
 ################## MODEL DRIVEN ##############################
 vulnerability_graph = []        # dictionary of nodes
 shortest_paths = {}             # matrix where each entry as shortest path value and multiplicity
 Solution_Path = []              # used for depth-first traversal, gives solution paths from target to goal (source)
 GoalNode = None                 # goal (source) node for depth-first traversal
-centrality_metrics = []         # holds the centrality metrics (betweeness, indegree, outdegree, degree, closeness, katz, pagerank)
+centrality_metrics = []         # holds the centrality metrics (betweeness, indegree, outdegree, degree, closeness, pagerank, katz)
 class ModelDriven:
     # Enum for node layers
     class Layers(IntEnum):
@@ -132,7 +132,7 @@ def shortest_paths_gen():
                     del base_sum                
 
 # find exploitability, impact, and base scoes from origin to node
-@model_analysis_bp.route('/model_driven/attack_paths/<node_index>')
+# @model_analysis_bp.route('/model_driven/attack_paths/<node_index>')
 def origin_to_node_metrics(node_index):
     global Solution_Path
     global vulnerability_graph
@@ -228,7 +228,7 @@ def origin_to_node_metrics(node_index):
         })
 
 ## Vulnerable Host Percentage Metrics
-@model_analysis_bp.route('/model_driven/vulnerable_host_percentage')
+# @model_analysis_bp.route('/model_driven/vulnerable_host_percentage')
 def vulnerable_host_percentage():
     global vulnerability_graph
     node_w_in_edge = set()
@@ -271,12 +271,18 @@ def betweenness_centrality():
         node_index = node.index
         betweenness.append(0.0)
         for source in vulnerability_graph:
-            # source cannot goto node if on same or greater layer
+            # no path exist if node and source are on same layer
             if source.layer == vulnerability_graph[node_index].layer:
                 break
 
-            for target_id in range(node_index,len(vulnerability_graph)):            
+            for target_id in range(node_index,len(vulnerability_graph)):      
+                # target cannot equal source (no path) and no path exist if target and node are same layer
+                if (target_id == source.index) or (vulnerability_graph[target_id].layer == vulnerability_graph[node_index].layer):
+                    continue
+
                 # testing if path exist between source to node && node to target
+                # shortest_paths is a multi-key dictionary with key 1 = source and key 2 = target. 
+                # therefore, check if paths between (source, target) and (source, node) and (node, target) exist following betweeness equation
                 if (all(x in shortest_paths.keys() for x in [(source.index,target_id), (source.index,node_index), (node_index,target_id)])):
                     # testing v's betweenness
                     if shortest_paths[(source.index,target_id)][0] == (shortest_paths[(source.index,node_index)][0] + shortest_paths[(node_index,target_id)][0]):
@@ -315,16 +321,23 @@ def closeness_centrality():
     closeness = []
     for node in vulnerability_graph:
         node_index = node.index
-        closeness.append(0.0)
-        for y in len(vulnerability_graph):
-            dist = 0
+        dist = 0.0
+        for y in range(len(vulnerability_graph)):
+            
+            # calculating the distance between node and y
+            # since shortest_path does source to target where source index < target index:
+            # therefore, index has to be tested to determine source and target, respectively
             if y < node_index:
-                dist = shortest_paths[(y,node_index)][0]
+                if (y,node_index) in shortest_paths.keys(): 
+                    dist += shortest_paths[(y,node_index)][0]
             else:
-                dist = shortest_paths[(node_index,y)][0]
+                if (node_index,y) in shortest_paths.keys():
+                    dist += shortest_paths[(node_index,y)][0]
 
-            if dist > 0:
-                closeness[-1] += 1.0/dist
+        if dist > 0.0:
+            closeness.append(1.0/dist)
+        else: # error, unconnected node
+            return
 
     return closeness
 
@@ -332,18 +345,10 @@ def closeness_centrality():
 # [1] https://ocw.mit.edu/courses/civil-and-environmental-engineering/1-022-introduction-to-network-models-fall-2018/lecture-notes/MIT1_022F18_lec4.pdf, 
 # [2] https://www.nature.com/articles/s41598-017-15426-1
 # https://www.youtube.com/watch?v=vSm1a0-VcMg, 
-# [4] https://en.wikipedia.org/wiki/Centrality (pagerank)
-# 
 # calculates katz centrality for all nodes
-def katz_centrality_and_pagerank_centrality():
+def katz_centrality():
     global vulnerability_graph
     
-    def L(mat, row):
-        result = 0.0
-        for i in range(len(mat)):
-            result += mat[row][i]
-        return result
-
     # creating adj_matrix
     adj_mat = np.zeros((len(vulnerability_graph),len(vulnerability_graph)),dtype=np.uint8)
     pagerank = []
@@ -367,7 +372,7 @@ def katz_centrality_and_pagerank_centrality():
         if alpha > 1:
             alpha = 0.1
 
-    # calculating Katz = inv(I - a*A)*vec(n,1) Ref: [1][2]
+    # calculating Katz = inv(I - a*A)*vec(n,1) Ref: [1],[2]
     katz = np.dot(la.inv(np.subtract(np.identity(len(adj_mat)), 1.0/alpha * adj_mat)),np.ones((len(adj_mat),1)))
 
     norm = 0.0
@@ -376,27 +381,35 @@ def katz_centrality_and_pagerank_centrality():
         norm += val**2
     katz *= 1.0 / math.sqrt(norm)
 
-    # calculating pagerank
-    norm = 0.0
-    for i in range(len(adj_mat)):
-        # katz_tmp = 0.0
-        pagarank_tmp = 0.0
-        for j in range(len(adj_mat)):
-            # katz_tmp += adj_mat[i][j] * eigvecs[j]
-            pagarank_tmp += adj_mat[i][j] * eigvecs[j] / L(adj_mat, j) + (1 - 1.0 / alpha) / len(adj_mat)
+    return katz
 
-        # katz.append(1/max_eigval*katz_tmp)
-        pagerank.append(1/alpha*pagarank_tmp)
-        norm += (1/alpha*pagarank_tmp) ** 2 
+# ref: https://methods.sagepub.com/base/download/DatasetStudentGuide/pagerank-in-florentine-1994-python
+# http://infolab.stanford.edu/~backrub/google.html
+# d is damping factor in set (0,1) default val is 0.85
+def pagerank_centrality(d=0.85):
+    global vulnerability_graph
+
+    # PageRank: PR(A) = (1-d) + d (PR(T1)/C(T1) + ... + PR(Tn)/C(Tn))
+    # where page A has pages T1...Tn which point to it and C(A) is outdegree
+    pagerank = []
+    norm = 0.0
+    for node in vulnerability_graph:
+        pagerank.append(0.0)
+        for inedge in node.in_edges:
+            pagerank[-1] += pagerank[inedge.source.index] / len(inedge.source.out_edges)
+
+        pagerank[-1] *= d
+        pagerank[-1] += 1.0-d
+        norm += pagerank[-1] ** 2
 
     # normalizing pagerank 
     norm = 1.0/math.sqrt(norm)
     for page in pagerank:
         page *= norm
 
-    return katz, pagerank
+    return pagerank
 
-@model_analysis_bp.route('/model_driven/centrality')   
+# @model_analysis_bp.route('/model_driven/centrality')   
 def centrality():
     global centrality_metrics # holds the centrality metrics (betweeness, indegree, outdegree, degree, closeness, katz, pagerank)
     global vulnerability_graph
@@ -408,14 +421,19 @@ def centrality():
         centrality_metrics.append(degree[0])
         centrality_metrics.append(degree[1])
         centrality_metrics.append(degree[2])
-        centrality_metrics.append(closeness_centrality())
-        katz_page = katz_centrality_and_pagerank_centrality()
-        centrality_metrics.append(katz_page[0])
-        centrality_metrics.append(katz_page[1])
+
+        closeness = closeness_centrality()
+        if closeness:
+            centrality_metrics.append(closeness)
+        else:
+            return ("ERROR: Unconnected Node", 400)
+
+        centrality_metrics.append(pagerank_centrality())
+        centrality_metrics.append(katz_centrality())
 
 # ref: Modeling Cyber Resilience for Energy Delivery Systems using critical system functionality      
 def TOPSIS():
-    from .topsis import topsis
+    from topsis import topsis
     global centrality_metrics
     global vulnerability_graph
     if len(centrality_metrics) == 0:
@@ -426,7 +444,8 @@ def TOPSIS():
     # criteria are exploitability, impact, betweeness centrality, and katz centrality
     a = []
     # appending node exploitability and impact scores
-    a.append([],[]) 
+    a.append([])
+    a.append([]) 
     for node in vulnerability_graph:
         if node.index == 0:             # not including remote attacker node
             continue
@@ -434,15 +453,16 @@ def TOPSIS():
         a[1].append(node.weights[2])    # appending node's impact
 
     a.append(centrality_metrics[0][1:]) # appending betweeness centrality excluding remote
-    a.append(centrality_metrics[-1][1:])# appending katz centrality excluding remote
+    a.append([])
+    for val in centrality_metrics[-1][1:]:
+        a[-1].append(val[0])                   # appending katz centrality excluding remote
 
     # constructing weights array: this will follow Arif's work done in ref
     w = [0.25,0.5,0.15,0.1]    
 
     # positive impact matrix, following Mathemtical Modeling in Social Network Analysis: Using TOPSIS to Find Node influences in social ndetwork
     # p. 537
-    j = np.ones((len(a[0]),), dtype=int)    
+    j = np.ones((len(a),), dtype=int)    
 
     t = topsis(a,w,j)
     n = t.calc()        # calculating topsis, n is array of criticalities of each node
-    

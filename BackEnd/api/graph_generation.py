@@ -108,7 +108,8 @@ def network_topology_model_driven_input():
             product=node["product"], 
             vendor=node["vendor"],
             layer=node["layer"],
-            index=int(node["id"])
+            index=int(node["id"]),
+            cve_ids=node["cve_ids"]
             ))
 
     # sorting vulnerability node list by index ascending order

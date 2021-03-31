@@ -4,67 +4,78 @@
             "id": "4",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_dmz" 
+            "layer" : "corp_dmz",
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "2",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_dmz" 
+            "layer" : "corp_dmz" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "3",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_dmz" 
+            "layer" : "corp_dmz" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "1",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_dmz" 
+            "layer" : "corp_dmz" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "8",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_lan" 
+            "layer" : "corp_lan" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "6",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_lan" 
+            "layer" : "corp_lan" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "7",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_lan" 
+            "layer" : "corp_lan" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "5",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_lan" 
+            "layer" : "corp_lan" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "9",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_lan" 
+            "layer" : "corp_lan" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "11",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_lan" 
+            "layer" : "corp_lan" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         },
         { 
             "id": "10",
             "vendor": "microsoft",
             "product": "xbox_360",
-            "layer" : "corp_lan" 
+            "layer" : "corp_lan" ,
+            "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]  
         }
     ],
     "arcs": [ 
