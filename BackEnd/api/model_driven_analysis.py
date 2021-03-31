@@ -9,7 +9,7 @@ import numpy as np
 import time
 
 # route for model driven analysis component
-# model_analysis_bp = Blueprint('model_analysis_bp', __name__)
+model_analysis_bp = Blueprint('model_analysis_bp', __name__)
 
 ################## MODEL DRIVEN ##############################
 # calculating variables

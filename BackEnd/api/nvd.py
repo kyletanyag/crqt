@@ -6,7 +6,6 @@
 '''
 
 from flask import Blueprint, jsonify, request
-# from .data_models import NVD
 import requests
 import json
 import os
@@ -14,8 +13,9 @@ import os
 httpHost    = "http://127.0.0.1:2000"       # ip and port of CVE Search
 nvd_bp = Blueprint('nvd_bp', __name__)
 
-@nvd_bp.route('nvd/get_nvd_update_date', methods=['GET'])
+@nvd_bp.route('/nvd/get_nvd_update_date', methods=['GET'])
 def get_nvd_update_date():
+    print(os.getcwd())
     with open('..\\dms\\cve_search\\log\\update_populate.log', 'rb') as f:
         f.seek(-2, os.SEEK_END)
         while f.read(1) != b'\n':
