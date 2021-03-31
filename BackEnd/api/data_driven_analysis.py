@@ -5,10 +5,12 @@ from collections import deque
 from . import db 
 import math
 import requests
+import time
 
 # route for LAG generation module
 data_analysis_bp = Blueprint('data_analysis_bp', __name__)
 LAG = {}
+derived_score_computation_time = None
 
 # namespace for data-driven objects
 class DataDriven:
@@ -42,7 +44,9 @@ class DataDriven:
 
 def DataDriven_init():
     global LAG
+
     LAG.clear()
+    derived_score_computation_time = None
 
 '''
 Probability Formulas:
@@ -86,19 +90,27 @@ def Depth_First_Alg(scores, numConditions, key):
 
 def DerivedScore(lag_dict, leaf_queue):
     global LAG
+    global derived_score_computation_time
+
     LAG = lag_dict
+    
+    # starting timer for computation time
+    start_time = time.time()
     
     # modifying derived scores
     while len(leaf_queue) > 0:
         node = leaf_queue.pop()
         for key in node.next_node:
             Depth_First_Alg(node.derived_score, 1, key)
-               
-    # return LAG
+    
+    # calculating computation time
+    derived_score_computation_time = time.time() - start_time
+            
 
 @data_analysis_bp.route('/data_driven/get_derived_scores', methods=['GET'])
 def getDerivedScores():
     global LAG
+    global derived_score_computation_time
 
     # converting to JSON
     node_type_to_str = {
@@ -119,7 +131,7 @@ def getDerivedScores():
         for e in LAG[key].next_node:
             edges.append({'source' : key, 'target' : e})
     
-    return jsonify({'nodes': vertices, 'edges' : edges})
+    return jsonify({'nodes': vertices, 'edges' : edges, "computation_time" : derived_score_computation_time})
 
 @data_analysis_bp.route('/data_driven/test-derived-scores', methods=['GET'])
 def test_Derived_Scores():

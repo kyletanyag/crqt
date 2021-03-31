@@ -1,21 +1,29 @@
-# from flask import Blueprint, jsonify
-from nvd import model_driven_cvss_query
+from flask import Blueprint, jsonify
+from .nvd import model_driven_cvss_query
 from enum import IntEnum, auto
 from copy import deepcopy 
 from collections import deque
 import math
 import scipy.linalg as la
 import numpy as np
+import time
 
 # route for model driven analysis component
 # model_analysis_bp = Blueprint('model_analysis_bp', __name__)
 
 ################## MODEL DRIVEN ##############################
+# calculating variables
 vulnerability_graph = []        # dictionary of nodes
 shortest_paths = {}             # matrix where each entry as shortest path value and multiplicity
 Solution_Path = []              # used for depth-first traversal, gives solution paths from target to goal (source)
 GoalNode = None                 # goal (source) node for depth-first traversal
 centrality_metrics = []         # holds the centrality metrics (betweeness, indegree, outdegree, degree, closeness, pagerank, katz)
+topsis_metrics = []             # holds the topsis method metrics
+
+# timing metrics
+shortest_path_time = 0.0        # computation time to compute shortest_paths
+centrality_time = 0.0           # computation time to compute all centrality metrics
+topsis_time = 0.0               # computation time to compute topsis metrics
 class ModelDriven:
     # Enum for node layers
     class Layers(IntEnum):
@@ -71,11 +79,18 @@ def ModelDriven_init():
     global shortest_paths
     global Solution_Path
     global centrality_metrics
+    global shortest_path_time
+    global topsis_metrics
+    global topsis_time
 
     vulnerability_graph.clear()
     shortest_paths.clear()
     Solution_Path.clear()
     centrality_metrics.clear()
+    topsis_metrics.clear()
+    shortest_path_time = 0.0
+    centrality_time = 0.0
+    topsis_time = 0.0
 
 ## depth first traversal
 # Will find all paths from target to source (goal node) 
@@ -103,6 +118,10 @@ def shortest_paths_gen():
     global Solution_Path
     global vulnerability_graph
     global GoalNode
+    global shortest_path_time
+
+    # starting timer for process time calc
+    start_timer = time.time()
 
     # computing the length and number of shortest paths between all pairs
     for source in vulnerability_graph:
@@ -129,14 +148,25 @@ def shortest_paths_gen():
                     
                     # adding shortest path
                     shortest_paths[(source.index,target.index)] = (base_sum[0],i)
-                    del base_sum                
+                    del base_sum
+
+    # calc process time
+    shortest_path_time = time.time() - start_timer
+
+@model_analysis_bp.route('/model_driven/attack_paths/get_shortest_path_computation_time', methods=['GET'])
+def shortest_path_comp_time():
+    global shortest_path_time
+    return jsonify({'shortest_path_computation_time' : shortest_path_time})
 
 # find exploitability, impact, and base scoes from origin to node
-# @model_analysis_bp.route('/model_driven/attack_paths/<node_index>')
+@model_analysis_bp.route('/model_driven/attack_paths/<node_index>', methods=['GET'])
 def origin_to_node_metrics(node_index):
     global Solution_Path
     global vulnerability_graph
     global GoalNode
+
+    # starting timer for processing time calculation
+    start_timer = time.time()
 
     # setting calculation variables
     Solution_Path.clear()
@@ -163,7 +193,7 @@ def origin_to_node_metrics(node_index):
         # adding score to cumulative sum
         for i in range(len(score)):
             score_sum[i] += score[i]
-
+        
         metrics_per_path.append({
                 'base_score' : round(score[0],3),
                 'exploitability_score' : round(score[1],3),
@@ -214,6 +244,8 @@ def origin_to_node_metrics(node_index):
             
             top_impactful.append({str(i) : path})
     
+    # calculating processing time
+    processing_time = time.time() - start_timer
     
     return jsonify({
         'metrics_per_path': metrics_per_path,
@@ -224,13 +256,18 @@ def origin_to_node_metrics(node_index):
             round(score_sum[2] / len(Solution_Path),3)
             ],
         'top_exploitable': top_exploitable, 
-        'top_impactful': top_impactful
+        'top_impactful': top_impactful,
+        'computation_time' : processing_time
         })
 
 ## Vulnerable Host Percentage Metrics
-# @model_analysis_bp.route('/model_driven/vulnerable_host_percentage')
+@model_analysis_bp.route('/model_driven/vulnerable_host_percentage', methods=['GET'])
 def vulnerable_host_percentage():
     global vulnerability_graph
+
+    # starting the timer for processing time calculation
+    start_timer = time.time()
+
     node_w_in_edge = set()
 
     # counting number of nodes with incoming edges
@@ -246,11 +283,15 @@ def vulnerable_host_percentage():
     vulnerable_host_percentage = 100.0 * number_vulnerable_hosts / len(vulnerability_graph)
     non_vulnerable_host_percentage = 100 - vulnerable_host_percentage
 
+    # processing time calc
+    processing_time = time.time() - start_timer
+
     return jsonify({
         'number_vulnerable_hosts': round(number_vulnerable_hosts,3),
         'number_hosts': round(number_hosts,3),
         'vulnerable_host_percentage': round(vulnerable_host_percentage,3),
-        'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3)
+        'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3),
+        'computation_time' : processing_time
         })
 
 ## Centrality Metrics
@@ -409,13 +450,19 @@ def pagerank_centrality(d=0.85):
 
     return pagerank
 
-# @model_analysis_bp.route('/model_driven/centrality')   
+@model_analysis_bp.route('/model_driven/centrality', methods=['GET'])   
 def centrality():
     global centrality_metrics # holds the centrality metrics (betweeness, indegree, outdegree, degree, closeness, katz, pagerank)
     global vulnerability_graph
+    global shortest_path_time
+    global centrality_time
+
 
     # if centrality metrics have not been calculated, then calculate them for all nodes
     if len(centrality_metrics) == 0:
+        # starting timer for centrality metrics
+        start_timer = time.timer()
+
         centrality_metrics.append(betweenness_centrality())
         degree = degree_centrality()
         centrality_metrics.append(degree[0])
@@ -431,38 +478,72 @@ def centrality():
         centrality_metrics.append(pagerank_centrality())
         centrality_metrics.append(katz_centrality())
 
+        centrality_time = time.time() - start_timer
+    
+    return jsonify({
+        "betweeness" : centrality_metrics[0][:],
+        "indegree" :  centrality_metrics[1][:],
+        "outdegree" :  centrality_metrics[2][:],
+        "degree" :  centrality_metrics[3][:],
+        "closeness" :  centrality_metrics[4][:],
+        "pagerank" :  centrality_metrics[5][:],
+        "katz" :  centrality_metrics[6][:],
+        "shortest_path_computation_time" : shortest_path_time,
+        "centrality_computation_time" : centrality_time
+    })
+    
+
+
 # ref: Modeling Cyber Resilience for Energy Delivery Systems using critical system functionality      
+@model_analysis_bp.route('/model_driven/topsis', methods=['GET'])
 def TOPSIS():
-    from topsis import topsis
+    from .topsis import topsis
     global centrality_metrics
     global vulnerability_graph
-    if len(centrality_metrics) == 0:
-        centrality()
+    global topsis_metrics
+    global topsis_time
 
-    # constructing matrix (criteria and alternatives) 
-    # matrix will contain all nodes except remote for alternative nodes
-    # criteria are exploitability, impact, betweeness centrality, and katz centrality
-    a = []
-    # appending node exploitability and impact scores
-    a.append([])
-    a.append([]) 
-    for node in vulnerability_graph:
-        if node.index == 0:             # not including remote attacker node
-            continue
-        a[0].append(node.weights[1])    # appending node's exploitability
-        a[1].append(node.weights[2])    # appending node's impact
+    if len(topsis_metrics) == 0:
+        if len(centrality_metrics) == 0:
+            centrality()
 
-    a.append(centrality_metrics[0][1:]) # appending betweeness centrality excluding remote
-    a.append([])
-    for val in centrality_metrics[-1][1:]:
-        a[-1].append(val[0])                   # appending katz centrality excluding remote
+        # start timer for process time calc 
+        start_timer = time.time()
 
-    # constructing weights array: this will follow Arif's work done in ref
-    w = [0.25,0.5,0.15,0.1]    
+        # constructing matrix (criteria and alternatives) 
+        # matrix will contain all nodes except remote for alternative nodes
+        # criteria are exploitability, impact, betweeness centrality, and katz centrality
+        a = []
+        # appending node exploitability and impact scores
+        a.append([])
+        a.append([]) 
+        for node in vulnerability_graph:
+            if node.index == 0:             # not including remote attacker node
+                continue
+            a[0].append(node.weights[1])    # appending node's exploitability
+            a[1].append(node.weights[2])    # appending node's impact
 
-    # positive impact matrix, following Mathemtical Modeling in Social Network Analysis: Using TOPSIS to Find Node influences in social ndetwork
-    # p. 537
-    j = np.ones((len(a),), dtype=int)    
+        a.append(centrality_metrics[0][1:]) # appending betweeness centrality excluding remote
+        a.append([])
+        for val in centrality_metrics[-1][1:]:
+            a[-1].append(val[0])                   # appending katz centrality excluding remote
 
-    t = topsis(a,w,j)
-    n = t.calc()        # calculating topsis, n is array of criticalities of each node
+        # constructing weights array: this will follow Arif's work done in ref
+        w = [0.25,0.5,0.15,0.1]    
+
+        # positive impact matrix, following Mathemtical Modeling in Social Network Analysis: Using TOPSIS to Find Node influences in social ndetwork
+        # p. 537
+        j = np.ones((len(a),), dtype=int)    
+
+        t = topsis(a,w,j)
+        n = t.calc()        # calculating topsis, n is array of criticalities of each node
+
+        for i in range(len(n)):
+            topsis_metrics({"node_id" : i + 1, "topsis_score": n[i]})
+
+        topsis_time = time.time() - start_timer
+    
+    return jsonify({
+        "topsis" : topsis_metrics,
+        "topsis_computation_time" : topsis_time
+    })
