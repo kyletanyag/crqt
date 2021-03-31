@@ -20,7 +20,7 @@ export default defineComponent({
     },
     numBins: String, //Vue was giving me an error in SimulationResults.vue, saying that it expected a number but I was passing a string.
     binLimits: {
-      type: Array(), // Assume the input is always in ascending order.
+      type: Array, // Assume the input is always in ascending order.
       default: function() {return [-1] } //assume a user will never enter a bin limit set of "-1". That doesnt make sense.
     },
     name: String,
