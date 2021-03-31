@@ -9,10 +9,21 @@ from flask import Blueprint, jsonify, request
 # from .data_models import NVD
 import requests
 import json
+import os
 
 httpHost    = "http://127.0.0.1:2000"       # ip and port of CVE Search
 nvd_bp = Blueprint('nvd_bp', __name__)
 
+@nvd_bp.route('nvd/get_nvd_update_date', methods=['GET'])
+def get_nvd_update_date():
+    with open('..\\dms\\cve_search\\log\\update_populate.log', 'rb') as f:
+        f.seek(-2, os.SEEK_END)
+        while f.read(1) != b'\n':
+            f.seek(-2, os.SEEK_CUR)
+        last_line = f.readline().decode()
+        return jsonify({"date" : last_line[:19]})
+
+################# DATA DRIVEN QUERY ######################
 # query with NVD database to get cve_ids
 def data_driven_cvss_query(cve_id):
     global httpHost
@@ -79,3 +90,4 @@ def model_driven_cvss_query(cve_ids):
         result[i] = result[i] / weight_sum[i]
 
     return result
+
