@@ -53,7 +53,6 @@ export default {
   data() {
    //   const coporateFirewall = ref([]);
    //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });
-
     return {
       ID:1,
       preview: false,
@@ -180,11 +179,9 @@ export default {
                numberServer:this.numberServer
             };
         },
-
         nodes() {
            
            var nodes = [];
-
            for (let i = 0; i < this.NumberFireWall; i++) {
               nodes.push( {
                  layer: 'corp_fw_1',
@@ -194,7 +191,6 @@ export default {
                  vulnerabilites: 'x'
               })
            }
-
            return {
               nodes
            };
@@ -206,13 +202,12 @@ export default {
       console.log('Got event!')
       var ID =1;
       var layerVal = '';
-
       for(var layers = 1; layers<=3; layers++ ) {
         layerVal = String(layers);
-        console.log("Layer: "+ layerVal)
+        console.log("Layer: "+ this.$refs[layerVal].rowData.length)
          
         for(var i; i < this.$refs[layerVal].rowData.length; i++) {
-          this.$refs[layerVal].rowData[i].id=ID,
+          this.$refs[layerVal].rowData[i].id = ID,
           console.log(this.$refs[layerVal])
         }
       }
@@ -233,7 +228,6 @@ export default {
               )
            //}
            console.log(nodes)
-
            return {
               nodes
            };
@@ -257,7 +251,6 @@ export default {
       //console.log(row);d
       this.rows.splice(_index-1, 1);
     },
-
    addNodes(n) {
       console.log('Got event!')
       //console.log(n);
@@ -276,7 +269,6 @@ export default {
               )
            //}
            console.log(nodes)
-
            return {
               nodes
            };
@@ -300,7 +292,6 @@ export default {
     },
   
 };
-
        
 </script>
 

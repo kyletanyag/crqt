@@ -54,14 +54,12 @@
 import Multiselect from '@vueform/multiselect'
 import http from '@/http-common.js';
 import { defineComponent, reactive } from "vue";
-
 export default {
   name: 'Model Driven Setting',
     
   component: {
     Multiselect,
     defineComponent
-
   },
   props: {
     title: String,
@@ -85,12 +83,10 @@ export default {
       for(let i=0; i<this.rows.length; i++){
           this.userInputTable[i] = this.rows[i];
     }
-
     return {
          
       };
     },
-
     rowData() {
       var nodes = [];
       
@@ -117,31 +113,25 @@ export default {
       console.log("Sending data to the parent")
       this.$emit('DataCall', this.rowData);      
   }
-
   },
-
   watch: {
     selectedVendor() { // double check this !!!
       this.getProducts();
     },
   },
-
   methods: {
     // sendDataParent() {
     //   console.log("Sending data to the parent")
     //   this.$emit('DataCall', this.rowData);
       
     // },
-
     addRow: function(_index){
       this.rows.push([undefined, undefined, undefined, 1]);
     },
     removeRow: function(_index){
       console.log(_index);
-
       this.rows.splice(_index, 1);
     },
-
     getProducts() {
       console.log('Getting products');
       // http.get(/* Some route name */)
@@ -164,6 +154,4 @@ export default {
 </script>
 
 <style>
-
 </style>
-

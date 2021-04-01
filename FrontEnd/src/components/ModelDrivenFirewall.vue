@@ -46,7 +46,6 @@
 </div>
 </template>
 <script>
-
 import Multiselect from '@vueform/multiselect';
 import http from '@/http-common.js';
 // import axios from 'axios';
@@ -56,15 +55,12 @@ export default {
   computed: {
     // importVendors(){
     //     http.get(`product_query/firewall/${this.selectedVendor}`) .then((r) => {
-
     //     var temp = [];
     //     r.data.query.forEach((e) => {
     //       temp.push(e.vendor)
     //     });
-
     //     this.vendor = temp;
     //   })
-
     //   return vendor;
     // },
   
@@ -93,9 +89,7 @@ export default {
         
     //   }
     // }
-
   },
-
   watch: {
     selectedVendor() { // double check this !!!
       http.get(`product_query/firewall/${this.selectedVendor}`)
@@ -107,7 +101,6 @@ export default {
         r.data.query.forEach((e) => {
           temp.push(e.product)
         });
-
         this.products = temp;
       })
       .catch(() => {
@@ -115,7 +108,6 @@ export default {
       });
     },
   },
-
   props: {
     title:String,
     layer: String,
@@ -129,7 +121,6 @@ export default {
     Multiselect,
   },
   
-
   methods: {
     sendDataParent() {
       this.$emit('DataCall', this.rowData);
