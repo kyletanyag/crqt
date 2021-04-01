@@ -9,7 +9,7 @@
     <div class="col">
       <p>
         You have entered your network topology titled: <strong>{{ title }}</strong> on {{ }}. 
-        It took {{ }} to compute the generated metrics.
+        It took {{ computation_time }} seconds to compute the generated metrics.
       </p>
       <p>
         Your inputted network contains a total of <strong>{{ nodes.length }}</strong> nodes and <strong>{{ edges.length }}</strong> edges.
@@ -243,6 +243,7 @@ export default
       loadingDerivedScores: true,
       loadingNetworkEntropy: true,
       numRecommend: 3,
+      computation_time: 0,
     }
   },
 
@@ -257,6 +258,8 @@ export default
 
       http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
+        this.computation_time = Number(r.data.computation_time.toPrecision(3));
+
         this.nodes = r.data.nodes;
         this.edges = r.data.edges;
 

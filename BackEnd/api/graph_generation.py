@@ -101,7 +101,7 @@ def network_topology_data_driven_input():
 
     DerivedScore(lag, leaf_queue)
 
-    return "Done", parsing_time
+    return {'parsing_time': parsing_time}, 200
 
         
 
@@ -138,4 +138,4 @@ def network_topology_model_driven_input():
 
     # start generating shorest paths
     shortest_paths_gen()
-    return 'Done', 21
+    return 'Done', 201
