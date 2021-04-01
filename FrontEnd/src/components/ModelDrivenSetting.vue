@@ -111,8 +111,8 @@ export default {
         }
       }
       return nodes;
-      
     },
+    
   sendDataParent(){
       console.log("Sending data to the parent")
       this.$emit('DataCall', this.rowData);      
@@ -155,7 +155,8 @@ export default {
       selectedVendor: [],
       selectedProduct: [],
       numProducts: [],
-      userInputTable:[]
+      userInputTable:[],
+      serverProduct: []
     };
   },
   

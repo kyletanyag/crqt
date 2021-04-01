@@ -6,8 +6,8 @@
 
       <!-- <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1" ref="2"/> -->
       <model-driven-setting title="Corporate DMZ" :serverType="DMZServerType" 
-      :vendorServer="serverVendorInput" layer="corp_dmz" @DataCall="addNodes"/>
-      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2" ref="2"/>
+      :vendorServer="serverVendorInput" layer="corp_dmz" @DataCall="addNodes" ref="2"/>
+      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2" ref="3"/>
       <model-driven-setting title="Corporate LAN" :serverType="LANServerVendorInput" 
       :vendorServer="serverVendorInput" layer="corp_lan" @DataCall="addNodes"/>
 
@@ -207,14 +207,15 @@ export default {
       var ID =1;
       var layerVal = '';
 
-   for(var layers = 1; layers<=3; layers++ ){
-      layerVal = String(layers);
-      console.log("Layer: "+ layerVal)
-
-      for(var i; r< this.$refs[layerVal].rowData.length;i++){
-         this.$refs[layerVal].rowData[i].id=ID,
-         console.log(this.$refs[layerVal])}
-    }
+      for(var layers = 1; layers<=3; layers++ ) {
+        layerVal = String(layers);
+        console.log("Layer: "+ layerVal)
+         
+        for(var i; i < this.$refs[layerVal].rowData.length; i++) {
+          this.$refs[layerVal].rowData[i].id=ID,
+          console.log(this.$refs[layerVal])
+        }
+      }
       var nodes = [];
             //for (let i = 0; i < n.length; i++) {
               //n[i].id = this.ID++    

@@ -49,7 +49,7 @@
 
 import Multiselect from '@vueform/multiselect';
 import http from '@/http-common.js';
-import axios from 'axios';
+// import axios from 'axios';
 export default {
   
   name: 'Model Driven Firewall',
@@ -76,9 +76,8 @@ export default {
           nodes.push({
             layer: this.layer,
             id: j, 
-            vendors: this.selectedVendor,
-            products: this.selectedProduct,
-            firewalls: this.numfirewalls,      
+            vendor: this.selectedVendor,
+            product: this.selectedProduct, 
             // vulnerabilities: this.selectedVulnerabilities[i]
           });
           console.log(nodes)
@@ -137,9 +136,10 @@ export default {
     }
   },
   data(){
-    axios.get('http://localhost:2000/api/search/microsoft/windows_xp').then((r) => {
-        r.data.results.forEach((e) => {console.log(e.id)});
-    });
+    // Example of how to get data from CVE-Search !!! 
+    // axios.get('http://localhost:2000/api/search/microsoft/windows_xp').then((r) => {
+    //     r.data.results.forEach((e) => {console.log(e.id)});
+    // });
     return{
       selectedVendor:[], 
       selectedProduct:[],
