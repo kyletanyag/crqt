@@ -90,9 +90,9 @@ In new windows CMD start flask web server:
 
 In ubuntu terminal, test web server:
 ```
-$ curl http://127.0.0.1:5000/api/browse/zyxel
-$ curl http://127.0.0.1:5000/api/cve/CVE-2010-3333
-$ curl http://127.0.0.1:5000/api/search/zyxel/p-660hw
+$ curl http://127.0.0.1:2000/api/browse/zyxel
+$ curl http://127.0.0.1:2000/api/cve/CVE-2010-3333
+$ curl http://127.0.0.1:2000/api/search/zyxel/p-660hw
 ```
 
 ## To run server:
@@ -104,5 +104,18 @@ $ sudo service redis-server start
 In Windows CMD:
 ```
 > cd <path>\cve_search
-> python .\web\index.py # this will start flask server on port 5000
+> python .\web\index.py # this will start flask server on port 2000
+```
+
+## Updating Databases
+For repopulating db, in an Ubuntu terminal:
+```
+$ sudo service redis-server start
+$ python3 ./sbin/db_updater.py -v -f
+```
+
+For updating without repopulating db, in an Ubuntu terminal:
+```
+$ sudo service redis-server start
+$ python3 ./sbin/db_updater.py -v
 ```

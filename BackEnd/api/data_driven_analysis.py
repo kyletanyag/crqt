@@ -4,11 +4,13 @@ from copy import deepcopy
 from collections import deque
 from . import db 
 import math
-import scipy.linalg as la
-import numpy as np
+import requests
+import time
 
 # route for LAG generation module
 data_analysis_bp = Blueprint('data_analysis_bp', __name__)
+LAG = {}
+derived_score_computation_time = None
 
 # namespace for data-driven objects
 class DataDriven:
@@ -35,10 +37,16 @@ class DataDriven:
             self.next_node = []                  # next nodes
             self.calculations_remaining = 0      # number of nodes needed to calculate derived score
             self.isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
+            self.numConditions = 0               # number of conditions to reach node
 
         def printFunc(self):
             print(self.derived_score, self.description, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
 
+def DataDriven_init():
+    global LAG
+
+    LAG.clear()
+    derived_score_computation_time = None
 
 '''
 Probability Formulas:
@@ -46,14 +54,17 @@ For any n events e1, e2, ..., en:
 	1. P(e1, e2, ..., en)=product(P(ei),1,n)				    // product (expression, lower, upper)
 	2. P(e1 U e2 U ... U en) = 1 - product(P(NOT(ei)),1,n)		// http://people.duke.edu/~hpgavin/cee201/ProbabilityRules.pdf
 '''
-LAG = {}
+
 # scores is derived scores tuple
 # key is dictionary key to access node
-def Depth_First_Alg(scores, key): 
+def Depth_First_Alg(scores, numConditions, key): 
     global LAG
 
     # reduce number of nodes needed to make calculation
     LAG[key].calculations_remaining -= 1
+    
+    # adding number of conditions to reach node
+    LAG[key].numConditions += numConditions
 
     # modifying score
     if LAG[key].node_logic == DataDriven.Node_Logic.OR:
@@ -64,7 +75,7 @@ def Depth_First_Alg(scores, key):
         # AND = p1*...*pn
         for i in range(3):
             LAG[key].derived_score[i] = LAG[key].derived_score[i]*scores[i]         # probability formula 1
-    
+      
     # if no more nodes are required to make calculation
     if LAG[key].calculations_remaining == 0:
         # if OR node, then finalize calculation
@@ -75,25 +86,31 @@ def Depth_First_Alg(scores, key):
 
         # next node(s)
         for k in LAG[key].next_node:
-            Depth_First_Alg(LAG[key].derived_score, k)
-    
-
+            Depth_First_Alg(LAG[key].derived_score, LAG[key].numConditions, k)
 
 def DerivedScore(lag_dict, leaf_queue):
     global LAG
+    global derived_score_computation_time
+
     LAG = lag_dict
+    
+    # starting timer for computation time
+    start_time = time.time()
     
     # modifying derived scores
     while len(leaf_queue) > 0:
         node = leaf_queue.pop()
         for key in node.next_node:
-            Depth_First_Alg(node.derived_score, key)
-               
-    # return LAG
+            Depth_First_Alg(node.derived_score, 1, key)
+    
+    # calculating computation time
+    derived_score_computation_time = time.time() - start_time
+            
 
 @data_analysis_bp.route('/data_driven/get_derived_scores', methods=['GET'])
 def getDerivedScores():
     global LAG
+    global derived_score_computation_time
 
     # converting to JSON
     node_type_to_str = {
@@ -114,7 +131,7 @@ def getDerivedScores():
         for e in LAG[key].next_node:
             edges.append({'source' : key, 'target' : e})
     
-    return jsonify({'nodes': vertices, 'edges' : edges})
+    return jsonify({'nodes': vertices, 'edges' : edges, "computation_time" : derived_score_computation_time})
 
 @data_analysis_bp.route('/data_driven/test-derived-scores', methods=['GET'])
 def test_Derived_Scores():
@@ -228,3 +245,17 @@ def network_entropy():
     result.append({'impact' : round(net_entropy[2],3)})
 
     return jsonify({'network_entropy': result})
+
+@data_analysis_bp.route('/data_driven/conditions_per_derived_node', methods=['GET'])
+def conditions_per_derived_nodes():
+    global LAG
+
+    conditions_derived = []
+    for key in LAG:
+        if LAG[key].node_type == DataDriven.Node_Type.DERIVED:
+            conditions_derived.append({
+                "id" : key,
+                "num_conditions" : LAG[key].numConditions
+            })
+    
+    return jsonify({"conditions_per_derived_node" : conditions_derived})

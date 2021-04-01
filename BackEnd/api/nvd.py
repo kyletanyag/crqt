@@ -6,79 +6,88 @@
 '''
 
 from flask import Blueprint, jsonify, request
-from .data_models import NVD
+import requests
+import json
+import os
 
+httpHost    = "http://127.0.0.1:2000"       # ip and port of CVE Search
 nvd_bp = Blueprint('nvd_bp', __name__)
 
+@nvd_bp.route('/nvd/get_nvd_update_date', methods=['GET'])
+def get_nvd_update_date():
+    print(os.getcwd())
+    with open('..\\dms\\cve_search\\log\\update_populate.log', 'rb') as f:
+        f.seek(-2, os.SEEK_END)
+        while f.read(1) != b'\n':
+            f.seek(-2, os.SEEK_CUR)
+        last_line = f.readline().decode()
+        return jsonify({"date" : last_line[:19]})
+
+################# DATA DRIVEN QUERY ######################
 # query with NVD database to get cve_ids
 def data_driven_cvss_query(cve_id):
-    nvd = NVD.query.get(cve_id)
-    return [nvd.base_score/10.0, nvd.exploitabiliy_score_v2/10.0,nvd.impact_score_v2/10.0]
+    global httpHost
+    
+    url = httpHost + "/api/cve/" + cve_id
 
-@nvd_bp.route('/cvss_query', methods=['POST'])
-def cvss_query():
-    cve_id = request.get_json()  # json network topology data driven
-    print(cve_id['cve'])
-    nvd = NVD.query.get(cve_id['cve'])
-    return jsonify({
-        'base': nvd.base_score, 
-        'exploitability' : nvd.exploitabiliy_score_v2,
-        'impact' : nvd.impact_score_v2})
+    # making request to CVE ID
+    r = requests.get(url)
+    data = json.loads(r.text)
+    
+    scores = [0.0,0.0,0.0]       # base, exploitability, impact
 
-# # query with Products database to get vendor products by vendor name
-# @nvd_bp.route('/product_query_by_vendor/', methods=['POST'])
-# def query_by_vendor():
-#     rq =  request.get_json() # vendor name
-#     filter = Products.query.filter_by(vendor=rq['vendor'])
-#     results = []
+    scores[0] = float(data["cvss"]) / 10.0
+    
+    scores[1] = float(data["exploitabilityScore"]) / 10.0
 
-#     for i in filter:
-#         results.append({
-#             'vendor': results.vendor,
-#             'type': results.type,
-#             'product': results.product})
+    scores[2] = float(data["impactScore"]) / 10.0
 
-#     return jsonify({'Query': results})
+    return scores
 
-# # query with Products database to get vendor products by product type
-# @nvd_bp.route('/product_query_by_type/', methods=['POST'])
-# def query_by_type():
-#     rq =  request.get_json() # product type
-#     filter = Products.query.filter_by(type=rq['type'])
-#     results = []
 
-#     for i in filter:
-#         results.append({
-#             'vendor': results.vendor,
-#             'type': results.type,
-#             'product': results.product})
+############# MODEL DRIVEN QUERY ###################
+def score_to_weight(score):
+    if score >= 0.7:
+        return 0.5
+    elif score >= 0.4:
+        return 0.3
+    else:
+        return 0.2
 
-#     return jsonify({'Query': results})
+def model_driven_cvss_query(cve_ids):
+    global httpHost
+    weights = []
+    scores = []
+    
+    for cve in cve_ids:
+        url = httpHost + "/api/cve/" + cve
 
-# # query with Products database to get vendor products by product name
-# @nvd_bp.route('/product_query_by_name/', methods=['POST'])
-# def query_by_product():
-#     rq =  request.get_json() # product name
-#     filter = Products.query.filter_by(product=rq['product'])
-#     results = []
+        # making request to CVE ID
+        r = requests.get(url)
+        data = json.loads(r.text)
+        
+        weights.append([0.0,0.0,0.0])
+        scores.append([0.0,0.0,0.0])       # base, exploitability, impact
 
-#     for i in filter:
-#         if i.product == True:   
-#             results.append({
-#                 'vendor': results.vendor,
-#                 'type': results.type,
-#                 'product': results.product})
+        scores[-1][0] = float(data["cvss"]) / 10.0
+        weights[-1][0] = score_to_weight(scores[-1][0])
 
-#     return jsonify({'Query': results})
+        scores[-1][1] = float(data["exploitabilityScore"]) / 10.0
+        weights[-1][1] = score_to_weight(scores[-1][1])
 
-####### STILL IN WORK:
+        scores[-1][2] = float(data["impactScore"]) / 10.0
+        weights[-1][2] = score_to_weight(scores[-1][2])
+    
+    result = [0.0,0.0,0.0]
+    weight_sum = [0.0,0.0,0.0]
+    # calculating weighted average
+    for i in range(len(weights)):
+        for j in range(3):
+            result[j] += (scores[i][j] * weights[i][j])
+            weight_sum[j] += weights[i][j]
+    
+    for i in range(3):
+        result[i] = result[i] / weight_sum[i]
 
-# updates database with latest nvd
-# @nvd_bp.route('/update_nvd')
-# def update_nvd(cve_ids):
-#     for data in nvd.query.filter(nvd["cve id"]).all():
-#         if cve_ids not in data:
-#             nvd.add(cve_ids)
-#             nvd.commit()
-
+    return result
 
