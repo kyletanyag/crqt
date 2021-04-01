@@ -1,7 +1,11 @@
 <template>
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
+<<<<<<< HEAD
       <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1" @DataCall="addNodes"/>
+=======
+      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1" ref="a"/>
+>>>>>>> 04c84c80f2bb89b98920c33302d6fe25297a5eb5
       <model-driven-setting title="Corporate DMZ" :serverType="DMZServerType" 
       :vendorServer="serverVendorInput" layer="corp_dmz" @DataCall="addNodes"/>
       <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2" @DataCall="addNodes"/>
@@ -199,6 +203,7 @@ export default {
     },
     methods:{
    Submit() {
+      console.log(this.$refs.a.rowData)
                this.Upload(this.input, (event) => {
                 this.progress = Math.round(100 * event.loaded / event.total);
             })
