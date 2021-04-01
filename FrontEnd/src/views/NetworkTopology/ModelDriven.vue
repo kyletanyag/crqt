@@ -92,7 +92,7 @@ export default {
       var ID = 1;
       var nodes = [];
 
-      for(var layer = 1; layer <= 3; layer++) {
+      for(var layer = 1; layer <= 8; layer++) {
         for(var i = 0; i < this.$refs[layer].rowData.length; i++) {
           this.$refs[layer].rowData[i].id = ID++;
           nodes.push(this.$refs[layer].rowData[i]);

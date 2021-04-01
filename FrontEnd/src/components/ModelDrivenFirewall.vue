@@ -31,14 +31,14 @@
           </tr>
           <tr width="100%">
               <td>
-              <!-- <div v-if="selectedVendor != -1">
+              <div v-if="selectedProduct">
                 <Multiselect 
-                    v-model="L1Vendor"
-                    mode="multiple"
-                    placeholder="Select your Vulnerabilites"
-                    :options="vendors[selectedVendor].options"
-                    />
-              </div> -->
+                  v-model="selectedVulnerabilities"
+                  mode="multiple"
+                  placeholder="Select your Vulnerabilites"
+                  :options="vulnerability_list"
+                />
+              </div>
               </td>
               </tr>
         </tbody>
@@ -49,28 +49,34 @@
 /* eslint-disable */
 import Multiselect from '@vueform/multiselect';
 import http from '@/http-common.js';
-// import axios from 'axios';
+import axios from 'axios';
+import toRaw from 'vue';
+
 export default {
   name: 'Model Driven Firewall',
 
   computed: {
     rowData() {
       var nodes = [];
-        for(let j = 0; j < this.numfirewalls; j++) {
-          nodes.push({
-            layer: this.layer,
-            id: j, 
-            vendor: this.selectedVendor,
-            product: this.selectedProduct, 
-            // vulnerabilities: this.selectedVulnerabilities[i]
-          });
+      for (let i = 0; i < this.numfirewalls; i++) {
+        let cve_list = []
+        for (let j = 0; j < this.selectedVulnerabilities.length; j++)  {
+          cve_list.push(this.vulnerability_list[this.selectedVulnerabilities[j]]);
         }
+        nodes.push({
+          layer: this.layer,
+          id: i, 
+          vendor: this.selectedVendor,
+          product: this.selectedProduct, 
+          vulnerabilities: this.selectedVulnerabilities.length > 0 ? cve_list : JSON.parse(JSON.stringify(this.vulnerability_list))
+        });
+      }
       return nodes;
     },
   },
 
   watch: {
-    selectedVendor() { // double check this !!!
+    selectedVendor() { 
       http.get(`product_query/firewall/${this.selectedVendor}`)
       .then((r) => {
         if (r.data.error) console.log(r.data.error);
@@ -78,11 +84,12 @@ export default {
       });
     },
 
-    selectedProduct() {
-      // Example of how to get data from CVE-Search !!! 
-      // axios.get('http://localhost:2000/api/search/microsoft/windows_xp').then((r) => {
-      //     r.data.results.forEach((e) => {console.log(e.id)});
-      // });
+    selectedProduct() { // Example of how to get data from CVE-Search !!! 
+    this.vulnerability_list = [];
+      axios.get(`http://localhost:2000/api/search/${this.selectedVendor.toLowerCase()}/${this.selectedProduct.toLowerCase()}`).then((r) => {
+        console.log(r);
+        r.data.results.forEach((e) => {this.vulnerability_list.push(e.id)});
+      });
     }
   },
 
@@ -104,9 +111,10 @@ export default {
     return {
       selectedVendor: undefined, 
       selectedProduct: undefined,
-      L1Vendor:[],
+      selectedVulnerabilities: [],
       numfirewalls: 1,
       products: [],
+      vulnerability_list: [],
     };
   }
 }

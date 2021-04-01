@@ -8,7 +8,7 @@
     <!-- Node statistics -->
     <div class="col">
       <p>
-        You have entered your network topology titled: <strong>{{ title }}</strong> on {{ }}. 
+        You have entered your network topology titled: <strong>{{ title }}</strong> on {{ input_date }}. 
         It took {{ computation_time }} seconds to compute the generated metrics.
       </p>
       <p>
@@ -213,6 +213,7 @@ export default
       nodes: [],
       edges: [],
       title: undefined,
+      input_date: undefined,
       derivedFactNodes: [],
       primitiveFactNodes: [],
       derivationNodes: [],
@@ -255,6 +256,16 @@ export default
     getData() {
       this.loadingDerivedScores = true;
       this.loadingNetworkEntropy = true;
+
+      http.get('get_network_title').then((r) => {
+        console.log(r);
+        this.title = r.data.network_title;
+      });
+
+      http.get('get_input_date').then((r) => {
+        console.log(r);
+        this.input_date = r.data.input_date;
+      });
 
       http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
