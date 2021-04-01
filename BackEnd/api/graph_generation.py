@@ -18,6 +18,14 @@ input_date = ""                 # date/time of network input into system
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
 
+@graph_bp.route('/get_network_title', methods=['GET'])
+def get_network_title():
+    return jsonify({"network_title" : title})
+
+@graph_bp.route('/get_input_date', methods=['GET'])
+def get_input_date():
+    return jsonify({"input_date" : input_date})
+
 @graph_bp.route('/network_topology_data_driven_input', methods=['POST'])
 def network_topology_data_driven_input():
     network = request.get_json()  # json network topology data driven

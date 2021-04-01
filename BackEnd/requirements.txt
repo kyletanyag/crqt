@@ -12,7 +12,6 @@ colorama==0.4.4
 coverage==5.5
 dicttoxml==1.7.4
 dominate==2.6.0
-feedformatter==0.5
 Flask==1.1.2
 Flask-Bootstrap4==4.0.2
 Flask-Breadcrumbs==0.5.1
