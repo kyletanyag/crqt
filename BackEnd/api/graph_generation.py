@@ -8,7 +8,7 @@ from .nvd import data_driven_cvss_query
 import enum
 from collections import deque
 from .data_driven_analysis import DataDriven, DerivedScore, DataDriven_init
-from .model_driven_analysis import vulnerability_graph, ModelDriven, shortest_paths_gen, ModelDriven_init
+from .model_driven_analysis import ModelDriven, shortest_paths_gen, ModelDriven_init
 import time
 
 # input variables
@@ -32,7 +32,8 @@ def get_input_date():
 def network_topology_data_driven_input():
     global title
     global input_date 
-    
+    from .data_driven_analysis import LAG
+
     network = request.get_json()  # json network topology data driven
 
     # timing 
@@ -45,75 +46,59 @@ def network_topology_data_driven_input():
     title = network["network_title"]
     input_date = network["date"]
 
-    lag = {}
+    leaf_queue = deque()
 
     # vertices
     for node in network["vertices"]:
-        node_id = int(node["id"])
-        lag[node_id] = DataDriven.Node()
-
-        lag[node_id].description = node["description"]
-
-        # setting logic
-        if node["logic"] == "FLOW":
-            lag[node_id].node_logic = DataDriven.Node_Logic.FLOW 
-        elif node["logic"] == "AND":
-            lag[node_id].node_logic = DataDriven.Node_Logic.AND
-        elif node["logic"] == "OR":
-            lag[node_id].node_logic = DataDriven.Node_Logic.OR
-        else:
-            lag[node_id].node_logic = DataDriven.Node_Logic.LEAF
+        LAG.append(DataDriven.Node(int(node["id"]), node["logic"], node["description"]))
 
         # checking if derivation node
         if node["description"][:4] == 'RULE':
-            lag[node_id].node_type = DataDriven.Node_Type.DERIVATION
-            for score in lag[node_id].derived_score:
+            LAG[-1].node_type = DataDriven.Node_Type.DERIVATION
+            for score in LAG[-1].derived_score:
                 score = network["sim_config"]
 
         # checking if primitive fact node (primitive fact nodes are always leafs)
-        elif lag[node_id].node_logic == DataDriven.Node_Logic.LEAF: 
-            lag[node_id].node_type = DataDriven.Node_Type.PRIMITIVE_FACT
+        elif LAG[-1].node_logic == DataDriven.Node_Logic.LEAF: 
+            LAG[-1].node_type = DataDriven.Node_Type.PRIMITIVE_FACT
+
+            # searching for CVE ID
+            cve_index = LAG[-1].description.find('CVE')
+            if cve_index != -1:
+                end_position = LAG[-1].description.find('\'', cve_index)
+                cve_id = LAG[-1].description[cve_index:end_position]
+
+                # getting CVSS scores
+                LAG[key].derived_score = data_driven_cvss_query(cve_id)
+                # print(cve_id, LAG[key].derived_score)
+
+            # else use default values (1.0)
+            leaf_queue.append(LAG[-1])
 
         # else, derived fact node
         else:
-            lag[node_id].node_type = DataDriven.Node_Type.DERIVED
-        
-        # checking if node is execCode
-        if lag[node_id].node_type == DataDriven.Node_Type.DERIVED:
+            LAG[-1].node_type = DataDriven.Node_Type.DERIVED
+            
+            # checking if node is execCode
             execCode_index = node["description"].find('execCode')
             if execCode_index != -1:
                 # if execCode node, flag
-                lag[node_id].isExecCode = True
+                LAG[-1].isExecCode = True            
+
+    # sorting LAG by id
+    LAG.sort(key=lambda node: node.index)
 
     # edges
     for edge in network["arcs"]:
-        targetNode = int(edge["nextNode"])
-        lag[int(edge["currNode"])].next_node.append(targetNode) 
-        lag[targetNode].calculations_remaining += 1         # increase number of nodes needed for calculation
-        lag[targetNode].numConditions += 1                  # counting the number of conditions
-
-    # constructing queue for leaf nodes for derived score calculations
-    leaf_queue = deque()
-    for key in lag:
-        if lag[key].node_type == DataDriven.Node_Type.PRIMITIVE_FACT:
-            # searching for CVE ID
-            cve_index = lag[key].description.find('CVE')
-            if cve_index != -1:
-                end_position = lag[key].description.find('\'', cve_index)
-                cve_id = lag[key].description[cve_index:end_position]
-
-                # getting CVSS scores
-                lag[key].derived_score = data_driven_cvss_query(cve_id)
-                # print(cve_id, lag[key].derived_score)
-
-            # else use default values (1.0)
-            leaf_queue.append(lag[key])
-        
-        # print(key, lag[key].isExecCode)
+        targetNode = int(edge["nextNode"]) - 1
+        LAG[int(edge["currNode"]) - 1].next_node.append(LAG[targetNode]) 
+        LAG[targetNode].calculations_remaining += 1         # increase number of nodes needed for calculation
+        LAG[targetNode].diNumConditions += 1                # counting the number of conditions
     
     parsing_time = time.time() - start_timer
 
-    DerivedScore(lag, leaf_queue)
+    # calculates derived scores for all nodes
+    DerivedScore(leaf_queue)
 
     return {'parsing_time': parsing_time}, 200
 
@@ -123,6 +108,7 @@ def network_topology_data_driven_input():
 def network_topology_model_driven_input():
     global title
     global input_date 
+    from .model_driven_analysis import vulnerability_graph
 
     network = request.get_json()  # json network topology data driven
 
