@@ -54,7 +54,20 @@ export default {
   
   name: 'Model Driven Firewall',
   computed: {
+    // importVendors(){
+    //     http.get(`product_query/firewall/${this.selectedVendor}`) .then((r) => {
 
+    //     var temp = [];
+    //     r.data.query.forEach((e) => {
+    //       temp.push(e.vendor)
+    //     });
+
+    //     this.vendor = temp;
+    //   })
+
+    //   return vendor;
+    // },
+  
     rowData() {
       var nodes = [];
       
@@ -74,13 +87,13 @@ export default {
       return nodes;
       
     },
-    sendDataParentFirwall(){
-      console.log("Sending data to the parent")
-      this.$emit('DataCall', this.rowData);
-      return{
+    // sendDataParentFirwall(){
+    //   console.log("Sending data to the parent")
+    //   this.$emit('DataCall', this.rowData);
+    //   return{
         
-      }
-    }
+    //   }
+    // }
 
   },
 

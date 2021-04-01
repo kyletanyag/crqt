@@ -1,14 +1,13 @@
 <template>
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-<<<<<<< HEAD
-      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1" @DataCall="addNodes"/>
-=======
-      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1" ref="a"/>
->>>>>>> 04c84c80f2bb89b98920c33302d6fe25297a5eb5
+
+      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1" ref="1"/>
+
+      <!-- <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1" ref="2"/> -->
       <model-driven-setting title="Corporate DMZ" :serverType="DMZServerType" 
       :vendorServer="serverVendorInput" layer="corp_dmz" @DataCall="addNodes"/>
-      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2" @DataCall="addNodes"/>
+      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2" ref="2"/>
       <model-driven-setting title="Corporate LAN" :serverType="LANServerVendorInput" 
       :vendorServer="serverVendorInput" layer="corp_lan" @DataCall="addNodes"/>
 
@@ -203,14 +202,48 @@ export default {
     },
     methods:{
    Submit() {
-      console.log(this.$refs.a.rowData)
-               this.Upload(this.input, (event) => {
-                this.progress = Math.round(100 * event.loaded / event.total);
-            })
-            .then((response) => {
-                console.log(response.data.message);
-                // this.$router.push({name: 'Sandbox'});
-            })
+      //console.log(this.$refs.a.rowData)
+      console.log('Got event!')
+      var ID =1;
+      var layerVal = '';
+
+   for(var layers = 1; layers<=3; layers++ ){
+      layerVal = String(layers);
+      console.log("Layer: "+ layerVal)
+
+      for(var i; r< this.$refs[layerVal].rowData.length;i++){
+         this.$refs[layerVal].rowData[i].id=ID,
+         console.log(this.$refs[layerVal])}
+    }
+      var nodes = [];
+            //for (let i = 0; i < n.length; i++) {
+              //n[i].id = this.ID++    
+              //this.$refs.a.rowData[0].id=ID,        
+              nodes.push( 
+                 
+               this.$refs.a.rowData
+               
+               //   layer: n[0],
+               //   id: n.id,
+               //   type: n.type,
+               //   vendor:n.vendor, // Changes to be consitent with var
+               //   product: n.product,
+               //   vulnerabilites: 'x'
+              )
+           //}
+           console.log(nodes)
+
+           return {
+              nodes
+           };
+        
+            //    this.Upload(this.input, (event) => {
+            //    this.progress = Math.round(100 * event.loaded / event.total);
+            // })
+            // .then((response) => {
+            //     console.log(response.data.message);
+            //     // this.$router.push({name: 'Sandbox'});
+            // })
             
         },
    Upload(data, onUploadProgress) {
