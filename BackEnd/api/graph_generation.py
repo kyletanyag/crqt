@@ -20,14 +20,19 @@ graph_bp = Blueprint('graph_bp', __name__)
 
 @graph_bp.route('/get_network_title', methods=['GET'])
 def get_network_title():
+    global title
     return jsonify({"network_title" : title})
 
 @graph_bp.route('/get_input_date', methods=['GET'])
 def get_input_date():
+    global input_date
     return jsonify({"input_date" : input_date})
 
 @graph_bp.route('/network_topology_data_driven_input', methods=['POST'])
 def network_topology_data_driven_input():
+    global title
+    global input_date 
+    
     network = request.get_json()  # json network topology data driven
 
     # timing 
@@ -84,7 +89,8 @@ def network_topology_data_driven_input():
     for edge in network["arcs"]:
         targetNode = int(edge["nextNode"])
         lag[int(edge["currNode"])].next_node.append(targetNode) 
-        lag[targetNode].calculations_remaining += 1              # increase number of nodes needed for calculation
+        lag[targetNode].calculations_remaining += 1         # increase number of nodes needed for calculation
+        lag[targetNode].numConditions += 1                  # counting the number of conditions
 
     # constructing queue for leaf nodes for derived score calculations
     leaf_queue = deque()
@@ -115,6 +121,9 @@ def network_topology_data_driven_input():
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
 def network_topology_model_driven_input():
+    global title
+    global input_date 
+
     network = request.get_json()  # json network topology data driven
 
     # setting title and input date

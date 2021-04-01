@@ -30,14 +30,15 @@ class DataDriven:
     # graph data structure (adjenency list) for DataDriven
     class Node:
         def __init__(self):
-            self.derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
-            self.description = str()             # node description
-            self.node_type = None                # type of node  
-            self.node_logic = None               # node relationship 
-            self.next_node = []                  # next nodes
-            self.calculations_remaining = 0      # number of nodes needed to calculate derived score
-            self.isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
-            self.numConditions = 0               # number of conditions to reach node
+            self.derived_score = [1.0,1.0,1.0]      # base, exploitability, impact scores
+            self.description = str()                # node description
+            self.node_type = None                   # type of node  
+            self.node_logic = None                  # node relationship 
+            self.next_node = []                     # next nodes
+            self.calculations_remaining = 0         # number of nodes needed to calculate derived score
+            self.isExecCode = False                 # whether node is execCode node (used for percentage execCode metric)
+            self.sumNumConditions = 0               # sum total of conditions to reach node
+            self.numConditions = 0                  # number of conditions to reach node
 
         def printFunc(self):
             print(self.derived_score, self.description, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
@@ -64,7 +65,8 @@ def Depth_First_Alg(scores, numConditions, key):
     LAG[key].calculations_remaining -= 1
     
     # adding number of conditions to reach node
-    LAG[key].numConditions += numConditions
+    LAG[key].sumNumConditions += numConditions
+    
 
     # modifying score
     if LAG[key].node_logic == DataDriven.Node_Logic.OR:
