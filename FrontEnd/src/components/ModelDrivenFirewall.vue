@@ -71,9 +71,8 @@ export default {
           console.log(nodes)
         }
       
-      return {
-        nodes
-      };
+      return nodes;
+      
     },
     sendDataParentFirwall(){
       console.log("Sending data to the parent")

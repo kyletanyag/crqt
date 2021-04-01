@@ -110,9 +110,8 @@ export default {
           });
         }
       }
-      return {
-        nodes
-      };
+      return nodes;
+      
     },
   sendDataParent(){
       console.log("Sending data to the parent")

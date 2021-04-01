@@ -1,10 +1,10 @@
 <template>
    <body>
       <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1"/>
+      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" layer="corp_fw_1" @DataCall="addNodes"/>
       <model-driven-setting title="Corporate DMZ" :serverType="DMZServerType" 
       :vendorServer="serverVendorInput" layer="corp_dmz" @DataCall="addNodes"/>
-      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2"/>
+      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2" @DataCall="addNodes"/>
       <model-driven-setting title="Corporate LAN" :serverType="LANServerVendorInput" 
       :vendorServer="serverVendorInput" layer="corp_lan" @DataCall="addNodes"/>
 
@@ -52,6 +52,7 @@ export default {
    //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });
 
     return {
+      ID:1,
       preview: false,
       nodeSelect: false,
       L1VendorInput:[
@@ -222,9 +223,11 @@ export default {
       console.log('Got event!')
       //console.log(n);
       var nodes = [];
-         //   for (let i = 0; i < this.NumberFireWall; i++) {
+            //for (let i = 0; i < n.length; i++) {
+              //n[i].id = this.ID++            
               nodes.push( 
-                 n
+                 
+               n
                //   layer: n[0],
                //   id: n.id,
                //   type: n.type,
