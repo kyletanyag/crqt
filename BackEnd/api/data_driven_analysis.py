@@ -30,14 +30,15 @@ class DataDriven:
     # graph data structure (adjenency list) for DataDriven
     class Node:
         def __init__(self):
-            self.derived_score = [1.0,1.0,1.0]   # base, exploitability, impact scores
-            self.description = str()             # node description
-            self.node_type = None                # type of node  
-            self.node_logic = None               # node relationship 
-            self.next_node = []                  # next nodes
-            self.calculations_remaining = 0      # number of nodes needed to calculate derived score
-            self.isExecCode = False              # whether node is execCode node (used for percentage execCode metric)
-            self.numConditions = 0               # number of conditions to reach node
+            self.derived_score = [1.0,1.0,1.0]      # base, exploitability, impact scores
+            self.description = str()                # node description
+            self.node_type = None                   # type of node  
+            self.node_logic = None                  # node relationship 
+            self.next_node = []                     # next nodes
+            self.calculations_remaining = 0         # number of nodes needed to calculate derived score
+            self.isExecCode = False                 # whether node is execCode node (used for percentage execCode metric)
+            self.tolNumConditions = 0               # sum total of conditions to reach node
+            self.numConditions = 0                  # number of conditions to reach node
 
         def printFunc(self):
             print(self.derived_score, self.description, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
@@ -64,7 +65,8 @@ def Depth_First_Alg(scores, numConditions, key):
     LAG[key].calculations_remaining -= 1
     
     # adding number of conditions to reach node
-    LAG[key].numConditions += numConditions
+    LAG[key].tolNumConditions += numConditions
+    
 
     # modifying score
     if LAG[key].node_logic == DataDriven.Node_Logic.OR:
@@ -246,6 +248,7 @@ def network_entropy():
 
     return jsonify({'network_entropy': result})
 
+# 3.a
 @data_analysis_bp.route('/data_driven/conditions_per_derived_node', methods=['GET'])
 def conditions_per_derived_nodes():
     global LAG
@@ -255,7 +258,52 @@ def conditions_per_derived_nodes():
         if LAG[key].node_type == DataDriven.Node_Type.DERIVED:
             conditions_derived.append({
                 "id" : key,
-                "num_conditions" : LAG[key].numConditions
+                "num_conditions" : LAG[key].tolNumConditions # total number of conditions to reach node
             })
     
     return jsonify({"conditions_per_derived_node" : conditions_derived})
+
+# 3.c
+@data_analysis_bp.route('/data_driven/conditions_per_execCode_node', methods=['GET'])
+def conditions_per_execCode_node():
+    global LAG
+
+    conditions_derived = []
+    for key in LAG:
+        if LAG[key].isExecCode:
+            conditions_derived.append({
+                "id" : key,
+                "num_conditions" : LAG[key].tolNumConditions # total number of conditions to reach node
+            })
+    
+    return jsonify({"conditions_per_execCode_node" : conditions_derived})
+
+# 3.d
+@data_analysis_bp.route('/data_driven/rules_per_derived_node', methods=['GET'])
+def conditions_per_execCode_node():
+    global LAG
+
+    rules_derived = []
+    for key in LAG:
+        if LAG[key].node_type == DataDriven.Node_Type.DERIVED:
+            rules_derived.append({
+                "id" : key,
+                "num_conditions" : LAG[key].numConditions # number of rules
+            })
+    
+    return jsonify({"rules_per_derived_node" : rules_derived})
+
+# 3.d
+@data_analysis_bp.route('/data_driven/rules_per_execCode_node', methods=['GET'])
+def conditions_per_execCode_node():
+    global LAG
+
+    rules_derived = []
+    for key in LAG:
+        if LAG[key].isExecCode:
+            rules_derived.append({
+                "id" : key,
+                "num_conditions" : LAG[key].numConditions   # number of rules
+            })
+    
+    return jsonify({"rules_per_execCode_node" : rules_derived})
