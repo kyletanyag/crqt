@@ -45,6 +45,7 @@ class DataDriven:
 
 def DataDriven_init():
     global LAG
+    global derived_score_computation_time
 
     LAG.clear()
     derived_score_computation_time = None
@@ -280,7 +281,7 @@ def conditions_per_execCode_node():
 
 # 3.d
 @data_analysis_bp.route('/data_driven/rules_per_derived_node', methods=['GET'])
-def conditions_per_execCode_node():
+def rules_per_derived_nodes():
     global LAG
 
     rules_derived = []
@@ -293,9 +294,9 @@ def conditions_per_execCode_node():
     
     return jsonify({"rules_per_derived_node" : rules_derived})
 
-# 3.d
+# 3.e
 @data_analysis_bp.route('/data_driven/rules_per_execCode_node', methods=['GET'])
-def conditions_per_execCode_node():
+def rules_per_execCode_node():
     global LAG
 
     rules_derived = []

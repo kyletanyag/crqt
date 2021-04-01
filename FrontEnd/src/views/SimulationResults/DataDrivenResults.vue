@@ -8,8 +8,8 @@
     <!-- Node statistics -->
     <div class="col">
       <p>
-        You have entered your network topology titled: <strong>{{ title }}</strong> on {{ input_date }}. 
-        It took {{ computation_time }} seconds to compute the generated metrics.
+        You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ input_date }}</strong>. 
+        It took <strong>{{ computation_time }}</strong> second(s) to compute the generated metrics.
       </p>
       <p>
         Your inputted network contains a total of <strong>{{ nodes.length }}</strong> nodes and <strong>{{ edges.length }}</strong> edges.
@@ -269,7 +269,7 @@ export default
 
       http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
-        this.computation_time = Number(r.data.computation_time.toPrecision(3));
+        this.computation_time = r.data.computation_time < 1 ? 'less than 1' : Number(r.data.computation_time.toPrecision(3));
 
         this.nodes = r.data.nodes;
         this.edges = r.data.edges;
