@@ -8,8 +8,8 @@
     <!-- Node statistics -->
     <div class="col">
       <p>
-        You have entered your network topology titled: <strong>{{ title }}</strong> on {{ }}. 
-        It took {{ }} to compute the generated metrics.
+        You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ input_date }}</strong>. 
+        It took <strong>{{ computation_time }}</strong> second(s) to compute the generated metrics.
       </p>
       <p>
         Your inputted network contains a total of <strong>{{ nodes.length }}</strong> nodes and <strong>{{ edges.length }}</strong> edges.
@@ -114,6 +114,7 @@
         numBins="3"
         :binNames="['Low', 'Medium', 'High']" 
         :name="histogramNodeName" 
+        :binLimits="[0.4, 0.7, 1]"
         barColor='#f87979'
         style="width: 60%"
         class="container"
@@ -132,6 +133,16 @@
   <h3 class="pb-1">Specific Node Information</h3>
   <div>
     <!-- Conditions to reach a node -->
+    <div class="row">
+      <div class="col">
+        Which node would you like to see more information about? 
+        <input type="number" v-model.number="desiredNodeID" :max="lastNodeID" min="1" maxlength="2"
+           onkeyup="if(this.value > max) this.value = max; else if (this.value < 1) this.value = null;">
+      </div>  
+      <div class="col">
+
+      </div>
+    </div>
     <network-graph></network-graph>
   </div>
   <hr>
@@ -212,6 +223,7 @@ export default
       nodes: [],
       edges: [],
       title: undefined,
+      input_date: undefined,
       derivedFactNodes: [],
       primitiveFactNodes: [],
       derivationNodes: [],
@@ -242,6 +254,9 @@ export default
       loadingDerivedScores: true,
       loadingNetworkEntropy: true,
       numRecommend: 3,
+      computation_time: 0,
+      lastNodeID: 0,
+      desiredNodeID: 1,
     }
   },
 
@@ -254,13 +269,27 @@ export default
       this.loadingDerivedScores = true;
       this.loadingNetworkEntropy = true;
 
+      http.get('get_network_title').then((r) => {
+        console.log(r);
+        this.title = r.data.network_title;
+      });
+
+      http.get('get_input_date').then((r) => {
+        console.log(r);
+        this.input_date = r.data.input_date;
+      });
+
       http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
+        this.computation_time = r.data.computation_time < 1 ? 'less than 1' : Number(r.data.computation_time.toPrecision(3));
+
         this.nodes = r.data.nodes;
         this.edges = r.data.edges;
 
         r.data.nodes.forEach((n) => {
 
+          this.lastNodeID =  this.lastNodeID < n.id ? n.id : this.lastNodeID;
+          
           this.baseScores.push(n.base_score);
           this.impactScores.push(n.impact_score);
           this.exploitabilityScores.push(n.exploitability_score);
@@ -366,8 +395,13 @@ export default
 
     numRecommend() {
       if (this.numRecommend > 10) this.numRecommend = 10;
-      if (this.numRecommend < 0) this.numRecommend = "";
+      if (this.numRecommend < 0) this.numRecommend = null;
       if (!this.numRecommend === "") this.numRecommend = 1;
+    },
+
+    desiredNodeID() {
+      if (this.desiredNodeID > this.lastNodeID) this.desiredNodeID = this.lastNodeID;
+      if (this.desiredNodeID < 1) this.desiredNodeID = null;
     }
   },
 

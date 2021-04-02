@@ -9,6 +9,7 @@ from flask_breadcrumbs import Breadcrumbs
 from flask_login import LoginManager
 from flask_jwt_extended import JWTManager
 from flask_socketio import SocketIO
+from flask_cors import CORS
 
 from lib.Authentication import AuthenticationHandler
 from lib.Config import Configuration
@@ -36,6 +37,7 @@ def create_app(version, run_path):
     global app, token_blacklist, socketio
 
     app = Flask(__name__)
+    CORS(app)
 
     app.config["version"] = version
     app.config["run_path"] = run_path

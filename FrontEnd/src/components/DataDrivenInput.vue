@@ -127,8 +127,7 @@ export default {
           return;
         }
 
-        if (!this.networkTitle)
-        {
+        if (!this.networkTitle) {
           const d = new Date();
           var hr = d.getHours() < 10 ? `0${d.getHours()}` : d.getHours();
 

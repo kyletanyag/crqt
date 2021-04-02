@@ -84,7 +84,8 @@ Exploitability Score: ${d.exploitability_score} <br>\
 Impact Score ${d.impact_score}\
 </div>`)
             .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 350) + "px")
-            .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight) + "px");
+            // .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight) + "px");
+            .style("top", (d3.select('.tooltip').node().offsetHeight) + "px");
         })
         .on("mouseleave", function() {
           tooltip.transition()
