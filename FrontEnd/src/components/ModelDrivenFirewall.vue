@@ -1,12 +1,7 @@
 <template>
 <div>
   <h4> {{ title }} Settings:</h4>
-                  <Multiselect 
-                  v-model="selectedVulnerabilities"
-                  mode="multiple"
-                  placeholder="Select your Vulnerabilites"
-                  :options="vulnerability_list"
-                />
+  
     <p> Please select the product vendor, model, and quantity for your {{ layer }}.</p>
     <table width=100% border="0" cellspacing="0" >
         <tbody>
