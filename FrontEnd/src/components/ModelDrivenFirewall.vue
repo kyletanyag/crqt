@@ -67,7 +67,7 @@ export default {
           id: i, 
           vendor: this.selectedVendor,
           product: this.selectedProduct, 
-          vulnerabilities: this.selectedVulnerabilities.length > 0 ? cve_list : JSON.parse(JSON.stringify(this.vulnerability_list))
+          cve_ids: this.selectedVulnerabilities.length > 0 ? cve_list : JSON.parse(JSON.stringify(this.vulnerability_list))
         });
       }
       return nodes;

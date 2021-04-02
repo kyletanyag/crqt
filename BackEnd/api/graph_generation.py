@@ -120,7 +120,7 @@ def network_topology_model_driven_input():
     ModelDriven_init() 
 
     # creating remote attacker node
-    vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0))
+    vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0, None))
 
     for node in network["vertices"]:
         vulnerability_graph.append(ModelDriven.Node(

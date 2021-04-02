@@ -42,7 +42,7 @@
         :layerNodes1="filterNodes('cs_fw_2')" :layerNodes2="filterNodes('cs_lan')" 
         :layerName1="layerNames[6]" :layerName2="layerNames[7]" ref="15" />
       <div style="padding-left:15px; margin-top:20px">
-        <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveEdges()" value="Submit">
+        <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveEdges(); Submit()" value="Submit">
       </div>
       <div class="progress">
         <div class="progress-bar progress-bar-info"
@@ -114,11 +114,15 @@ export default {
       CSLan: CSLanSystemServerTypes,
       layerNames: NISTLayerNames,
       progress: 0,
+      network_title: ""
     };
   },  
   computed: {
-    network(){
+    network() {
+      const d = new Date();
       return {
+        network_title: this.network_title,
+        date: `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`,
         vertices: this.nodes,
         arcs: this.edges
       };
@@ -135,15 +139,6 @@ export default {
           this.nodes.push(this.$refs[`${layer}`].rowData[i]);
         }
       }
-      // console.log(this.nodes);
-      
-      // this.Upload(this.input, (event) => {
-      //   this.progress = Math.round(100 * event.loaded / event.total);
-      // })
-      // .then((response) => {
-      //   console.log(response.data.message);
-      //   // this.$router.push({name: 'Sandbox'});
-      // });
     },
 
     filterNodes(layerName) {
@@ -162,6 +157,13 @@ export default {
     },
 
     Submit() {
+      if (!this.networkTitle) {
+        const d = new Date();
+        var hr = d.getHours() < 10 ? `0${d.getHours()}` : d.getHours();
+
+        this.networkTitle = `Model-Driven_Network_${d.getFullYear()}${d.getMonth()+1}${d.getDate()}_${hr}${d.getMinutes()}`
+      }
+      
       this.Upload(this.network, (event) => {
         this.progress = Math.round(100 * event.loaded / event.total);
       })

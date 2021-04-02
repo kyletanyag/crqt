@@ -85,7 +85,7 @@ export default {
             type:this.rows[i][0],
             vendor: this.rows[i][1],
             product: this.rows[i][2],   
-            // vulnerabilities: this.selectedVulnerabilities[i]
+            cve_ids: null
           });
         }
       }
