@@ -69,7 +69,7 @@ def network_topology_data_driven_input():
                 cve_id = LAG[-1].description[cve_index:end_position]
 
                 # getting CVSS scores
-                LAG[key].derived_score = data_driven_cvss_query(cve_id)
+                LAG[-1].derived_score = data_driven_cvss_query(cve_id)
                 # print(cve_id, LAG[key].derived_score)
 
             # else use default values (1.0)
