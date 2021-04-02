@@ -43,12 +43,10 @@ export default {
 
       var edges = [];
       for (let i = 0; i < this.layerNodes1.length; i++) {
-        for (let j = 0; j < this.selectedNodes[i].length; j++) {
-          edges.push({
-            currNode: this.layerNodes1[i].id,
-            nextNode: this.selectedNodes[i][j]
-          })
-        }
+        edges.push({
+          currNode: this.layerNodes1[i].id,
+          nextNode: this.selectedNodes[i]
+        })
       }
       return edges;
     }, 

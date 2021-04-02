@@ -32,7 +32,7 @@
     </div>
   </div>
   <hr>
-  <h3 class="pb-1">Overall Network Compromise / Exploitation</h3>
+  <h3 class="pb-1">Overall Network Compromise / Exploitation Scenario</h3>
   <div class="mx-5 row">
     <!-- Overall network compromise/exploitation -->
     <div class="col text-left">
@@ -47,9 +47,9 @@
       </p>
       <p>
         Your total network severity breakdown:
-        <br><strong>{{ highSeverityNodes.length }}</strong> nodes are marked as <strong>high</strong> severity. (Base Score &#8805; 0.7)
-        <br><strong>{{ mediumServerityNodes.length }}</strong> nodes are marked as <strong>medium</strong> severity. (0.4 &#8804; Base Score &lt; 0.7)
-        <br><strong>{{ lowSeverityNodes.length }}</strong> nodes are marked as <strong>low</strong> severity. (Base Score &lt; 0.4)
+        <br><strong>{{ highSeverityNodes.length }}</strong> nodes are marked as <strong>high</strong> severity. (Computed Score &#8805; 0.7)
+        <br><strong>{{ mediumServerityNodes.length }}</strong> nodes are marked as <strong>medium</strong> severity. (0.4 &#8804; Computed Score &lt; 0.7)
+        <br><strong>{{ lowSeverityNodes.length }}</strong> nodes are marked as <strong>low</strong> severity. (Computed Score &lt; 0.4)
       </p>
       <p>
         Nodes marked as <strong>High Severity</strong> must be corrected with the highest priority.
