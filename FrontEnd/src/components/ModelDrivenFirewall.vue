@@ -51,7 +51,7 @@
 import Multiselect from '@vueform/multiselect';
 import http from '@/http-common.js';
 import axios from 'axios';
-import toRaw from 'vue';
+
 export default {
   name: 'Model Driven Firewall',
   computed: {

@@ -12,7 +12,7 @@
                <td>
                  <input type="button" class="btn btn-secondary mx-2" @click="removeRow(index)" value="Remove">
                </td>
-               <td width="25%">
+               <td width="20%">
                   <div align="center">
                      <p align="center">Server Type</p>
                      <select v-model="rows[index][0]">
@@ -20,7 +20,7 @@
                      </select>
                   </div>
                </td>
-               <td width="25%">
+               <td width="20%">
                   <div align="center">
                      <p>Server Vendor</p>
                      <select v-model="rows[index][1]" @change="getProducts(index)">
@@ -28,7 +28,7 @@
                      </select>
                   </div>
                </td>
-               <td width="25%">
+               <td width="20%">
                   <div align="center">
                      <p>Server Product</p>
                      <select v-model="rows[index][2]">
@@ -36,24 +36,22 @@
                      </select>
                   </div>
                </td>
-               <td width="25%">
+               <td width="20%">
                   <div align="center">
                      <p>Number of Servers</p>
                          <input type="text" v-model="rows[index][3]" placeholder="None" @click="getRowData"/>      
                   </div>
                </td>
-            </tr>
-            <tr>
-              <td>
+               <td width="20%">
                 <div>
-                <Multiselect 
-                  v-model="selectedVulnerabilities"
-                  mode="multiple"
-                  placeholder="Select your Vulnerabilites"
-                  :options="vulnerability_list"
-                />
-              </div>
-              </td>
+                  <Multiselect v-if="rows[index][2]" 
+                    v-model="selectedVulnerabilities"
+                    mode="multiple"
+                    placeholder="Select your Vulnerabilites"
+                    :options="vulnerability_list"
+                  />
+                </div>
+               </td>
             </tr>
          </tbody>
       </table>
@@ -65,9 +63,10 @@ import http from '@/http-common.js';
 export default {
   name: 'Model Driven Setting',
     
-  component: {
+  components: {
     Multiselect,
   },
+
   props: {
     title: String,
     layer: String,
@@ -93,6 +92,7 @@ export default {
       return nodes;
     }
   },
+
   methods: {
     addRow() {
       this.rows.push([undefined, undefined, undefined, 1]);
