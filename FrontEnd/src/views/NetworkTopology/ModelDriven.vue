@@ -1,265 +1,190 @@
 <template>
-   <body>
-      <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-      <model-driven-firewall title="Corporate Firewall L1" :vendors="L1VendorInput" :products="L1ProductInput" layer="corp_fw_1"/>
-      <model-driven-setting title="Corporate DMZ" :serverType="DMZServerType" 
-      :vendorServer="serverVendorInput" layer="corp_dmz" @DataCall="addNodes"/>
-      <model-driven-firewall title="Corporate Firewall L2" :vendors="L2VendorInput" layer="corp_fw_2"/>
-      <model-driven-setting title="Corporate LAN" :serverType="LANServerVendorInput" 
-      :vendorServer="serverVendorInput" layer="corp_lan" @DataCall="addNodes"/>
+  <body>
+    <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
 
-
-      <model-driven-firewall title="Control System Firewall L1" :vendors="L1VendorInput" layer="cs_fw_1"/>
-      <model-driven-setting title="Control System DMZ" :serverType="CSDMZserverType" 
-      :vendorServer="serverVendorInput" layer="cs_dmz" @DataCall="addNodes"/>
-      <model-driven-firewall title="Control System Firewall L2" :vendors="L2VendorInput" layer="cs_fw_2"/>
-      <model-driven-setting title="Control System LAN" :serverType="CSLanSystemServerType" 
-      :vendorServer="serverVendorInput" layer="corp_lan" @DataCall="addNodes"/>
-
-   <input type="button" @click="Submit()" value="Submit">
-   
-          <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button>
+    <model-driven-firewall title="Corporate Firewall L1" :vendors="firewalls" layer="corp_fw_1" ref="1"/>
+    <model-driven-setting title="Corporate DMZ" :serverTypes="CorpDMZ" 
+      :vendors="servers" layer="corp_dmz" ref="2"/>
+    <model-driven-firewall title="Corporate Firewall L2" :vendors="firewalls" layer="corp_fw_2" ref="3"/>
+    <model-driven-setting title="Corporate LAN" :serverTypes="CorpLAN" 
+      :vendors="servers" layer="corp_lan" ref="4"/>
+    <model-driven-firewall title="Control System Firewall L1" :vendors="firewalls" layer="cs_fw_1" ref="5"/>
+    <model-driven-setting title="Control System DMZ" :serverTypes="CSDMZ" 
+      :vendors="servers" layer="cs_dmz" ref="6"/>
+    <model-driven-firewall title="Control System Firewall L2" :vendors="firewalls" layer="cs_fw_2" ref="7"/>
+    <model-driven-setting title="Control System LAN" :serverTypes="CSLan" 
+      :vendors="servers" layer="cs_lan" ref="8"/>
+    <div style="padding-left:15px; margin-top:20px">
+      <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveNodes(), submit = !submit" value="Continue">
+    </div>
+    <!-- <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button> -->
           
-          <div v-if="preview" class="card mx-2" :style="GetCardSize()">
-            <div class="card-header">JSON Object Preview</div>
-            <div class="card-body" style="overflow-y: auto;">
-            
-                <div>
-                    {{ input }}
-                </div>
-            </div>
+    <div v-if="submit">
+      <model-driven-connection 
+        :layerNodes1="filterNodes('corp_fw_1')" :layerNodes2="filterNodes('corp_dmz')" 
+        :layerName1="layerNames[0]" :layerName2="layerNames[1]" ref="9" />
+      <model-driven-connection 
+        :layerNodes1="filterNodes('corp_dmz')" :layerNodes2="filterNodes('corp_fw_2')" 
+        :layerName1="layerNames[1]" :layerName2="layerNames[2]" ref="10" />
+      <model-driven-connection 
+        :layerNodes1="filterNodes('corp_fw_2')" :layerNodes2="filterNodes('corp_lan')" 
+        :layerName1="layerNames[2]" :layerName2="layerNames[3]" ref="11" />
+      <model-driven-connection 
+        :layerNodes1="filterNodes('corp_lan')" :layerNodes2="filterNodes('cs_fw_1')" 
+        :layerName1="layerNames[3]" :layerName2="layerNames[4]" ref="12" />
+      <model-driven-connection 
+        :layerNodes1="filterNodes('cs_fw_1')" :layerNodes2="filterNodes('cs_dmz')" 
+        :layerName1="layerNames[4]" :layerName2="layerNames[5]" ref="13" />
+      <model-driven-connection 
+        :layerNodes1="filterNodes('cs_dmz')" :layerNodes2="filterNodes('cs_fw_2')" 
+        :layerName1="layerNames[5]" :layerName2="layerNames[6]" ref="14" />
+      <model-driven-connection 
+        :layerNodes1="filterNodes('cs_fw_2')" :layerNodes2="filterNodes('cs_lan')" 
+        :layerName1="layerNames[6]" :layerName2="layerNames[7]" ref="15" />
+      <div style="padding-left:15px; margin-top:20px">
+        <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveEdges(); Submit()" value="Submit">
+      </div>
+      <div class="progress">
+        <div class="progress-bar progress-bar-info"
+          role="progressbar"
+          :style="{ width: progress + '%' }"
+          :aria-valuenow="progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          {{progress}}%
         </div>
-   </body>
+      </div>
+    </div>
+  </body>
 </template>
 
 
 <script>
 /* eslint-disable */ 
-//  JSON OBJECT layer, nodes, edges
 import http from "../../http-common";
-import Multiselect from '@vueform/multiselect'
 import ModelDrivenFirewall from '@/components/ModelDrivenFirewall.vue';
 import ModelDrivenSetting from '@/components/ModelDrivenSetting.vue';
-// import { ref } from 'vue';
-export default {
-   components: { 
-      Multiselect,
-      ModelDrivenFirewall,
-      ModelDrivenSetting,
-   },
-  data() {
-   //   const coporateFirewall = ref([]);
-   //   http.get('/produts').then((d) => { coporateFirewall.value = d.data });
+import ModelDrivenConnection from '../../components/ModelDrivenConnection.vue';
+import 
+{   
+  CorpDMZServerTypes,
+  CorpLANServerTypes,
+  CSDMZserverTypes,
+  CSLanSystemServerTypes,
+  NISTLayerNames
+} from '@/utilities/nist-constants.js';
 
+export default {
+
+  components: { 
+    ModelDrivenFirewall,
+    ModelDrivenSetting,
+    ModelDrivenConnection,
+  },
+
+  created() {
+    http.get('/product_query_by_type/firewall').then((r) => {
+      // console.log(r);
+      r.data.query.forEach((e) => {
+        if (r.data.error) console.log(r.data.error);
+        this.firewalls.push(e)
+      });
+    })
+
+    http.get('/product_query_by_type/server').then((r) => {
+      // console.log(r);
+      r.data.query.forEach((e) => {
+        if (r.data.error) console.log(r.data.error);
+        this.servers.push(e)
+      });
+    })
+  },
+
+  data() {
     return {
-      preview: false,
-      nodeSelect: false,
-      L1VendorInput:[
-      {
-        label:"Cisco",
-        options:["Cisco1","Cisco2","Cisco3"]
-      },
-      {
-        label:"Juniper",
-        options:["Juniper1","Juniper2","Juniper"]
-      },
-      {
-        label:"Microsoft",
-        options:["Microsoft1","Microsoft2","Microsoft3"]
-      }
-    ],
-      L2VendorInput:[
-      {
-        label:"Cisco",
-        options:["Cisco1","Cisco2","Cisco3"]
-      },
-      {
-        label:"Juniper",
-        options:["Juniper1","Juniper2","Juniper"]
-      },
-      {
-        label:"Microsoft",
-        options:["Microsoft1","Microsoft2","Microsoft3"]
-      }
-    ],
-     selectedVendor:undefined, 
-     selectedOption:[],
-      L1Vendor:[],
-      NumberFireWall: 0,
-      // L1ProductInput: [
-      //    "ASA5500",
-      //    "ASA5505",
-      //    "ASA5510",
-      //    "ASA5520",
-      //    "ASA5540",
-      //    "ASA5550",
-      //    "ASA5580",
-      //    "ASA5585X" ],
-      L1Product:[],
-      serverVendorInput: [
-         "Cisco",
-         "Juniper",
-         "Microsoft",
-         "Paloalto",
-         "Linux",
-         "Oracle",
-         "Semens",
-         "Emerson",
-         "SchneiderElectric",], 
-      LANServerVendorInput:[
-         "Business Server",
-         "Business Workstation",
-         "Web Application Server"
-      ],
-      DMZserverVendor:[],                                    
+      firewalls: [],
+      servers: [],
+      nodes:[],
+      edges:[],
+      submit: false,
+      CorpDMZ: CorpDMZServerTypes,
+      CorpLAN: CorpLANServerTypes,
+      CSDMZ: CSDMZserverTypes,
+      CSLan: CSLanSystemServerTypes,
+      layerNames: NISTLayerNames,
       progress: 0,
-      output: "",
-      DMZServerType: [
-         "Email Server",
-         "Web Server",
-         "FTP Server",
-         "DNS Server",
-         "WAP Server",
-         "AUTHENTICATION Server"],
-      emailServer:[],
-      serverProductInput: [
-         "windowsxp",
-         "windows_xp",
-         "windows_vista",
-         "windows_7",
-         "windows_server_2008",
-         "windows_server_2012",
-         "windows_server_2016",
-         "windows_server_2003",
-         "SQLServer",],
-      serverProduct:[],
-      rows: [1],
-      coporateFirewall: [
-         'Cisco',
-         'Juniper',
-         'Microsoft',
-      ],
-      CSDMZserverType:["Ext Business COMM Server",
-                     "WWW Server",
-                     "Database Server",
-                     "Security Server",
-                     "Authentication Server",
-      ],
-      CSLanSystemServer:[],
-      CSLanSystemServerType:["Application Server",
-                           "Historian",
-                           "Database Server",
-                           "Configuration Server",
-                           "HMI Computers",
-                           "Engineering Workstation",
-      ],
-      
-            progress: 0,
-            numberServer: 0,
+      network_title: ""
     };
   },  
-//   watch: {
-//     serverProduct(){
-//       // binding this to the data value in the email input
-//       this.ValidateServerProduct();
-//     }
-//   },
-    computed: {
-        input() {
-            return {
-               selectedVendor: this.selectedVendor,
-               NumberFireWall: this.NumberFireWall,
-               L1Product: this.L1Product,
-               emailServer:this.emailServer,
-               serverVendor:this.serverVendor,
-               serverProduct:this.serverProduct,
-               numberServer:this.numberServer
-            };
-        },
+  computed: {
+    network() {
+      const d = new Date();
+      return {
+        network_title: this.network_title,
+        date: `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`,
+        vertices: this.nodes,
+        arcs: this.edges
+      };
+    },
+  },
 
-        nodes() {
-           
-           var nodes = [];
-
-           for (let i = 0; i < this.NumberFireWall; i++) {
-              nodes.push( {
-                 layer: 'corp_fw_1',
-                 id: i,
-                 vendor: 'Cisco', // Changes to be consitent with var
-                 product: this.L1Product,
-                 vulnerabilites: 'x'
-              })
-           }
-
-           return {
-              nodes
-           };
+  methods:{
+    saveNodes() {
+      var ID = 1;
+      this.nodes = []
+      for (let layer = 1; layer <= 8; layer++) {
+        for (let i = 0; i < this.$refs[`${layer}`].rowData.length; i++) {
+          this.$refs[`${layer}`].rowData[i].id = ID++;
+          this.nodes.push(this.$refs[`${layer}`].rowData[i]);
         }
-    },
-    methods:{
-   Submit() {
-               this.Upload(this.input, (event) => {
-                this.progress = Math.round(100 * event.loaded / event.total);
-            })
-            .then((response) => {
-                console.log(response.data.message);
-                // this.$router.push({name: 'Sandbox'});
-            })
-            
-        },
-   Upload(data, onUploadProgress) {
-            return http.post("/network_topology_model_driven_input", data , { onUploadProgress });
-        }, 
-   addRow: function(_index){
-         this.rows.splice(_index+1,0, this.rows[_index]);
-    },
-    removeRow: function(_index){
-      //console.log(row);d
-      this.rows.splice(_index-1, 1);
+      }
     },
 
-   addNodes(n) {
-      console.log('Got event!')
-      //console.log(n);
-      var nodes = [];
-         //   for (let i = 0; i < this.NumberFireWall; i++) {
-              nodes.push( 
-                 n
-               //   layer: n[0],
-               //   id: n.id,
-               //   type: n.type,
-               //   vendor:n.vendor, // Changes to be consitent with var
-               //   product: n.product,
-               //   vulnerabilites: 'x'
-              )
-           //}
-           console.log(nodes)
+    filterNodes(layerName) {
+      return this.nodes.filter((n) => {
+        return n.layer == layerName;
+      });
+    },
 
-           return {
-              nodes
-           };
+    saveEdges() {
+      this.edges =[]
+      for (let conn = 9; conn <= 15; conn++) {
+        for (let i = 0; i < this.$refs[`${conn}`].rowData.length; i++) {
+          this.edges.push(this.$refs[`${conn}`].rowData[i])
         }
-   },
+      }
+    },
+
+    Submit() {
+      if (!this.networkTitle) {
+        const d = new Date();
+        var hr = d.getHours() < 10 ? `0${d.getHours()}` : d.getHours();
+
+        this.networkTitle = `Model-Driven_Network_${d.getFullYear()}${d.getMonth()+1}${d.getDate()}_${hr}${d.getMinutes()}`
+      }
+      
+      this.Upload(this.network, (event) => {
+        this.progress = Math.round(100 * event.loaded / event.total);
+      })
+      .then((response) => {
+        console.log(response.data.message);
+        // this.$router.push({name: 'Sandbox'});
+      });
+    },
+
+    Upload(data, onUploadProgress) {
+      return http.post("/network_topology_model_driven_input", data , { onUploadProgress });
+    }, 
     
-    GetCardSize() {
-            return {
-                'width' :100,
-                'height' : 100
-            };
-        },
-   ValidateServerProduct(){
-   if (this.serverProduct!=""){
-      return false;  // kbt false
-   }
-    },  
-    selectVendor: function(selectedVendor){
-       this.selectedVendor = selectedVendor;
-       this.selectedOption='';
+    GetCardSize() { // Needs to be fixed.
+      return {
+        'width' : 100,
+        'height' : 100
+      };
     },
-  
-};
-
-       
+  }
+}; 
 </script>
 
 <style>
@@ -280,6 +205,6 @@ export default {
    padding-left: 10px;
    padding-bottom:5px;
    }
-  
+
 </style>
 <style src="@vueform/multiselect/themes/default.css"></style>

@@ -16,9 +16,13 @@ export default defineComponent({
     data: Array,
     binNames: {
       type: Array,
-      default: function() {return ['automatic'] } 
+      default: function() {return ['automatic'] }
     },
     numBins: String, //Vue was giving me an error in SimulationResults.vue, saying that it expected a number but I was passing a string.
+    binLimits: {
+      type: Array, // Assume the input is always in ascending order.
+      default: function() {return [-1] } //assume a user will never enter a bin limit set of "-1". That doesnt make sense.
+    },
     name: String,
     barColor: String
   },
@@ -35,16 +39,23 @@ export default defineComponent({
 
       // Bin the data
       let numInEachBin = new Array(this.numBins); for (let i=0; i<this.numBins; ++i) numInEachBin[i] = 0;
-      var binSize = 1/this.numBins; // Assuming the range is 0-1
-      // console.log("Started binning the array: " + this.data);
-      // console.log(this.data.length);
-      for (var k = 0; k < this.data.length; k++){ // for each data point
-        numInEachBin[Math.floor(this.data[k]/binSize)] += 1; // determine which bin it is in, then add one to the total number in that bin.
-        // console.log("  Binned " + this.data[k] + " into bin index " + Math.floor(this.data[k]/binSize));
-        // console.log("  Current numInEachBin: " + numInEachBin);
-        // console.log("");
+
+      if (this.binLimits == -1){ //if its the default value, automatically definine bins
+        var binSize = 1/this.numBins; // Assuming the range is 0-1
+        for (var k = 0; k < this.data.length; k++) // for each data point
+            numInEachBin[Math.floor(this.data[k]/binSize)]++; // determine which bin it is in, then add one to the total number in that bin.
       }
-      //console.log(numInEachBin)
+      else{ // if the user is using custom bin sizes
+        //this.binLimits.sort()// sort in ascending order - This introduces an error, so we are just always assuming its in ascendeding order.
+        for (var m = 0; m < this.data.length; m++){ // for each data point
+          for (var l = 0; l < this.binLimits.length; l++){ // for each possible bin where the data could lie
+            if (this.data[m] <= this.binLimits[l]){ // if the data belongs in this bin
+              numInEachBin[l]++; // increment the number of datapoints in that bin
+              break; // dont check any more bins for this particular data point
+            }
+          }
+        }
+      }
 
       var labelArray = new Array(this.numBins);
       if (this.binNames == "automatic"){
@@ -79,3 +90,4 @@ export default defineComponent({
   },
 })
 </script>
+

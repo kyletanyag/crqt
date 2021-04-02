@@ -100,7 +100,7 @@ def network_topology_data_driven_input():
     # calculates derived scores for all nodes
     DerivedScore(leaf_queue)
 
-    return "Done", parsing_time
+    return {'parsing_time': parsing_time}, 200
 
         
 
@@ -120,7 +120,7 @@ def network_topology_model_driven_input():
     ModelDriven_init() 
 
     # creating remote attacker node
-    vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0))
+    vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0, None))
 
     for node in network["vertices"]:
         vulnerability_graph.append(ModelDriven.Node(
@@ -141,4 +141,4 @@ def network_topology_model_driven_input():
 
     # start generating shorest paths
     shortest_paths_gen()
-    return 'Done', 21
+    return 'Done', 201
