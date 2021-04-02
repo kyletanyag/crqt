@@ -57,13 +57,16 @@ Window Terminal - https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk70
 Install Mongo Windows Service - https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#run-mongodb-from-cmd
 Python installed on windows with pip
 
-
-On Windows CMD create and clone CVE Search repo: 
+## Automatic Install
+In Ubuntu Terminal run:
 ```
-> mkdir cve_search && cd cve_search
-> git clone https://github.com/cve-search/cve-search.git .
+$ chmod 700 ./cve_search_install.sh 
+$ ./cve_search_install.sh
 ```
 
+After install, proceed to run server section
+
+## Manual Install
 On Ubuntu Terminal open cve_search directory and run the following commands:
 ```
 $ sudo apt-get install python3
@@ -75,22 +78,10 @@ $ sudo service redis-server start
 
 In same terminal download cve data: 
 ```
+$ cd ./dms/cve_search/
 $ python3 ./sbin/db_mgmt_cpe_dictionary.py -p
 $ python3 ./sbin/db_mgmt_json.py -p
 $ python3 ./sbin/db_updater.py -c # This will take >45minutes on a decent machine,please be patient
-```
-
-In new windows CMD start flask web server:
-```
-> pip3 install flask flask-pymongo
-> python .\web\index.py # this will start flask server on port 5000
-```
-
-In ubuntu terminal, test web server:
-```
-$ curl http://127.0.0.1:2000/api/browse/zyxel
-$ curl http://127.0.0.1:2000/api/cve/CVE-2010-3333
-$ curl http://127.0.0.1:2000/api/search/zyxel/p-660hw
 ```
 
 ## To run server:
@@ -103,6 +94,13 @@ In Windows CMD:
 ```
 > cd <path>\cve_search
 > python .\web\index.py # this will start flask server on port 2000
+```
+
+In ubuntu terminal, test web server:
+```
+$ curl http://127.0.0.1:2000/api/browse/zyxel
+$ curl http://127.0.0.1:2000/api/cve/CVE-2010-3333
+$ curl http://127.0.0.1:2000/api/search/zyxel/p-660hw
 ```
 
 ## Updating Databases
