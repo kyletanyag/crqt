@@ -45,7 +45,14 @@
             </tr>
             <tr>
               <td>
-              
+                <div>
+                <Multiselect 
+                  v-model="selectedVulnerabilities"
+                  mode="multiple"
+                  placeholder="Select your Vulnerabilites"
+                  :options="vulnerability_list"
+                />
+              </div>
               </td>
             </tr>
          </tbody>
