@@ -173,7 +173,7 @@ def origin_to_node_metrics(node_index):
     GoalNode = vulnerability_graph[0] # romote attacker node
 
     # generates solution paths    
-    Depth_First_Traversal(vulnerability_graph[node_index], [])
+    Depth_First_Traversal(vulnerability_graph[int(node_index)], [])
 
     # calculating metrics
     metrics_per_path = []           # scores from each solution path
@@ -271,10 +271,9 @@ def vulnerable_host_percentage():
     node_w_in_edge = set()
 
     # counting number of nodes with incoming edges
+    number_vulnerable_hosts = 0
     for node in vulnerability_graph:
-        for edge in node.edges:
-            if edge.target not in node_w_in_edge:
-                node_w_in_edge.add(edge.target)
+        number_vulnerable_hosts += (len(node.in_edges) > 0)
 
     # calculating number of vulnerable hosts (nodes with incoming edges) and num of hosts (nodes with no incoming edges)
     number_vulnerable_hosts = len(node_w_in_edge)
@@ -461,7 +460,7 @@ def centrality():
     # if centrality metrics have not been calculated, then calculate them for all nodes
     if len(centrality_metrics) == 0:
         # starting timer for centrality metrics
-        start_timer = time.timer()
+        start_timer = time.time()
 
         centrality_metrics.append(betweenness_centrality())
         degree = degree_centrality()
