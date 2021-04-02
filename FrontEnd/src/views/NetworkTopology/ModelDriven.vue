@@ -15,12 +15,25 @@
     <model-driven-setting title="Control System LAN" :serverTypes="CSLan" 
       :vendors="servers" layer="corp_lan" ref="8"/>
     <div style="padding-left:15px; margin-top:20px">
-    <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="Submit(),submit = !submit" value="Submit">
+      <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="Submit(),submit = !submit" value="Submit">
     </div>
     <!-- <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button> -->
           
     <div v-if="submit" class="card mx-2" :style="GetCardSize()">
-      <edges :nodes="nodes" />
+      <!-- <div v-for="(row, index) in nodes" :key="index" :row="row"> -->
+        <edges :node1="filterNodes('corp_fw_1')" :node2="filterNodes('corp_dmz')" :layer1="layers[0]" :layer2="layers[1]" ref="1"/>
+        <!-- <edges :node1="Layer2Nodes" :node2="Layer3Nodes" :layer1="layers[1]" :layer2="layers[2]" ref="2"/>
+        <edges :node1="Layer3Nodes" :node2="Layer4Nodes" :layer1="layers[2]" :layer2="layers[3]" ref="3"/>
+        <edges :node1="Layer4Nodes" :node2="Layer5Nodes" :layer1="layers[3]" :layer2="layers[4]" ref="4"/>
+        <edges :node1="Layer5Nodes" :node2="Layer6Nodes" :layer1="layers[4]" :layer2="layers[5]" ref="5"/>
+        <edges :node1="Layer6Nodes" :node2="Layer7Nodes" :layer1="layers[5]" :layer2="layers[6]" ref="6"/>
+        <edges :node1="Layer7Nodes" :node2="Layer8Nodes" :layer1="layers[6]" :layer2="layers[7]" ref="7"/> -->
+
+      <!-- </div> -->
+
+      <div style="padding-left:15px; margin-top:20px">
+          <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveEdges()" value="Submit">
+      </div>
     </div>
   </body>
 </template>
@@ -65,8 +78,20 @@ export default {
   },
   data() {
     return {
+      layers:["Firewall 1", "Corporate DMZ Settings", "Firewall 2", "Corporate LAN Settings", "Control Sytem Firewall 1", "Control System DMZ Settings", "Control System Firewall 2","Control System LAN Settings"],
+      Edges:[],
+      Layer1Nodes:[],
+      Layer2Nodes:[],
+      Layer3Nodes:[],
+      Layer4Nodes:[],
+      Layer5Nodes:[],
+      Layer6Nodes:[],
+      Layer7Nodes:[],
+      Layer8Nodes:[],
       firewalls: [],
       nodes:[],
+      vertices:[],
+      arcs:[],
       servers: [],
       submit: false,
       CorpDMZ: CorpDMZServerTypes,
@@ -77,6 +102,13 @@ export default {
     };
   },  
   computed: {
+    network(){
+  
+        return{
+          vertices: this.nodes,
+          arcs: this.edges}
+     },
+
   },
   methods:{
     Submit() {
@@ -89,6 +121,7 @@ export default {
         }
       }
       console.log(this.nodes);
+      
       // this.Upload(this.input, (event) => {
       //   this.progress = Math.round(100 * event.loaded / event.total);
       // })
@@ -97,6 +130,20 @@ export default {
       //   // this.$router.push({name: 'Sandbox'});
       // });
     },
+    filterNodes(layerName){
+      return this.nodes.filter((n)=>{
+        return n.layer==layerName;
+      });
+    },
+    saveEdges(){
+      this.Edges =[]
+      for(var layer = 1; layer <= 8; layer++) {
+        for(var i = 0; i < this.$refs[layer].edges.length; i++) {
+          this.Edges.push(this.$refs[layer].edges)
+        }
+      }
+    },
+
     Upload(data, onUploadProgress) {
       return http.post("/network_topology_model_driven_input", data , { onUploadProgress });
     }, 
