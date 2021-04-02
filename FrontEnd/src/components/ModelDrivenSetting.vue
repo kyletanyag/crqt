@@ -1,6 +1,7 @@
 <template>
 <div>
   <h4> {{ title }} Settings:</h4>
+ 
     <p> Please select the product vendor, model, and quantity for your {{ title }}. Use the "Add Server" button to add and "Remove Server" button to remove</p>
     <form>
       <input type="button" style="margin-bottom:5px;" class="btn btn-secondary mx-2" @click="addRow(index)" value="Add Server">
@@ -8,7 +9,7 @@
       <table id="AddServer" width="100%">
          <tbody>
             <tr v-for="(row, index) in rows" :key="index" :row="row">
-                <td>
+               <td>
                  <input type="button" class="btn btn-secondary mx-2" @click="removeRow(index)" value="Remove">
                </td>
                <td width="25%">
@@ -41,7 +42,11 @@
                          <input type="text" v-model="rows[index][3]" placeholder="None" @click="getRowData"/>      
                   </div>
                </td>
-
+            </tr>
+            <tr>
+              <td>
+              
+              </td>
             </tr>
          </tbody>
       </table>
@@ -100,6 +105,7 @@ export default {
     return{
       rows: [[undefined, undefined, undefined, 1]],
       serverProduct: [],
+      selectedVulnerabilities:[]
     };
   },
 }
