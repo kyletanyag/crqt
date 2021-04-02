@@ -14,13 +14,13 @@
     <model-driven-firewall title="Control System Firewall L2" :vendors="firewalls" layer="cs_fw_2" ref="7"/>
     <model-driven-setting title="Control System LAN" :serverTypes="CSLan" 
       :vendors="servers" layer="corp_lan" ref="8"/>
-
-    <input type="button" @click="Submit(),submit = !submit" value="Submit">
-   
+    <div style="padding-left:15px; margin-top:20px">
+    <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="Submit(),submit = !submit" value="Submit">
+    </div>
     <!-- <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button> -->
           
     <div v-if="submit" class="card mx-2" :style="GetCardSize()">
-      <edges :nodes="nodes"  />
+      <edges :nodes="nodes" />
     </div>
   </body>
 </template>
@@ -129,6 +129,6 @@ export default {
    padding-left: 10px;
    padding-bottom:5px;
    }
-  
+
 </style>
 <style src="@vueform/multiselect/themes/default.css"></style>
