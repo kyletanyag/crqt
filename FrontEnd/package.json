@@ -39,7 +39,7 @@
     "vue-router": "^4.0.0-0",
     "vue-select": "^3.11.2",
     "vue-table-dynamic": "^0.4.4",
-    "vue3-chart-v2": "^0.8.1",
+    "vue3-chart-v2": "git://github.com/SamirM-BE/vue3-chart-v2.git#main",
     "vue3-table-lite": "^1.0.3"
   },
   "devDependencies": {

@@ -32,7 +32,7 @@ import http from "../../http-common";
 import Multiselect from '@vueform/multiselect'
 import ModelDrivenFirewall from '@/components/ModelDrivenFirewall.vue';
 import ModelDrivenSetting from '@/components/ModelDrivenSetting.vue';
-import Edges from '../../components/Edges.vue';
+// import Edges from '../../components/Edges.vue';
 import 
 {   
   CorpDMZServerTypes,
@@ -45,7 +45,7 @@ export default {
     Multiselect,
     ModelDrivenFirewall,
     ModelDrivenSetting,
-    Edges,
+    // Edges,
   },
   created() {
     http.get('/product_query_by_type/firewall').then((r) => {
