@@ -1,6 +1,12 @@
 <template>
 <div>
   <h4> {{ title }} Settings:</h4>
+                  <Multiselect 
+                  v-model="selectedVulnerabilities"
+                  mode="multiple"
+                  placeholder="Select your Vulnerabilites"
+                  :options="vulnerability_list"
+                />
     <p> Please select the product vendor, model, and quantity for your {{ layer }}.</p>
     <table width=100% border="0" cellspacing="0" >
         <tbody>
@@ -9,7 +15,7 @@
                 <div align="center">
                     <p align="center">{{ title }} Vendor</p>
                     <select v-model="selectedVendor">
-                      <option v-for="(L1Vend,item) in vendors" :key="item" :value="L1Vend.label" @change="sendDataParentFirwall">{{L1Vend.label}}</option>
+                      <option v-for="item in vendors" :key="item" :value="item">{{ item }}</option>
                     </select>
                 </div>
               </td> 
@@ -17,7 +23,7 @@
                 <div align="center">
                     <p> {{ title }} Product</p>
                     <select v-model="selectedProduct">
-                      <option v-for="item in products" :key="item" :value="item" @change="sendDataParentFirwall">{{item}}</option>               
+                      <option v-for="item in products" :key="item" :value="item">{{ item }}</option>               
                     </select>
                 </div>
               </td>
@@ -25,20 +31,20 @@
                 <div align="center">
                     <p>Number of Coporate Firewall 1</p>                     
                       <!-- <input type="text" v-model="NumberFireWall" placeholder="Number of Firewalls 1" />         -->
-                      <input type="text" v-model="numfirewalls" placeholder="Number of Firewalls" @change="sendDataParentFirwall" />
+                      <input type="text" v-model="numfirewalls" placeholder="1" />
                 </div>
               </td> 
           </tr>
           <tr width="100%">
               <td>
-              <!-- <div v-if="selectedVendor != -1">
+              <div v-if="selectedProduct">
                 <Multiselect 
-                    v-model="L1Vendor"
-                    mode="multiple"
-                    placeholder="Select your Vulnerabilites"
-                    :options="vendors[selectedVendor].options"
-                    />
-              </div> -->
+                  v-model="selectedVulnerabilities"
+                  mode="multiple"
+                  placeholder="Select your Vulnerabilites"
+                  :options="vulnerability_list"
+                />
+              </div>
               </td>
               </tr>
         </tbody>
@@ -46,97 +52,69 @@
 </div>
 </template>
 <script>
+/* eslint-disable */
 import Multiselect from '@vueform/multiselect';
 import http from '@/http-common.js';
-// import axios from 'axios';
+import axios from 'axios';
+import toRaw from 'vue';
 export default {
-  
   name: 'Model Driven Firewall',
   computed: {
-    // importVendors(){
-    //     http.get(`product_query/firewall/${this.selectedVendor}`) .then((r) => {
-    //     var temp = [];
-    //     r.data.query.forEach((e) => {
-    //       temp.push(e.vendor)
-    //     });
-    //     this.vendor = temp;
-    //   })
-    //   return vendor;
-    // },
-  
     rowData() {
       var nodes = [];
-      
-        for(let j=0; j< this.numfirewalls;j++){
-          
-          nodes.push({
-            layer: this.layer,
-            id: j, 
-            vendor: this.selectedVendor,
-            product: this.selectedProduct, 
-            // vulnerabilities: this.selectedVulnerabilities[i]
-          });
-          console.log(nodes)
+      for (let i = 0; i < this.numfirewalls; i++) {
+        let cve_list = []
+        for (let j = 0; j < this.selectedVulnerabilities.length; j++)  {
+          cve_list.push(this.vulnerability_list[this.selectedVulnerabilities[j]]);
         }
-      
+        nodes.push({
+          layer: this.layer,
+          id: i, 
+          vendor: this.selectedVendor,
+          product: this.selectedProduct, 
+          vulnerabilities: this.selectedVulnerabilities.length > 0 ? cve_list : JSON.parse(JSON.stringify(this.vulnerability_list))
+        });
+      }
       return nodes;
-      
     },
-    // sendDataParentFirwall(){
-    //   console.log("Sending data to the parent")
-    //   this.$emit('DataCall', this.rowData);
-    //   return{
-        
-    //   }
-    // }
   },
   watch: {
-    selectedVendor() { // double check this !!!
+    selectedVendor() { 
       http.get(`product_query/firewall/${this.selectedVendor}`)
       .then((r) => {
-        if (r.data.error)
-          console.log(r.data.error);
-          
-        var temp = [];
-        r.data.query.forEach((e) => {
-          temp.push(e.product)
-        });
-        this.products = temp;
-      })
-      .catch(() => {
-        console.log('Cannot complete query. Invalid data.');
+        if (r.data.error) console.log(r.data.error);
+        this.products = r.data.query;
       });
     },
+    selectedProduct() { // Example of how to get data from CVE-Search !!! 
+    this.vulnerability_list = [];
+      axios.get(`http://localhost:2000/api/search/${this.selectedVendor.toLowerCase()}/${this.selectedProduct.toLowerCase()}`).then((r) => {
+        console.log(r);
+        r.data.results.forEach((e) => {this.vulnerability_list.push(e.id)});
+      });
+    }
   },
   props: {
-    title:String,
+    title: String,
     layer: String,
     vendors: Array,
-    vendor: Array,
-    product:Array,
-    firewalls: Number,
+    product: Array,
   },
   
-  component: {
+  components: {
     Multiselect,
   },
   
   methods: {
-    sendDataParent() {
-      this.$emit('DataCall', this.rowData);
-    }
   },
-  data(){
-    // Example of how to get data from CVE-Search !!! 
-    // axios.get('http://localhost:2000/api/search/microsoft/windows_xp').then((r) => {
-    //     r.data.results.forEach((e) => {console.log(e.id)});
-    // });
-    return{
-      selectedVendor:[], 
-      selectedProduct:[],
-      L1Vendor:[],
-      numfirewalls:[],
+  data() {
+    return {
+      selectedVendor: undefined, 
+      selectedProduct: undefined,
+      selectedVulnerabilities: [],
+      numfirewalls: 1,
       products: [],
+      vulnerability_list: [],
     };
   }
 }

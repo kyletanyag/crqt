@@ -8,8 +8,8 @@
     <!-- Node statistics -->
     <div class="col">
       <p>
-        You have entered your network topology titled: <strong>{{ title }}</strong> on {{ }}. 
-        It took {{ }} to compute the generated metrics.
+        You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ input_date }}</strong>. 
+        It took <strong>{{ computation_time }}</strong> second(s) to compute the generated metrics.
       </p>
       <p>
         Your inputted network contains a total of <strong>{{ nodes.length }}</strong> nodes and <strong>{{ edges.length }}</strong> edges.
@@ -213,6 +213,7 @@ export default
       nodes: [],
       edges: [],
       title: undefined,
+      input_date: undefined,
       derivedFactNodes: [],
       primitiveFactNodes: [],
       derivationNodes: [],
@@ -243,6 +244,7 @@ export default
       loadingDerivedScores: true,
       loadingNetworkEntropy: true,
       numRecommend: 3,
+      computation_time: 0,
     }
   },
 
@@ -255,8 +257,20 @@ export default
       this.loadingDerivedScores = true;
       this.loadingNetworkEntropy = true;
 
+      http.get('get_network_title').then((r) => {
+        console.log(r);
+        this.title = r.data.network_title;
+      });
+
+      http.get('get_input_date').then((r) => {
+        console.log(r);
+        this.input_date = r.data.input_date;
+      });
+
       http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
+        this.computation_time = r.data.computation_time < 1 ? 'less than 1' : Number(r.data.computation_time.toPrecision(3));
+
         this.nodes = r.data.nodes;
         this.edges = r.data.edges;
 

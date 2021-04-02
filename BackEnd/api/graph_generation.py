@@ -4,18 +4,46 @@
 
 '''
 from flask import Blueprint, jsonify, request
-from .nvd import data_driven_cvss_query#, model_driven_cvss_query
+from .nvd import data_driven_cvss_query
 import enum
 from collections import deque
-from .data_driven_analysis import DataDriven, DerivedScore
-from .model_driven_analysis import vulnerability_graph, ModelDriven, shortest_paths_gen
+from .data_driven_analysis import DataDriven, DerivedScore, DataDriven_init
+from .model_driven_analysis import vulnerability_graph, ModelDriven, shortest_paths_gen, ModelDriven_init
+import time
+
+# input variables
+title = ""                      # title/name of network
+input_date = ""                 # date/time of network input into system
 
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
 
+@graph_bp.route('/get_network_title', methods=['GET'])
+def get_network_title():
+    global title
+    return jsonify({"network_title" : title})
+
+@graph_bp.route('/get_input_date', methods=['GET'])
+def get_input_date():
+    global input_date
+    return jsonify({"input_date" : input_date})
+
 @graph_bp.route('/network_topology_data_driven_input', methods=['POST'])
 def network_topology_data_driven_input():
+    global title
+    global input_date 
+    
     network = request.get_json()  # json network topology data driven
+
+    # timing 
+    start_timer = time.time()
+
+    # initializing data-driven
+    DataDriven_init()
+    
+    # setting title and input date
+    title = network["network_title"]
+    input_date = network["date"]
 
     lag = {}
 
@@ -61,7 +89,8 @@ def network_topology_data_driven_input():
     for edge in network["arcs"]:
         targetNode = int(edge["nextNode"])
         lag[int(edge["currNode"])].next_node.append(targetNode) 
-        lag[targetNode].calculations_remaining += 1              # increase number of nodes needed for calculation
+        lag[targetNode].calculations_remaining += 1         # increase number of nodes needed for calculation
+        lag[targetNode].numConditions += 1                  # counting the number of conditions
 
     # constructing queue for leaf nodes for derived score calculations
     leaf_queue = deque()
@@ -81,18 +110,28 @@ def network_topology_data_driven_input():
             leaf_queue.append(lag[key])
         
         # print(key, lag[key].isExecCode)
+    
+    parsing_time = time.time() - start_timer
+
     DerivedScore(lag, leaf_queue)
 
-    return "Done", 200
+    return {'parsing_time': parsing_time}, 200
 
         
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
 def network_topology_model_driven_input():
-    # test file opening
-    import json
-    with open('./model.json') as f:
-        network = json.load(f)
+    global title
+    global input_date 
+
+    network = request.get_json()  # json network topology data driven
+
+    # setting title and input date
+    title = network["network_title"]
+    input_date = network["date"]
+
+    # initializing model-driven 
+    ModelDriven_init() 
 
     # creating remote attacker node
     vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0))
@@ -102,7 +141,8 @@ def network_topology_model_driven_input():
             product=node["product"], 
             vendor=node["vendor"],
             layer=node["layer"],
-            index=int(node["id"])
+            index=int(node["id"]),
+            cve_ids=node["cve_ids"]
             ))
 
     # sorting vulnerability node list by index ascending order
@@ -115,4 +155,4 @@ def network_topology_model_driven_input():
 
     # start generating shorest paths
     shortest_paths_gen()
-    return 'Done', 21
+    return 'Done', 201
