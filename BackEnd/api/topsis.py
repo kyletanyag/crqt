@@ -33,7 +33,7 @@ class topsis:
 		self.m=len(a)
 		self.n=len(a[0])
 		self.w=np.transpose(np.array([w]))
-		print(self.a)
+		# print(self.a)
 		self.j=j
 
 	#Step 2
@@ -41,8 +41,7 @@ class topsis:
 		self.r=self.a
 		for j in range(self.n):
 			nm=sum(self.a[:,j]**2)**0.5
-			for i in range(self.m):
-				self.r[i,j]=self.a[i,j]/nm
+			self.r[:,j]=self.a[:,j]/nm
 
 	#Step 3
 	def step3(self):
@@ -67,7 +66,7 @@ class topsis:
 
 	#Step 6
 	def step6(self):
-		np.seterr(all='ignore')
+		# np.seterr(all='ignore')
 		self.siw=self.diw/(self.diw+self.dib)
 	
 	def calc(self):
