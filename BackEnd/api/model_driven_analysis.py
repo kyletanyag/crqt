@@ -56,7 +56,7 @@ class ModelDriven:
             self.product = product          # node discription
             self.vendor = vendor
             self.index = index
-            self.weights = np.array([0.0,0.0,0.0])    # base, exploitability, impact scores
+            self.weights = np.array([1.0,1.0,1.0])    # base, exploitability, impact scores
 
             if cve_ids:
                 self.weights = model_driven_cvss_query(cve_ids)
