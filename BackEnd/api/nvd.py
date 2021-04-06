@@ -9,6 +9,7 @@ from flask import Blueprint, jsonify, request
 import requests
 import json
 import os
+import numpy as np
 
 httpHost    = "http://127.0.0.1:2000"       # ip and port of CVE Search
 nvd_bp = Blueprint('nvd_bp', __name__)
@@ -33,16 +34,9 @@ def data_driven_cvss_query(cve_id):
     # making request to CVE ID
     r = requests.get(url)
     data = json.loads(r.text)
-    
-    scores = [0.0,0.0,0.0]       # base, exploitability, impact
 
-    scores[0] = float(data["cvss"]) / 10.0
-    
-    scores[1] = float(data["exploitabilityScore"]) / 10.0
-
-    scores[2] = float(data["impactScore"]) / 10.0
-
-    return scores
+    # base, exploitability, impact
+    return np.array([float(data["cvss"]) / 10.0, float(data["exploitabilityScore"]) / 10.0, float(data["impactScore"]) / 10.0]) 
 
 
 ############# MODEL DRIVEN QUERY ###################
@@ -56,9 +50,11 @@ def score_to_weight(score):
 
 def model_driven_cvss_query(cve_ids):
     global httpHost
-    weights = []
-    scores = []
     
+    scores = np.array([0.0,0.0,0.0])
+    weights = np.array([0.0,0.0,0.0])
+    tmp = np.array([0.0,0.0,0.0])
+    tmpW = np.array([0.0,0.0,0.0])
     for cve in cve_ids:
         url = httpHost + "/api/cve/" + cve
 
@@ -66,28 +62,13 @@ def model_driven_cvss_query(cve_ids):
         r = requests.get(url)
         data = json.loads(r.text)
         
-        weights.append([0.0,0.0,0.0])
-        scores.append([0.0,0.0,0.0])       # base, exploitability, impact
+        tmp[:] = [float(data["cvss"]) / 10.0, float(data["exploitabilityScore"]) / 10.0, float(data["impactScore"]) / 10.0]
+        tmpW[:] = [score_to_weight(tmp[0]), score_to_weight(tmp[1]), score_to_weight(tmp[2])]
+        scores += tmp * tmpW
+        weights += tmpW
 
-        scores[-1][0] = float(data["cvss"]) / 10.0
-        weights[-1][0] = score_to_weight(scores[-1][0])
-
-        scores[-1][1] = float(data["exploitabilityScore"]) / 10.0
-        weights[-1][1] = score_to_weight(scores[-1][1])
-
-        scores[-1][2] = float(data["impactScore"]) / 10.0
-        weights[-1][2] = score_to_weight(scores[-1][2])
-    
-    result = [0.0,0.0,0.0]
-    weight_sum = [0.0,0.0,0.0]
     # calculating weighted average
-    for i in range(len(weights)):
-        for j in range(3):
-            result[j] += (scores[i][j] * weights[i][j])
-            weight_sum[j] += weights[i][j]
-    
-    for i in range(3):
-        result[i] = result[i] / weight_sum[i]
+    scores /= weights
 
-    return result
+    return scores
 
