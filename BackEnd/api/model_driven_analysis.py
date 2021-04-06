@@ -73,6 +73,30 @@ class ModelDriven:
             self.target.in_edges.append(self)    # adding incoming edge to target
             self.source.out_edges.append(self)
 
+@model_analysis_bp.route('/model_driven/get_network_topology', methods=['GET'])
+def get_network_topology():
+    global vulnerability
+
+    vertices = []
+    edges = []
+    for node in vulnerability: 
+        vertices.append({
+            'id'        : node.index,
+            'vendor'    : node.vendor,
+            'product'   : node.product,
+            'layer'     : list(ModelDriven.switch.keys())[list(ModelDriven.switch.values()).index(node.layer)]            
+        })
+        for e in node.out_edges:
+            edges.append({
+                'source'                : node.index,
+                'target'                : e.target,
+                'base_score'            : e.weights[0],
+                'exploitability_score'  : e.weights[1],
+                'impact_score'          : e.weights[2]
+            })
+    
+    return jsonify({'nodes': vertices, 'edges' : edges})
+
 # initializing all global variables
 def ModelDriven_init():
     global vulnerability_graph
