@@ -2,35 +2,7 @@
 <div>
   <h1>Network Topology Results (Data-Driven)</h1>
   <hr>
-  <h3 class="pb-1">Summary</h3>
-  <div class="mx-5 text-justify row">
-    <!-- Summary, contain basic network information -->
-    <!-- Node statistics -->
-    <div class="col">
-      <p>
-        You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ input_date }}</strong>. 
-        It took <strong>{{ computation_time }}</strong> second(s) to compute the generated metrics.
-      </p>
-      <p>
-        Your inputted network contains a total of <strong>{{ nodes.length }}</strong> nodes and <strong>{{ edges.length }}</strong> edges.
-      </p>
-      <p>
-        Out of the <strong>{{ nodes.length }}</strong> nodes: 
-        <br><strong>{{ derivedFactNodes.length }} </strong> nodes were derived fact nodes. 
-        <br><strong>{{ derivationNodes.length }}</strong> nodes were rule nodes.
-        <br><strong>{{ primitiveFactNodes.length }}</strong> nodes were primitive fact nodes.
-      </p>
-    </div>
-    <div class="col" v-if="!loadingDerivedScores">
-      <doughnut-chart 
-        name="Network Topology Breakdown"
-        :data="[derivedFactPercentage, derivationPercentatge, primitiveFactPercentage]" 
-        :labels="['% of Derived Fact Nodes', '% of Rule Nodes', '% of Primitive Fact Nodes']"
-        style="width: 50%; height: 20%"
-        class="container"
-      />
-    </div>
-  </div>
+  
   <hr>
   <h3 class="pb-1">Overall Network Compromise / Exploitation Scenario</h3>
   <div class="mx-5 row">
@@ -202,17 +174,15 @@
 <script>
 // import { ref } from 'vue';
 import http from '@/http-common.js';
-import DoughnutChart from '@/components/DoughnutChart.vue';
 import Histogram from '@/components/Histogram.vue';
 import NetworkGraph from '@/components/NetworkGraph.vue';
 import NetworkDataTable from '@/components/NetworkDataTable.vue';
 
 export default 
 {
-  name: 'Data Driven Results',
+  name: 'Data Driven Results Home',
 
   components: { 
-    DoughnutChart,
     Histogram, 
     NetworkGraph,
     NetworkDataTable,
@@ -268,16 +238,6 @@ export default
     getData() {
       this.loadingDerivedScores = true;
       this.loadingNetworkEntropy = true;
-
-      http.get('get_network_title').then((r) => {
-        console.log(r);
-        this.title = r.data.network_title;
-      });
-
-      http.get('get_input_date').then((r) => {
-        console.log(r);
-        this.input_date = r.data.input_date;
-      });
 
       http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
