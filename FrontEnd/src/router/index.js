@@ -1,9 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Do we need these?
-import Callback from '@/views/Callback'
-import ErrorPage from '@/views/Error'
-import SecureComponent from "@/views/Secure.vue"
+
+import Error from '@/views/Error'
 
 // Testing page for Kyle
 import Sandbox from "../views/_Sandbox.vue";
@@ -35,19 +33,10 @@ const routes = [
         component: () => import(/* webpackChunkName: "Home" */ '@/views/Home.vue'),
     },
     {
-        path: '/callback',
-        name: 'Callback',
-        component: Callback
-    },
-    {
-        path: '/error',
+        path: '/error/:errorCode',
         name: 'Error',
-        component: ErrorPage,
-    },
-    {
-        path: '/secure',
-        name: "Secure",
-        component: SecureComponent
+        component: Error,
+        props: true,
     },
     {
         path: '/login',

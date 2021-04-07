@@ -75,11 +75,11 @@ class ModelDriven:
 
 @model_analysis_bp.route('/model_driven/get_network_topology', methods=['GET'])
 def get_network_topology():
-    global vulnerability
+    global vulnerability_graph
 
     vertices = []
     edges = []
-    for node in vulnerability: 
+    for node in vulnerability_graph: 
         vertices.append({
             'id'        : node.index,
             'vendor'    : node.vendor,

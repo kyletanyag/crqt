@@ -39,53 +39,11 @@
                                          active-class="active"
                                          :to="getSimulationResultsRoute()">Simulation Results</router-link>
                         </li>
-                        <!-- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown">Resilience Metrics</a>
-                            <div class="dropdown-menu" style="width: 20em;" >
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/Robustness">Robustness</router-link>
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/Redundancy">Redundancy</router-link>
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/Resourcefullness">Resourcefullness</router-link>
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/Rapidity">Rapidity</router-link>
-                            </div>
-                        </li> -->
-                        <!-- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-toggle="dropdown">Visualization</a>
-                            <div class="dropdown-menu" style="width: 20em">
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/BasicGraphView">Basic Graph View</router-link>
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/ColorGraphView">Color Graph View</router-link>
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/CollapsibleLayout">Collapsible Layout</router-link>
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/ForceLayout">Force Layout</router-link>
-                                <router-link class="nav-link" style="color:black;"
-                                             active-class="bg-primary text-white"
-                                             to="/TidyTree">Tidy Tree Layout</router-link>
-                            </div>
-                        </li> -->
                         <li class="nav-item">
                             <router-link class="nav-link"
                                          active-class="active"
                                          to="/ContactUs">Contact Us</router-link>
-                        </li>    
-                        <li class="nav-item">
-                            <router-link class="nav-link"
-                                         active-class="active"
-                                         to="/Secure">Secure Page</router-link>
-                        </li>   
+                        </li>     
                     </ul>
                 </div>
                 <div id="log">
@@ -101,44 +59,45 @@
 </template>
 
 <script>
-  export default {
-    name: 'App',
-    data() {
-      return {
-        authenticated: true, // change to true when developing
-        inputApproach: undefined,
-        mockAccount: {
-          emailAddress: "email",
-          password: "password"
-        }
-      }
+export default {
+  name: 'App',
+
+  data() {
+    return {
+      authenticated: true, // change to true when developing
+      inputApproach: undefined,
+    }
+  },
+
+  mounted() {
+    if (!this.authenticated && this.$route.name != 'Login' && this.$route.name != 'Register') {
+      this.$router.replace({ name: 'Login' });
+    }
+  },
+  
+  created() {    
+  },
+
+  methods: {
+    setAuthenticated(status) {
+      this.authenticated = status;
     },
-    mounted() {
-      if (!this.authenticated && this.$route.name != 'Login' && this.$route.name != 'Register') {
-        this.$router.replace({ name: "Login" });
-      }
+
+    setInputApproach(approach) {
+      console.log(approach);
+      this.inputApproach = approach;
     },
-    
-    methods: {
-      setAuthenticated(status) {
-        this.authenticated = status;
-      },
 
-      setInputApproach(approach) {
-        console.log(approach);
-        this.inputApproach = approach;
-      },
+    logout() {
+      this.authenticated = false;
+    },
 
-      logout() {
-        this.authenticated = false;
-      },
-
-      getSimulationResultsRoute(){
-        console.log(`/simulation-results/${this.inputApproach}`);
-        return `/simulation-results/${this.inputApproach}`;
-      }
+    getSimulationResultsRoute(){
+      console.log(`/simulation-results/${this.inputApproach}`);
+      return `/simulation-results/${this.inputApproach}`;
     }
   }
+}
 </script>
 
 <style>
@@ -161,15 +120,7 @@
   transition-duration: 0.4s;
   cursor: pointer;
 }
-.button1 {
-  background-color: white; 
-  color: black; 
-  border: 2px solid #2a79b9;
-}
-.button1:hover {
-  background-color: #2c20d4;
-  color: white;
-}
+
 .dropdown-menu{
   color: #0d0852;
 }
