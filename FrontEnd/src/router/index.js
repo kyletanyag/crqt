@@ -1,9 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-// Do we need these?
-import Callback from '@/views/Callback'
-import ErrorPage from '@/views/Error'
-import SecureComponent from "@/views/Secure.vue"
+
+import Error from '@/views/Error'
 
 // Testing page for Kyle
 import Sandbox from "../views/_Sandbox.vue";
@@ -13,11 +11,6 @@ const routes = [
       path: '/ContactUs',
       name: 'ContactUs',
       component: () => import(/* webpackChunkName: "ContactUs" */ '../views/ContactUs.vue')
-    },
-    {
-      path: '/SimulationResults',
-      name: 'SimulationResults',
-      component: () => import(/* webpackChunkName: "SimulationResults" */ '../views/SimulationResults/SimulationResults.vue')
     },
     {
         path: '/network-topology/data-driven',
@@ -35,19 +28,10 @@ const routes = [
         component: () => import(/* webpackChunkName: "Home" */ '@/views/Home.vue'),
     },
     {
-        path: '/callback',
-        name: 'Callback',
-        component: Callback
-    },
-    {
-        path: '/error',
+        path: '/error/:errorCode',
         name: 'Error',
-        component: ErrorPage,
-    },
-    {
-        path: '/secure',
-        name: "Secure",
-        component: SecureComponent
+        component: Error,
+        props: true,
     },
     {
         path: '/login',
@@ -85,8 +69,44 @@ const routes = [
     {
         path: '/simulation-results/data-driven',
         name: 'Data Driven Results',
-        component: () => import(/* webpackChunkName: "Data Driven Results" */ '@/views/SimulationResults/DataDrivenResults.vue')
-    }
+        component: () => import(/* webpackChunkName: "Data Driven Results" */ '@/views/SimulationResults/DataDriven/Default.vue'),
+
+    },
+    {
+        path: '/simulation-results/data-driven/summary',
+        name: 'Data Driven Results - Summary',
+        component: () => import(/* webpackChunkName: "Data Driven Results - Summary" */ '@/views/SimulationResults/DataDriven/Summary.vue')
+    },
+    {
+        path: '/simulation-results/data-driven/overall-network-compromise',
+        name: 'Data Driven Results - Overall Network Compromise',
+        component: () => import(/* webpackChunkName: "Data Driven Results - Overall Network Compromise" */ '@/views/SimulationResults/DataDriven/OverallNetworkCompromise.vue')
+    },
+    {
+        path: '/simulation-results/data-driven/derived-node-exploitation',
+        name: 'Data Driven Results - Derived Node Exploitation',
+        component: () => import(/* webpackChunkName: "Data Driven Results - Derived Node Exploitation" */ '@/views/SimulationResults/DataDriven/DerivedNodeExploitation.vue')
+    },
+    {
+        path: '/simulation-results/data-driven/network-visualization',
+        name: 'Data Driven Results - Network Visualization',
+        component: () => import(/* webpackChunkName: "Data Driven Results - Network Visualization" */ '@/views/SimulationResults/DataDriven/NetworkVisualization.vue')
+    },
+    {
+        path: '/simulation-results/data-driven/specific-node-information',
+        name: 'Data Driven Results - Specific Node Information',
+        component: () => import(/* webpackChunkName: "Data Driven Results - Specific Node Information" */ '@/views/SimulationResults/DataDriven/SpecificNodeInformation.vue')
+    },
+    {
+        path: '/simulation-results/data-driven/recommendation',
+        name: 'Data Driven Results - Recommendations',
+        component: () => import(/* webpackChunkName: "Data Driven Results - Recommendations" */ '@/views/SimulationResults/DataDriven/Recommendation.vue')
+    },
+    {
+        path: '/simulation-results/data-driven/printout',
+        name: 'Data Driven Results - Printout',
+        component: () => import(/* webpackChunkName: "Data Driven Results - Printout" */ '@/views/SimulationResults/DataDriven/Printout.vue')
+    },
 ]
 
 const router = createRouter({

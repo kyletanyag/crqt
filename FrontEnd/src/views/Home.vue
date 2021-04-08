@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: 'Home',
 
@@ -29,6 +30,23 @@ export default {
         'Kyle Tanyag'
       ]
     }
+  },
+
+  created() {
+    axios.get('http://localhost:5000/test_connection')
+      .then((r) => {
+        console.log(r);
+        axios.get('http://localhost:2000/api/browse/microsoft')
+          .then((r) => {
+            console.log(r);
+          })
+          .catch(() => {
+            this.$router.push({name: 'Error', params: {errorCode: 'CVE-Search'}})
+          })
+      })
+      .catch(() => {
+        this.$router.push({name: 'Error', params: {errorCode: 'Flask'}})
+      });
   },
 }
 </script>

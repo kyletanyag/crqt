@@ -18,6 +18,10 @@ input_date = ""                 # date/time of network input into system
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
 
+@graph_bp.route('/test_connection', methods=['GET'])
+def test_connection():
+    return 'Good Connection', 200
+
 @graph_bp.route('/get_network_title', methods=['GET'])
 def get_network_title():
     global title
