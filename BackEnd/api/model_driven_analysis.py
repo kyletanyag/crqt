@@ -39,21 +39,21 @@ class ModelDriven:
         CS_FW2 = auto()
         CS_LAN = auto()
 
+    # switch for converting layers string to enum
+    switch = {
+        "remote_attack" : Layers.REMOTE_ATTACK,
+        "corp_fw_1"     : Layers.CORP_FW1,
+        "corp_dmz"      : Layers.CORP_DMZ,
+        "corp_fw_2"     : Layers.CORP_FW2,
+        "corp_lan"      : Layers.CORP_LAN,
+        "cs_fw_1"       : Layers.CS_FW1,
+        "cs_dmz"        : Layers.CS_DMZ,
+        "cs_fw_2"       : Layers.CS_FW2,
+        "cs_lan"        : Layers.CS_LAN
+    }
+
     # object for nodes
     class Node:
-        # switch for converting layers string to enum
-        switch = {
-            "remote_attack" : ModelDriven.Layers.REMOTE_ATTACK,
-            "corp_fw_1"     : ModelDriven.Layers.CORP_FW1,
-            "corp_dmz"      : ModelDriven.Layers.CORP_DMZ,
-            "corp_fw_2"     : ModelDriven.Layers.CORP_FW2,
-            "corp_lan"      : ModelDriven.Layers.CORP_LAN,
-            "cs_fw_1"       : ModelDriven.Layers.CS_FW1,
-            "cs_dmz"        : ModelDriven.Layers.CS_DMZ,
-            "cs_fw_2"       : ModelDriven.Layers.CS_FW2,
-            "cs_lan"        : ModelDriven.Layers.CS_LAN
-        }
-
         def __init__(self, product, vendor, layer, index, cve_ids):
             self.out_edges = []             # array of outgoing edges
             self.in_edges = []              # array of incoming edges
@@ -66,7 +66,7 @@ class ModelDriven:
                 self.weights = model_driven_cvss_query(cve_ids)
 
             # determining what layer
-            self.layer = Node.switch[layer]  # what layer does node belong too
+            self.layer = ModelDriven.switch[layer]  # what layer does node belong too
 
     # object for weighted edges nodes will use
     class Edge:
@@ -82,6 +82,18 @@ class ModelDriven:
 def get_network_topology():
     global vulnerability_graph
 
+    switch = {
+        ModelDriven.Layers.REMOTE_ATTACK    : "remote_attack", 
+        ModelDriven.Layers.CORP_FW1         : "corp_fw_1",
+        ModelDriven.Layers.CORP_DMZ         : "corp_dmz",
+        ModelDriven.Layers.CORP_FW2         : "corp_fw_2",
+        ModelDriven.Layers.CORP_LAN         : "corp_lan",
+        ModelDriven.Layers.CS_FW1           : "cs_fw_1",
+        ModelDriven.Layers.CS_DMZ           : "cs_dmz",
+        ModelDriven.Layers.CS_FW2           : "cs_fw_2",
+        ModelDriven.Layers.CS_LAN           : "cs_lan"
+    }
+    
     vertices = []
     edges = []
     # creating json with vertices and arcs objects 
@@ -90,7 +102,7 @@ def get_network_topology():
             'id'        : node.index,
             'vendor'    : node.vendor,
             'product'   : node.product,
-            'layer'     : list(ModelDriven.Node.switch.keys())[list(ModelDriven.Node.switch.values()).index(node.layer)]            
+            'layer'     : switch[node.layer]           
         })
         for e in node.out_edges:
             edges.append({
