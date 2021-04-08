@@ -36,13 +36,13 @@
     <div class="col" v-if="!loadingDerivedScores">
       <Histogram
         :data="histogramScoreData" 
-        :numBins="10" 
+        :numBins="numBins" 
         :name="histogramScoreName" 
         barColor='#f87979'
         style="width: 60%"
         class="container"
       />
-      <div class="btn-group btn-group-toggle pt-2" id="histogram score">
+      <div class="btn-group btn-group-toggle pt-2 px-2" id="histogram score">
         <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Base'}">
           <input type="radio" v-model="histogramScoreType" value="Base" autocomplete="off"> Base
         </label>
@@ -51,6 +51,14 @@
         </label>
         <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Exploitability' }">
           <input type="radio" v-model="histogramScoreType" value="Exploitability" autocomplete="off"> Exploitability
+        </label>
+      </div>
+      <div class="btn-group btn-group-toggle pt-2 px-2" id="histogram bin size"> 
+        <label class="btn btn-secondary" :class="{active: numBins === 5}">
+          <input type="radio" v-model="numBins" :value="5" autocomplete="off"> 5
+        </label>
+        <label class="btn btn-secondary" :class="{active: numBins === 10}">
+          <input type="radio" v-model="numBins" :value="10"  autocomplete="off"> 10
         </label>
       </div>
     </div>
@@ -83,6 +91,7 @@ export default {
       numHighSeverity: 0,
       numMedSeverity: 0,
       numLowSeverity: 0,
+      numBins: 10,
       error: undefined,
     }
   },
@@ -155,6 +164,18 @@ export default {
       else 
         this.histogramScoreData = this.exploitabilityScores;
     },
+
+    numBins() {
+      const btns = document.getElementById('histogram bin size').getElementsByTagName('input');
+      btns.forEach((b) => {
+        b.disabled = true;
+      });
+      setTimeout(() => {
+        btns.forEach((b) => {
+          b.disabled = false;
+        });
+      }, 1500)
+    }
   }
 }
 </script>
