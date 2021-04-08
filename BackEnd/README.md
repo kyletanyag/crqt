@@ -52,7 +52,6 @@ https://www.youtube.com/watch?v=Urx8Kj00zsI&list=WL&index=32&t=133s
 IMPORTANT: please follow the prior guide for flask first before running cve-search
 
 ## Prerequisites
-Window Terminal - https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab
 Install Mongo Windows Service - https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#run-mongodb-from-cmd
 Python installed on windows with pip
 
@@ -64,6 +63,7 @@ If problems occur during installation, please refer to https://docs.microsoft.co
 ## Automatic Install
 In Ubuntu Terminal run:
 ```
+$ cd /mnt/<path_to_crqt>/BackEnd
 $ chmod 700 ./cve_search_install.sh 
 $ ./cve_search_install.sh
 ```
@@ -73,6 +73,7 @@ After install, proceed to run server section
 ## Manual Install
 On Ubuntu Terminal open cve_search directory and run the following commands:
 ```
+$ cd /mnt/<path_to_crqt>/BackEnd
 $ sudo apt-get install python3
 $ sudo apt-get install python3-pip
 $ sudo apt-get install redis-server
@@ -96,7 +97,7 @@ $ sudo service redis-server start
 
 In Windows CMD:
 ```
-> cd <path>\cve_search
+> cd <path_to_cqqt>\BackEnd\dms\cve_search
 > python .\web\index.py # this will start flask server on port 2000
 ```
 
