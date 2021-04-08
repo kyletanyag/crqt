@@ -370,7 +370,7 @@ def degree_centrality():
         outdegree.append(len(vulnerability_graph[node.index].out_edges))
         degree.append(indegree[-1] + outdegree[-1])
 
-    return indegree, outdegree, degree
+    return [indegree, outdegree, degree]
 
 # reference: https://en.wikipedia.org/wiki/Centrality
 def closeness_centrality():

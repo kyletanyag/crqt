@@ -86,13 +86,13 @@ export default {
       });
 
       http.get('/nvd/get_nvd_update_date').then((r) => {
-        console.log(r);
+        // console.log(r);
         this.NVDDate = r.data.date;
       })
 
       http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
-        this.computationTime = r.data.computation_time < 1 ? 'less than 1' : Number(r.data.computation_time.toPrecision(3));
+        this.computationTime = Number(r.data.computation_time.toPrecision(3));
 
         this.numNodes = r.data.nodes.length;
         this.numEdges = r.data.edges.length;
