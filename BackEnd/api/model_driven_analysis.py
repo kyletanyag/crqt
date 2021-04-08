@@ -24,6 +24,8 @@ topsis_metrics = []             # holds the topsis method metrics
 shortest_path_time = None       # computation time to compute shortest_paths
 centrality_time = None            # computation time to compute all centrality metrics
 topsis_time = 0.0               # computation time to compute topsis metrics
+
+# model driven data-structure 
 class ModelDriven:
     # Enum for node layers
     class Layers(IntEnum):
@@ -37,62 +39,66 @@ class ModelDriven:
         CS_FW2 = auto()
         CS_LAN = auto()
 
-    switch = {
-        "remote_attack" : Layers.REMOTE_ATTACK,
-        "corp_fw_1" : Layers.CORP_FW1,
-        "corp_dmz" : Layers.CORP_DMZ,
-        "corp_fw_2" : Layers.CORP_FW2,
-        "corp_lan" : Layers.CORP_LAN,
-        "cs_fw_1" : Layers.CS_FW1,
-        "cs_dmz" : Layers.CS_DMZ,
-        "cs_fw_2" : Layers.CS_FW2,
-        "cs_lan" : Layers.CS_LAN
-    }
     # object for nodes
     class Node:
+        # switch for converting layers string to enum
+        switch = {
+            "remote_attack" : ModelDriven.Layers.REMOTE_ATTACK,
+            "corp_fw_1"     : ModelDriven.Layers.CORP_FW1,
+            "corp_dmz"      : ModelDriven.Layers.CORP_DMZ,
+            "corp_fw_2"     : ModelDriven.Layers.CORP_FW2,
+            "corp_lan"      : ModelDriven.Layers.CORP_LAN,
+            "cs_fw_1"       : ModelDriven.Layers.CS_FW1,
+            "cs_dmz"        : ModelDriven.Layers.CS_DMZ,
+            "cs_fw_2"       : ModelDriven.Layers.CS_FW2,
+            "cs_lan"        : ModelDriven.Layers.CS_LAN
+        }
+
         def __init__(self, product, vendor, layer, index, cve_ids):
             self.out_edges = []             # array of outgoing edges
             self.in_edges = []              # array of incoming edges
-            self.product = product          # node discription
-            self.vendor = vendor
-            self.index = index
+            self.product = product          # node product
+            self.vendor = vendor            # node vendor
+            self.index = index              # node index/id
             self.weights = np.array([1.0,1.0,1.0])    # base, exploitability, impact scores
 
             if cve_ids:
                 self.weights = model_driven_cvss_query(cve_ids)
 
             # determining what layer
-            self.layer = ModelDriven.switch[layer]  # what layer does node belong too
+            self.layer = Node.switch[layer]  # what layer does node belong too
 
     # object for weighted edges nodes will use
     class Edge:
         def __init__(self, node_source, node_target):
-            self.target = node_target    # target node (where the edge connect too)
-            self.source = node_source    # source node (where the edge starts)
+            self.target = node_target       # target node (where the edge connect too)
+            self.source = node_source       # source node (where the edge starts)
+            
+            self.target.in_edges.append(self)       # adding incoming edge to target
+            self.source.out_edges.append(self)      # adding out edges to source
 
-            self.target.in_edges.append(self)    # adding incoming edge to target
-            self.source.out_edges.append(self)
-
+# will send graph topology to front-end
 @model_analysis_bp.route('/model_driven/get_network_topology', methods=['GET'])
 def get_network_topology():
     global vulnerability_graph
 
     vertices = []
     edges = []
+    # creating json with vertices and arcs objects 
     for node in vulnerability_graph: 
         vertices.append({
             'id'        : node.index,
             'vendor'    : node.vendor,
             'product'   : node.product,
-            'layer'     : list(ModelDriven.switch.keys())[list(ModelDriven.switch.values()).index(node.layer)]            
+            'layer'     : list(ModelDriven.Node.switch.keys())[list(ModelDriven.Node.switch.values()).index(node.layer)]            
         })
         for e in node.out_edges:
             edges.append({
                 'source'                : node.index,
-                'target'                : e.target,
-                'base_score'            : node.weights[0],
-                'exploitability_score'  : node.weights[1],
-                'impact_score'          : node.weights[2]
+                'target'                : e.target.index,
+                'base_score'            : e.weights[0],
+                'exploitability_score'  : e.weights[1],
+                'impact_score'          : e.weights[2]
             })
     
     return {'nodes': vertices, 'edges' : edges}, 200
@@ -146,14 +152,18 @@ def Short_Path_Depth_First_Traversal(node, score):
     # accumulating score from this node
     score += (1 - node.weights[0])          # 1 - CVSS/10
 
-    # if reached attacker node, stop
-    if GoalNode.index == node.index:
+    # if reached goal node node, stop
+    if GoalNode.index == node.index and shortest_path_counter >= score:
         global shortest_score
+
+        # if the score calculated smaller than current smallest, set score to smallest and reset number of paths found with that score 
         if score < shortest_score:
             shortest_score = score
             shortest_path_counter = 1
+        # else, increase number of paths with this score
         else:
             shortest_path_counter += 1
+    
     elif shortest_path_counter >= score and node.layer > GoalNode.layer:
         for n in node.in_edges:
             Short_Path_Depth_First_Traversal(n.source, deepcopy(score))
