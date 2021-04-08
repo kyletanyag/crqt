@@ -51,11 +51,15 @@ https://www.youtube.com/watch?v=Urx8Kj00zsI&list=WL&index=32&t=133s
 # CVE-Search
 IMPORTANT: please follow the prior guide for flask first before running cve-search
 
-Prerequisites:
-Ubuntu Subsystem for Windows - https://docs.microsoft.com/en-us/windows/wsl/install-win10, https://adamtheautomator.com/windows-subsystem-for-linux/
+## Prerequisites
 Window Terminal - https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab
 Install Mongo Windows Service - https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#run-mongodb-from-cmd
 Python installed on windows with pip
+
+### Installing Ubuntu 20.04 subsystem for Windows
+To install Ubuntu 20.04 subsystem for Windows go to Window's Control Panel -> Programs and select Turn Windows features on or off. From there, check mark Windows Subsystem for Linux and press ok. After this, it will install subsystem functionality and require restart. After restart, goto Microsoft store and install Ubuntu 20.04. Once installed, open Ubuntu 20.04 so to put username and passwd for terminal. Once completed, you can open Ubuntu 20.04 in Windows Terminal and cd to CRQT directory.  
+
+If problems occur during installation, please refer to https://docs.microsoft.com/en-us/windows/wsl/install-win10 or https://adamtheautomator.com/windows-subsystem-for-linux/ or https://www.youtube.com/watch?v=av0UQy6g2FA.
 
 ## Automatic Install
 In Ubuntu Terminal run:
