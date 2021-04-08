@@ -1,5 +1,5 @@
 # this is a test file for testing/debugging analysis module
-from model_driven_analysis import vulnerability_graph, ModelDriven_init, ModelDriven, centrality, origin_to_node_metrics, shortest_paths_gen,shortest_path_comp_time
+from model_driven_analysis import vulnerability_graph, ModelDriven_init, ModelDriven, centrality, origin_to_node_metrics, shortest_paths_gen,TOPSIS
 import time
 def network_topology_model_driven_input():
     # test file opening
@@ -31,10 +31,7 @@ def network_topology_model_driven_input():
         for tar in edges["nextNode"]:
             ModelDriven.Edge(vulnerability_graph[curr], vulnerability_graph[tar])
 
-    start = time.time()
-    for node in vulnerability_graph[1:]:
-        origin_to_node_metrics(node.index)
-    print(time.time() - start)
+    TOPSIS()
     return 'Done', 21
 
 
