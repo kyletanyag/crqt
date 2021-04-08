@@ -93,7 +93,7 @@ def get_network_topology():
         ModelDriven.Layers.CS_FW2           : "cs_fw_2",
         ModelDriven.Layers.CS_LAN           : "cs_lan"
     }
-    
+
     vertices = []
     edges = []
     # creating json with vertices and arcs objects 
@@ -108,9 +108,9 @@ def get_network_topology():
             edges.append({
                 'source'                : node.index,
                 'target'                : e.target.index,
-                'base_score'            : e.weights[0],
-                'exploitability_score'  : e.weights[1],
-                'impact_score'          : e.weights[2]
+                'base_score'            : e.target.weights[0],
+                'exploitability_score'  : e.target.weights[1],
+                'impact_score'          : e.target.weights[2]
             })
     
     return {'nodes': vertices, 'edges' : edges}, 200
