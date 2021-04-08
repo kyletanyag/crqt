@@ -11,7 +11,7 @@
 
 <script>
   /* eslint-disable */
-import NetworkGraph from '../components/NetworkGraph.vue';
+import NetworkGraph from '../components/DataDrivenNetworkGraph.vue';
 import http from '../http-common.js';
 import { ref } from 'vue';
 import Handsontable from "handsontable";

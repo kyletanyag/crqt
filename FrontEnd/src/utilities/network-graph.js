@@ -1,7 +1,8 @@
 /*global d3*/
 /*eslint no-undef: "error"*/
+/* eslint-disable */
 
-function generateNetworkDiagram(data) {
+function generateDataDrivenNetworkDiagram(data) {
   const svg = d3.select("#network"),
       width = +svg.attr("width"),
       height = +svg.attr("height");
@@ -47,58 +48,60 @@ function generateNetworkDiagram(data) {
     
     render(null, data);
   
-    function render (error, graph) {
-      const simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function(d) { return d.id; }))
-        .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2));
-  
-  
-      if (error) throw error;
-  
-      console.log(graph);
+  function render (error, graph) {
+    const simulation = d3.forceSimulation()
+      .force("link", d3.forceLink().id(function(d) { return d.id; }))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(width / 2, height / 2));
 
-      const link = svg.append("g")
-          .attr("class", "links")
-          .attr("stroke", "#999")
-        .selectAll("line")
-        .data(graph.edges)
-        .enter().append("line")
-          .attr("stroke-width", function(d) { return Math.sqrt(d.value); })
-          .attr('color', 'black')
-          .attr('marker-end', 'url(#arrowhead)');
-  
 
-      const nodeWrapper = svg.append('g')
-        .attr('class', 'nodes')
-        .selectAll('.node')
-        .data(graph.nodes)
-        .enter().append('g')
-        .attr('class', 'nodeWrapper')
+    if (error) throw error;
 
-      const node = nodeWrapper
-        .append("circle")
-        .attr("r", 5)
-        .attr("fill", function(d) { return color(d.node_type); })
-        .attr("id", function(d) { return `node_${d.id}`; })
-        .call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
-      
-      const tooltip = d3.select('#networkContainer')
-        .append('div')
-        .classed('tooltip', true)
-        .style('opacity', 0);
+    console.log(graph);
 
-      
-      nodeWrapper
-        .on("mouseover", function(d) {
-          tooltip.transition()
-            .duration(300)
-            .style("opacity", 1) // show the tooltip
-            .style('background-color', 'rgba(211, 211, 211, 0.8)')
-          tooltip.html(`<div style="width: 300px">\
+    const link = svg.append("g")
+        .attr("class", "links")
+        .attr("stroke", "#999")
+      .selectAll("line")
+      .data(graph.edges)
+      .enter().append("line")
+        .attr("stroke-width", function(d) { return Math.sqrt(d.value); })
+        .attr('color', 'black')
+        .attr('marker-end', 'url(#arrowhead)');
+
+
+    const nodeWrapper = svg.append('g')
+      .attr('class', 'nodes')
+      .selectAll('.node')
+      .data(graph.nodes)
+      .enter().append('g')
+      .attr('class', 'nodeWrapper')
+
+    const node = nodeWrapper
+      .append("circle")
+      .attr("r", 5)
+      .attr("fill", function(d) { return color(d.node_type); })
+      .attr("id", function(d) { return `node_${d.id}`; })
+      .attr("cx", function(d) { return d.id; })
+      .attr("cy", function(d) { return d.id + 100; })
+      .call(d3.drag()
+          .on("start", dragstarted)
+          .on("drag", dragged)
+          .on("end", dragended));
+    
+    const tooltip = d3.select('#networkContainer')
+      .append('div')
+      .classed('tooltip', true)
+      .style('opacity', 0);
+
+    
+    nodeWrapper
+      .on("mouseover", function(d) {
+        tooltip.transition()
+          .duration(300)
+          .style("opacity", 1) // show the tooltip
+          .style('background-color', 'rgba(211, 211, 211, 0.8)')
+        tooltip.html(`<div style="width: 300px">\
 ID: ${d.id} <br>\
 Description: ${d.description} <br>\
 Type: ${d.node_type} <br>\
@@ -106,39 +109,39 @@ Base Score: ${d.base_score} <br>\
 Exploitability Score: ${d.exploitability_score} <br>\
 Impact Score ${d.impact_score}\
 </div>`)
-            .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 350) + "px")
-            .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 100) + "px");
-            // .style("top", (d3.select('.tooltip').node().offsetHeight) + "px");
-        })
-        .on("mouseleave", function() {
-          tooltip.transition()
-            .duration(0)
-            .style("opacity", 0)
-            .style('left', 0 + 'px')
-            .style('top', 0 + 'px');
-          tooltip.html('<div />')
-        })
-  
-      // node.append("title")
-      //     .text(function(d) { return d.id; });
+          .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 350) + "px")
+          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 100) + "px");
+          // .style("top", (d3.select('.tooltip').node().offsetHeight) + "px");
+      })
+      .on("mouseleave", function() {
+        tooltip.transition()
+          .duration(0)
+          .style("opacity", 0)
+          .style('left', 0 + 'px')
+          .style('top', 0 + 'px');
+        tooltip.html('<div />')
+      })
 
-      simulation
-          .nodes(graph.nodes)
-          .on("tick", () => {
-            link
-                .attr("x1", function(d) { return d.source.x; })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; });
-  
-            node
-                .attr("cx", function(d) { return d.x = Math.max(5, Math.min(width - 5, d.x)); })
-                .attr("cy", function(d) { return d.y = Math.max(5, Math.min(height - 5, d.y)); });
-          });
-  
-      simulation.force("link")
-          .links(graph.edges);
-  
+    // node.append("title")
+    //     .text(function(d) { return d.id; });
+
+    simulation
+        .nodes(graph.nodes)
+        .on("tick", () => {
+          link
+              .attr("x1", function(d) { return d.source.x; })
+              .attr("y1", function(d) { return d.source.y; })
+              .attr("x2", function(d) { return d.target.x; })
+              .attr("y2", function(d) { return d.target.y; });
+
+          node
+              .attr("cx", function(d) { return d.x = Math.max(5, Math.min(width - 5, d.x)); })
+              .attr("cy", function(d) { return d.y = Math.max(5, Math.min(height - 5, d.y)); });
+        });
+
+    simulation.force("link")
+        .links(graph.edges);
+
   
     function dragstarted(d) {
       if (!d3.event.active) simulation.alphaTarget(0.3).restart();
@@ -165,7 +168,120 @@ Impact Score ${d.impact_score}\
     //   return x < lo ? lo : x > hi ? hi : x;
     // }
 
-    }
+  }
+}
+
+function generateModelDrivenNetworkDiagram(data) {
+  const svg = d3.select("#network"),
+  width = +svg.attr("width"),
+  height = +svg.attr("height");
+
+  const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+  svg.append('defs').append('marker')
+        .attrs({'id':'arrowhead',
+            'viewBox':'-0 -5 10 10',
+            'refX':13,
+            'refY':0,
+            'orient':'auto',
+            'markerWidth':13,
+            'markerHeight':13,
+            'xoverflow':'visible'})
+        .append('svg:path')
+        .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+        .attr('fill', '#999')
+        .style('stroke','none');
+    
+    render(null, data);
+  
+  function render (error, graph) {
+    const simulation = d3.forceSimulation()
+      .force("link", d3.forceLink().id(function(d) { return d.id; }))
+      .force("charge", d3.forceManyBody())
+      .force("center", d3.forceCenter(width / 2, height / 2));
+
+
+    if (error) throw error;
+
+    console.log(graph);
+
+    const link = svg.append("g")
+        .attr("class", "links")
+        .attr("stroke", "#999")
+      .selectAll("line")
+      .data(graph.edges)
+      .enter().append("line")
+        .attr("stroke-width", function(d) { return Math.sqrt(d.value); })
+        .attr('color', 'black')
+        .attr('marker-end', 'url(#arrowhead)');
+
+
+    const nodeWrapper = svg.append('g')
+      .attr('class', 'nodes')
+      .selectAll('.node')
+      .data(graph.nodes)
+      .enter().append('g')
+      .attr('class', 'nodeWrapper')
+
+    const node = nodeWrapper
+      .append("circle")
+      .attr("r", 5)
+      .attr("fill", function(d) { return color(d.node_type); })
+      .attr("id", function(d) { return `node_${d.id}`; })
+      .attr("cx", function(d) { return d.id; })
+      .attr("cy", function(d) { return d.id + 100; })
+    
+    const tooltip = d3.select('#networkContainer')
+      .append('div')
+      .classed('tooltip', true)
+      .style('opacity', 0);
+
+    
+    nodeWrapper
+      .on("mouseover", function(d) {
+        tooltip.transition()
+          .duration(300)
+          .style("opacity", 1) // show the tooltip
+          .style('background-color', 'rgba(211, 211, 211, 0.8)')
+        tooltip.html(`<div style="width: 300px">\
+ID: ${d.id} <br>\
+Description: ${d.description} <br>\
+Type: ${d.node_type} <br>\
+Base Score: ${d.base_score} <br>\
+Exploitability Score: ${d.exploitability_score} <br>\
+Impact Score ${d.impact_score}\
+</div>`)
+          .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 350) + "px")
+          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 100) + "px");
+      })
+      .on("mouseleave", function() {
+        tooltip.transition()
+          .duration(0)
+          .style("opacity", 0)
+          .style('left', 0 + 'px')
+          .style('top', 0 + 'px');
+        tooltip.html('<div />')
+      })
+
+    simulation
+        .nodes(graph.nodes);
+        // .on("tick", () => {
+        //   link
+        //       .attr("x1", function(d) { return d.source.x; })
+        //       .attr("y1", function(d) { return d.source.y; })
+        //       .attr("x2", function(d) { return d.target.x; })
+        //       .attr("y2", function(d) { return d.target.y; });
+
+        //   node
+        //       .attr("cx", function(d) { return d.x; })
+        //       .attr("cy", function(d) { return d.y; });
+        // });
+
+    simulation.force("link")
+        .links(graph.edges);
+
   }
 
-export { generateNetworkDiagram };
+}
+
+export { generateDataDrivenNetworkDiagram, generateModelDrivenNetworkDiagram };

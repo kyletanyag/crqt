@@ -42,10 +42,10 @@
 
 <script>
 import http from '@/http-common.js';
-import { generateNetworkDiagram } from '../utilities/network-graph.js';
+import { generateDataDrivenNetworkDiagram } from '../utilities/network-graph.js';
 
 export default {
-  name: 'Network Graph',
+  name: 'Data Driven Network Graph',
 
   data() {
     return {
@@ -114,7 +114,7 @@ export default {
   mounted() {
     http.get('data_driven/get_derived_scores').then((r) => {
       this.network = { links: r.data.edges, nodes: r.data.nodes };
-      generateNetworkDiagram(r.data);
+      generateDataDrivenNetworkDiagram(r.data);
     })
   }
 }

@@ -11,7 +11,7 @@
 </template>
 <script>
 import ResultHeader from '@/components/ResultHeader.vue';
-import NetworkGraph from '@/components/NetworkGraph.vue';
+import NetworkGraph from '@/components/DataDrivenNetworkGraph.vue';
 export default {
   name: 'Data Driven Results - Network Visualization',
 

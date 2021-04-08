@@ -90,12 +90,12 @@ def get_network_topology():
             edges.append({
                 'source'                : node.index,
                 'target'                : e.target,
-                'base_score'            : e.weights[0],
-                'exploitability_score'  : e.weights[1],
-                'impact_score'          : e.weights[2]
+                'base_score'            : node.weights[0],
+                'exploitability_score'  : node.weights[1],
+                'impact_score'          : node.weights[2]
             })
     
-    return jsonify({'nodes': vertices, 'edges' : edges})
+    return {'nodes': vertices, 'edges' : edges}, 200
 
 # initializing all global variables
 def ModelDriven_init():
