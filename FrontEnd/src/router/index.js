@@ -93,19 +93,64 @@ const routes = [
         component: () => import(/* webpackChunkName: "Data Driven Results - Network Visualization" */ '@/views/SimulationResults/DataDriven/NetworkVisualization.vue')
     },
     {
-        path: '/simulation-results/data-driven/specific-node-information',
-        name: 'Data Driven Results - Specific Node Information',
-        component: () => import(/* webpackChunkName: "Data Driven Results - Specific Node Information" */ '@/views/SimulationResults/DataDriven/SpecificNodeInformation.vue')
+        path: '/simulation-results/data-driven/attack-path-details',
+        name: 'Data Driven Results - Attack Path Details',
+        component: () => import(/* webpackChunkName: "Data Driven Results - Attack Path Details" */ '@/views/SimulationResults/DataDriven/AttackPathDetails.vue')
     },
     {
-        path: '/simulation-results/data-driven/recommendation',
+        path: '/simulation-results/data-driven/recommendations',
         name: 'Data Driven Results - Recommendations',
-        component: () => import(/* webpackChunkName: "Data Driven Results - Recommendations" */ '@/views/SimulationResults/DataDriven/Recommendation.vue')
+        component: () => import(/* webpackChunkName: "Data Driven Results - Recommendations" */ '@/views/SimulationResults/DataDriven/Recommendations.vue')
     },
     {
         path: '/simulation-results/data-driven/printout',
         name: 'Data Driven Results - Printout',
         component: () => import(/* webpackChunkName: "Data Driven Results - Printout" */ '@/views/SimulationResults/DataDriven/Printout.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/',
+        name: 'Model Driven Results',
+        component: () => import(/* webpackChunkName: "Model Driven Result" */ '@/views/SimulationResults/ModelDriven/Default.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/summary',
+        name: 'Model Driven Results - Summary',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Summary" */ '@/views/SimulationResults/ModelDriven/Summary.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/network-visualization',
+        name: 'Model Driven Results - Network Visualization',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Network Visualization" */ '@/views/SimulationResults/ModelDriven/NetworkVisualization.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/graph-metrics',
+        name: 'Model Driven Results - Graph Metrics',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Graph Metrics" */ '@/views/SimulationResults/ModelDriven/GraphMetrics.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/node-specific-metrics',
+        name: 'Model Driven Results - Node Specific Metrics',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Node Specific Metrics" */ '@/views/SimulationResults/ModelDriven/NodeSpecificMetrics.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/vulnerable-host-percentage-metrics',
+        name: 'Model Driven Results - Vulnerable Host Percentage Metrics',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Vulnerable Host Percentage Metrics" */ '@/views/SimulationResults/ModelDriven/VulnerableHostPercentageMetrics.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/severity-display',
+        name: 'Model Driven Results - Severity Display',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Severity Display" */ '@/views/SimulationResults/ModelDriven/SeverityDisplay.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/recommendations',
+        name: 'Model Driven Results - Recommendations',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Recommendations" */ '@/views/SimulationResults/ModelDriven/Recommendations.vue')
+    },
+    {
+        path: '/simulation-results/model-driven/printout',
+        name: 'Model Driven Results - Printout',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Printout" */ '@/views/SimulationResults/ModelDriven/Printout.vue')
     },
 ]
 

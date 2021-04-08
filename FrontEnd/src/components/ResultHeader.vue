@@ -1,29 +1,29 @@
 <template>
 <div>
-  <div class="d-flex flex-row">
+  <div class="d-flex flex-row pb-2">
     <button class="btn btn-secondary btn-sm"
-      v-if="defaultRouteName"
-      @click="this.$router.push({name: defaultRouteName})"
+      v-if="defaultPage"
+      @click="this.$router.push({name: defaultPage})"
     >
       Table of Contents
     </button>
   </div>
   <div class="d-flex justify-content-between pb-2">
-    <div class="col">
+    <div class="col-2">
       <button class="btn btn-primary" 
-        v-if="prevRouteName"
-        @click="this.$router.push({name: prevRouteName})"
+        v-if="prevPage"
+        @click="this.$router.push({name: prevPage})"
       >
-        Previous &nbsp;<i class="fa fa-arrow-left"></i>
+        <i class="fa fa-arrow-left"></i>&nbsp; Previous 
       </button>
     </div>
     <div class="col">
-      <h2 class="pb-1">{{ title }}</h2>
+      <h1 class="pb-1">{{ title }}</h1>
     </div>
-    <div class="col">
+    <div class="col-2">
       <button class="btn btn-primary" 
-        v-if="nextRouteName"
-        @click="this.$router.push({name: nextRouteName})"
+        v-if="nextPage"
+        @click="this.$router.push({name: nextPage})"
       >
         Next &nbsp;<i class="fa fa-arrow-right"></i>
       </button>
@@ -38,9 +38,9 @@ export default {
 
   props: {
     title: String,
-    prevRouteName: String,
-    nextRouteName: String,
-    defaultRouteName: String,
+    prevPage: String,
+    nextPage: String,
+    defaultPage: String,
   }
 }
 </script>

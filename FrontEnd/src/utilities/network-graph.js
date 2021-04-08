@@ -6,7 +6,30 @@ function generateNetworkDiagram(data) {
       width = +svg.attr("width"),
       height = +svg.attr("height");
 
+  var keys = ['Derived Fact', 'Derivation', 'Primitive Fact']
+
   const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+  svg.selectAll("mydots")
+  .data(keys)
+  .enter()
+  .append("circle")
+    .attr("cx", 20)
+    .attr("cy", function(d,i){ return 40 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("r", 7)
+    .style("fill", function(d){ return color(d)})
+
+  // Add one dot in the legend for each name.
+  svg.selectAll("mylabels")
+    .data(keys)
+    .enter()
+    .append("text")
+      .attr("x", 40)
+      .attr("y", function(d,i){ return 40 + i*25}) // 100 is where the first dot appears. 25 is the distance between dots
+      .style("fill", function(d){ return color(d)})
+      .text(function(d){ return d})
+      .attr("text-anchor", "left")
+      .style("alignment-baseline", "middle")
 
     svg.append('defs').append('marker')
         .attrs({'id':'arrowhead',
@@ -27,7 +50,7 @@ function generateNetworkDiagram(data) {
     function render (error, graph) {
       const simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
-        .force("charge", d3.forceManyBody().strength(-50))
+        .force("charge", d3.forceManyBody())
         .force("center", d3.forceCenter(width / 2, height / 2));
   
   
@@ -84,8 +107,8 @@ Exploitability Score: ${d.exploitability_score} <br>\
 Impact Score ${d.impact_score}\
 </div>`)
             .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 350) + "px")
-            // .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight) + "px");
-            .style("top", (d3.select('.tooltip').node().offsetHeight) + "px");
+            .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 100) + "px");
+            // .style("top", (d3.select('.tooltip').node().offsetHeight) + "px");
         })
         .on("mouseleave", function() {
           tooltip.transition()
@@ -93,6 +116,7 @@ Impact Score ${d.impact_score}\
             .style("opacity", 0)
             .style('left', 0 + 'px')
             .style('top', 0 + 'px');
+          tooltip.html('<div />')
         })
   
       // node.append("title")

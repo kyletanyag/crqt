@@ -218,11 +218,12 @@ def conditions_per_derived_nodes():
     for node in LAG:
         if node.node_type == DataDriven.Node_Type.DERIVED:
             conditions_derived.append({
-                "id" : node,
+                "id" : node.index,
+                "description": node.description,
                 "num_conditions" : node.tolNumConditions # total number of conditions to reach node
             })
     
-    return jsonify({"conditions_per_derived_node" : conditions_derived})
+    return {"conditions_per_derived_node" : conditions_derived}, 200
 
 # 3.c
 @data_analysis_bp.route('/data_driven/conditions_per_execCode_node', methods=['GET'])
@@ -233,11 +234,12 @@ def conditions_per_execCode_node():
     for node in LAG:
         if node.isExecCode:
             conditions_derived.append({
-                "id" : node,
+                "id" : node.index,
+                "description": node.description,
                 "num_conditions" : node.tolNumConditions # total number of conditions to reach node
             })
     
-    return jsonify({"conditions_per_execCode_node" : conditions_derived})
+    return {"conditions_per_execCode_node" : conditions_derived}, 200
 
 # 3.d
 @data_analysis_bp.route('/data_driven/rules_per_derived_node', methods=['GET'])
@@ -248,11 +250,12 @@ def rules_per_derived_nodes():
     for node in LAG:
         if node.node_type == DataDriven.Node_Type.DERIVED:
             rules_derived.append({
-                "id" : node,
-                "num_conditions" : node.diNumConditions # direct number of rules
+                "id" : node.index,
+                "description": node.description,
+                "num_rules" : node.diNumConditions # direct number of rules
             })
     
-    return jsonify({"rules_per_derived_node" : rules_derived})
+    return {"rules_per_derived_node" : rules_derived}, 200
 
 # 3.e
 @data_analysis_bp.route('/data_driven/rules_per_execCode_node', methods=['GET'])
@@ -263,8 +266,24 @@ def rules_per_execCode_node():
     for node in LAG:
         if node.isExecCode:
             rules_derived.append({
-                "id" : node,
-                "num_conditions" : node.diNumConditions   # direct number of rules
+                "id" : node.index,
+                "description": node.description,
+                "num_rules" : node.diNumConditions   # direct number of rules
             })
     
-    return jsonify({"rules_per_execCode_node" : rules_derived})
+    return {"rules_per_execCode_node" : rules_derived}, 200
+
+@data_analysis_bp.route('/data_driven/conditions_and_rules_per_node', methods=['GET'])
+def conditions_and_rules_per_nodde():
+    global LAG
+
+    derived = []
+    for node in LAG:
+        if node.node_type == DataDriven.Node_Type.DERIVED:
+            derived.append({
+                "id" : node.index,
+                "description": node.description,
+                "num_conditions": node.tolNumConditions,
+                "num_rules" : node.diNumConditions # direct number of rules
+            })
+    return {"derived_data": derived}, 200

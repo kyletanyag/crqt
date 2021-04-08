@@ -2,12 +2,13 @@
 <div>
   <result-header 
     title="Summary"
-    nextRouteName="Data Driven Results - Overall Network Compromise"
-    defaultRouteName="Data Driven Results"
+    nextPage="Data Driven Results - Overall Network Compromise"
+    defaultPage="Data Driven Results"
   />
+  <div v-if="error" class="alert alert-danger">
+    {{ error }}
+  </div>
   <div class="mx-5 text-justify row">
-    <!-- Summary, contain basic network information -->
-    <!-- Node statistics -->
     <div class="col">
       <p>
         You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ inputDate }}</strong>. 
