@@ -2,16 +2,20 @@
 <div>
   <result-header 
     title="Summary"
-    nextRouteName="Data Driven Results - Overall Network Compromise"
-    defaultRouteName="Data Driven Results"
+    nextPage="Data Driven Results - Overall Network Compromise"
+    defaultPage="Data Driven Results"
   />
+  <div v-if="error" class="alert alert-danger">
+    {{ error }}
+  </div>
   <div class="mx-5 text-justify row">
-    <!-- Summary, contain basic network information -->
-    <!-- Node statistics -->
     <div class="col">
       <p>
         You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ inputDate }}</strong>. 
-        It took <strong>{{ computationTime }}</strong> second(s) to compute the generated metrics.
+        It took <strong>{{ computationTime }}</strong> second(s) to compute the generated metrics. 
+      </p>
+      <p>
+        The computed metrics use NVD Vulnerability data updated from <strong>{{ NVDDate }}</strong>.
       </p>
       <p>
         Your inputted network contains a total of <strong>{{ numNodes }}</strong> nodes and <strong>{{ numEdges }}</strong> edges.
@@ -59,6 +63,7 @@ export default {
       derivedFactPercentage: 0,
       derivationPercentatge: 0,
       primitiveFactPercentage: 0,
+      NVDDate: undefined
     }
   },
 
@@ -71,18 +76,23 @@ export default {
       this.loadingDerivedScores = true;
 
       http.get('get_network_title').then((r) => {
-        console.log(r);
+        // console.log(r);
         this.title = r.data.network_title;
       });
 
       http.get('get_input_date').then((r) => {
-        console.log(r);
+        // console.log(r);
         this.inputDate = r.data.input_date;
       });
 
+      http.get('/nvd/get_nvd_update_date').then((r) => {
+        // console.log(r);
+        this.NVDDate = r.data.date;
+      })
+
       http.get('data_driven/get_derived_scores').then((r) => {
         console.log(r);
-        this.computationTime = r.data.computation_time < 1 ? 'less than 1' : Number(r.data.computation_time.toPrecision(3));
+        this.computationTime = Number(r.data.computation_time.toPrecision(3));
 
         this.numNodes = r.data.nodes.length;
         this.numEdges = r.data.edges.length;

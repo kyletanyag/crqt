@@ -16,7 +16,7 @@ Note: The npm install command only has to be run once. This downloads all the ne
 ```
 npm run serve
 ```
-This will start the front-end application at http://localhost:8080/. The jmt.repo.api application will also need to be running for the application to work. (see above)
+This will start the front-end application at http://localhost:8080/.
 
 
 ### Compiles and minifies for production

@@ -113,7 +113,7 @@ def get_network_topology():
                 'impact_score'          : e.target.weights[2]
             })
     
-    return jsonify({'nodes': vertices, 'edges' : edges})
+    return {'nodes': vertices, 'edges' : edges}, 200
 
 # initializing all global variables
 def ModelDriven_init():
@@ -370,7 +370,7 @@ def degree_centrality():
         outdegree.append(len(vulnerability_graph[node.index].out_edges))
         degree.append(indegree[-1] + outdegree[-1])
 
-    return indegree, outdegree, degree
+    return [indegree, outdegree, degree]
 
 # reference: https://en.wikipedia.org/wiki/Centrality
 def closeness_centrality():

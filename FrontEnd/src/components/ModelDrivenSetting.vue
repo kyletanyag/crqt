@@ -102,7 +102,7 @@ export default {
     },
     getProducts(index) {
       http.get(`/product_query/server/${this.rows[index][1]}`).then((r) => {
-        // console.log(r);
+        console.log(r);
         if (r.data.error) console.log(r.data.error);
         this.serverProduct[index] = r.data.query;
       });

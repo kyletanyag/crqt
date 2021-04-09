@@ -1,6 +1,6 @@
 <template>
 <div>
-  <h1>Data Driven Results</h1>
+  <h1>Model Driven Results</h1>
   <div class="mx-5 row">
     <div class="container">
       <table>
@@ -41,26 +41,17 @@
 </template>
 <script>
 import http from '@/http-common.js';
-import { DataDrivenResultOptions } from '@/utilities/result-constants.js';
+import { ModelDrivenResultOptions } from '@/utilities/result-constants.js';
 export default {
   name: 'Data Driven Results',
 
   data() {
     return {
-      options: DataDrivenResultOptions,
+      options: ModelDrivenResultOptions,
       error: undefined,
       rawData: {
-        network_title: '',
-        input_date: '',
-        network_entropy: {
-          base: 0,
-          exploitability: 0,
-          impact: 0
-        },
         nodes: [],
         edges: [],
-        conditions_per_derived_node: [],
-        rules_per_derived_node: []
       }
     }
   },
@@ -71,41 +62,10 @@ export default {
 
   methods: {
     GetData() {
-      http.get('get_network_title').then((r) => {
-        this.rawData.network_title = r.data.network_title;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('get_input_date').then((r) => {
-        this.rawData.input_date = r.data.input_date;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('/data_driven/network_entropy').then((r) => {
-        this.rawData.network_entropy.base = r.data.network_entropy[0].base,
-        this.rawData.network_entropy.exploitability = r.data.network_entropy[1].exploitability,
-        this.rawData.network_entropy.impact = r.data.network_entropy[2].impact
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('data_driven/get_derived_scores').then((r) => {
+      http.get('/model_driven/get_network_topology').then((r) => {
         this.rawData.nodes = r.data.nodes;
         this.rawData.edges = r.data.edges;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('/data_driven/conditions_per_derived_node').then((r) => {
-        this.rawData.conditions_per_derived_node = r.data.conditions_per_derived_node;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('/data_driven/rules_per_derived_node').then((r) => {
-        this.rawData.rules_per_derived_node = r.data.rules_per_derived_node;
+        
       }).catch((e) => {
         this.error = e;
       });

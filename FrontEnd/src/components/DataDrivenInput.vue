@@ -132,21 +132,17 @@ export default {
           var hr = d.getHours() < 10 ? `0${d.getHours()}` : d.getHours();
 
           this.networkTitle = `Data-Driven_Network_${d.getFullYear()}${d.getMonth()+1}${d.getDate()}_${hr}${d.getMinutes()}`
-          console.log(this.networkTitle);
         }
 
         this.Upload(this.network, (event) => {
           this.progress = Math.round(100 * event.loaded / event.total);
         })
-        .then((response) => {
-          console.log(response.data.message);
-          // this.$router.push({name: 'Sandbox'});
+        .then(() => {
           this.$emit('inputApproach', 'data-driven')
         })
-        .catch((response) => {
+        .catch(() => {
           this.progress = 0;
           console.log('Could not upload data!');
-          console.log(response);
         })
       },
 
