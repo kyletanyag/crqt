@@ -280,7 +280,9 @@ export default {
                this.progress = Math.round(100 * event.loaded / event.total);
          })
       },
+      checkForm(){
 
+      },
       Upload(data, onUploadProgress) {
             return http.post("/upload", data , { onUploadProgress });
       }, 

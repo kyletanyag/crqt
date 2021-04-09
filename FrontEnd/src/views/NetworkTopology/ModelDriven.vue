@@ -134,13 +134,22 @@ export default {
       var ID = 1;
       this.nodes = []
       for (let layer = 1; layer <= 8; layer++) {
-        for (let i = 0; i < this.$refs[`${layer}`].rowData.length; i++) {
+        for (let i = 0; i < this.$refs[`${layer}`].rowData.length; i++) {          
           this.$refs[`${layer}`].rowData[i].id = ID++;
           this.nodes.push(this.$refs[`${layer}`].rowData[i]);
+          this.checkNodes(this.nodes[i])
         }
       }
     },
-
+    checkNodes(Layer){
+      console.log("Hello "+Layer)
+      for(let i=0; i<=Layer.length;i++){
+        
+        if(Layer[i]==""){
+          console.log("Blank Spaces")
+        }
+      }
+    },
     filterNodes(layerName) {
       return this.nodes.filter((n) => {
         return n.layer == layerName;
@@ -189,21 +198,22 @@ export default {
 
 <style>
    table, th, td {
-   border: 1px solid rgb(5, 5, 5);
+   border: 1px solid rgb(226, 226, 226);
    border-collapse: collapse;
    margin-left:7px;
    }
    th, td {
-   padding: 5px;
-   text-align: left;    
+   padding: 2px;
+    
    }
    h4{
-   padding-left: 10px;
-   padding-top: 30px;
+   padding-left: 5px;
+   padding-top: 10px;
    }
    p{
+   font-size: 17px;
+   font-weight: 550;
    padding-left: 10px;
-   padding-bottom:5px;
    }
 
 </style>
