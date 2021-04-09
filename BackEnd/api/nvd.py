@@ -25,7 +25,7 @@ def get_nvd_update_date():
         return jsonify({"date" : last_line[:19]})
 
 ################# DATA DRIVEN QUERY ######################
-# query with NVD database to get cve_ids
+# queries cvss score with CVE-Search
 def data_driven_cvss_query(cve_id):
     global httpHost
     
@@ -35,8 +35,26 @@ def data_driven_cvss_query(cve_id):
     r = requests.get(url)
     data = json.loads(r.text)
 
+    cvss = np.array([0.0,0.0,0.0])
+
+    # testing if cvss scores exist
+    try:
+        cvss[0] =  float(data["cvss"]) / 10.0
+    except:
+        cvss[0] = 1
+    
+    try:
+        cvss[0] =  float(data["exploitabilityScore"]) / 10.0
+    except:
+        cvss[0] = 1
+    
+    try:
+        cvss[0] =  float(data["impactScore"]) / 10.0
+    except:
+        cvss[0] = 1
+
     # base, exploitability, impact
-    return np.array([float(data["cvss"]) / 10.0, float(data["exploitabilityScore"]) / 10.0, float(data["impactScore"]) / 10.0]) 
+    return cvss
 
 
 ############# MODEL DRIVEN QUERY ###################
@@ -48,6 +66,7 @@ def score_to_weight(score):
     else:
         return 0.2
 
+# queries cvss score with CVE-Search
 def model_driven_cvss_query(cve_ids):
     global httpHost
     
@@ -62,7 +81,22 @@ def model_driven_cvss_query(cve_ids):
         r = requests.get(url)
         data = json.loads(r.text)
         
-        tmp[:] = [float(data["cvss"]) / 10.0, float(data["exploitabilityScore"]) / 10.0, float(data["impactScore"]) / 10.0]
+        # testing if cvss scores exist
+        try:
+            tmp[0] =  float(data["cvss"]) / 10.0
+        except:
+            tmp[0] = 1
+        
+        try:
+            tmp[1] =  float(data["exploitabilityScore"]) / 10.0
+        except:
+            tmp[1] = 1
+        
+        try:
+            tmp[2] =  float(data["impactScore"]) / 10.0
+        except:
+            tmp[2] = 1
+
         tmpW[:] = [score_to_weight(tmp[0]), score_to_weight(tmp[1]), score_to_weight(tmp[2])]
         scores += tmp * tmpW
         weights += tmpW
