@@ -51,24 +51,20 @@ https://www.youtube.com/watch?v=Urx8Kj00zsI&list=WL&index=32&t=133s
 # CVE-Search
 IMPORTANT: please follow the prior guide for flask first before running cve-search
 
-Prerequisites:
-Ubuntu Subsystem for Windows - https://docs.microsoft.com/en-us/windows/wsl/install-win10, https://adamtheautomator.com/windows-subsystem-for-linux/
-Window Terminal - https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab
+## Prerequisites
 Install Mongo Windows Service - https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#run-mongodb-from-cmd
+
 Python installed on windows with pip
 
-## Automatic Install
-In Ubuntu Terminal run:
-```
-$ chmod 700 ./cve_search_install.sh 
-$ ./cve_search_install.sh
-```
+### Installing Ubuntu 20.04 subsystem for Windows
+To install Ubuntu 20.04 subsystem for Windows go to Window's Control Panel -> Programs and select Turn Windows features on or off. From there, check mark Windows Subsystem for Linux and press ok. After this, it will install subsystem functionality and require restart. After restart, goto Microsoft store and install Ubuntu 20.04. Once installed, open Ubuntu 20.04 so to put username and passwd for terminal. Once completed, you can open Ubuntu 20.04 in Windows Terminal and cd to CRQT directory.  
 
-After install, proceed to run server section
+If problems occur during installation, please refer to https://docs.microsoft.com/en-us/windows/wsl/install-win10 or https://adamtheautomator.com/windows-subsystem-for-linux/ or https://www.youtube.com/watch?v=av0UQy6g2FA.
 
-## Manual Install
+## Install
 On Ubuntu Terminal open cve_search directory and run the following commands:
 ```
+$ cd /mnt/<path_to_crqt>/BackEnd
 $ sudo apt-get install python3
 $ sudo apt-get install python3-pip
 $ sudo apt-get install redis-server
@@ -92,7 +88,7 @@ $ sudo service redis-server start
 
 In Windows CMD:
 ```
-> cd <path>\cve_search
+> cd <path_to_cqqt>\BackEnd\dms\cve_search
 > python .\web\index.py # this will start flask server on port 2000
 ```
 

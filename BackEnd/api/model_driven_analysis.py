@@ -159,15 +159,11 @@ MAX_SCORE = 1000                    # max score used to init shortest_score
 shortest_score = MAX_SCORE          # score for shortest path
 shortest_path_counter = 0
 def Short_Path_Depth_First_Traversal(node, score):
-    global shortest_path_counter
-    
-    # accumulating score from this node
-    score += (1 - node.weights[0])          # 1 - CVSS/10
+    global shortest_score
 
     # if reached goal node node, stop
-    if GoalNode.index == node.index and shortest_path_counter >= score:
-        global shortest_score
-
+    if GoalNode.index == node.index and shortest_score >= score:
+        global shortest_path_counter
         # if the score calculated smaller than current smallest, set score to smallest and reset number of paths found with that score 
         if score < shortest_score:
             shortest_score = score
@@ -176,7 +172,10 @@ def Short_Path_Depth_First_Traversal(node, score):
         else:
             shortest_path_counter += 1
     
-    elif shortest_path_counter >= score and node.layer > GoalNode.layer:
+    elif shortest_score >= score and node.layer > GoalNode.layer:
+        # accumulating score from this node (edge weight)
+        score += (1 - node.weights[0])          # 1 - CVSS/10
+
         for n in node.in_edges:
             Short_Path_Depth_First_Traversal(n.source, deepcopy(score))
 
@@ -199,6 +198,7 @@ def shortest_paths_gen():
         for target in vulnerability_graph[(source.index+1):]:
             # no path exists if source is target or source is on same or greater layer than target
             if source.layer < target.layer:
+                shortest_path_counter = 0
                 shortest_score = MAX_SCORE
                 Short_Path_Depth_First_Traversal(target, 0.0)
 
@@ -481,7 +481,10 @@ def centrality():
         start_timer = time.time()
 
         centrality_metrics.append(betweenness_centrality())
-        centrality_metrics.append(degree_centrality())
+        degree = degree_centrality()
+        for i in range(3):
+            centrality_metrics.append(degree[i])
+
         centrality_metrics.append(closeness_centrality())
         centrality_metrics.append(pagerank_centrality())
         centrality_metrics.append(katz_centrality())
@@ -494,8 +497,8 @@ def centrality():
         "outdegree" : centrality_metrics[2],
         "degree"    : centrality_metrics[3],
         "closeness" : centrality_metrics[4],
-        "pagerank"  : centrality_metrics[5],
-        "katz"      : centrality_metrics[6],
+        "pagerank"  : [x for x in centrality_metrics[5]],
+        "katz"      : [x[0] for x in centrality_metrics[6]],
         "shortest_path_computation_time" : shortest_path_time,
         "centrality_computation_time" : centrality_time
     })
@@ -530,7 +533,7 @@ def TOPSIS():
 
         a.append(centrality_metrics[0][1:]) # appending betweeness centrality excluding remote
         a.append([])
-        for val in centrality_metrics[-1][1:]:
+        for val in centrality_metrics[6][1:]:
             a[-1].append(val[0])                   # appending katz centrality excluding remote
 
         # constructing weights array: this will follow Arif's work done in ref
@@ -544,7 +547,7 @@ def TOPSIS():
         n = t.calc()        # calculating topsis, n is array of criticalities of each node
 
         for i in range(len(n)):
-            topsis_metrics({"node_id" : i + 1, "topsis_score": n[i]})
+            topsis_metrics.append({"node_id" : i + 1, "topsis_score": n[i]})
 
         topsis_time = time.time() - start_timer
     

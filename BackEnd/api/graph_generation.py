@@ -96,7 +96,6 @@ def network_topology_data_driven_input():
         targetNode = int(edge["nextNode"]) - 1
         LAG[int(edge["currNode"]) - 1].next_node.append(LAG[targetNode]) 
         LAG[targetNode].calculations_remaining += 1         # increase number of nodes needed for calculation
-        LAG[targetNode].diNumConditions += 1                # counting the number of conditions
     
     parsing_time = time.time() - start_timer
 
