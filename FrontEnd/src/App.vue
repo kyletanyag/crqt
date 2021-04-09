@@ -93,7 +93,6 @@ export default {
     },
 
     getSimulationResultsRoute(){
-      console.log(`/simulation-results/${this.inputApproach}`);
       return `/simulation-results/${this.inputApproach}`;
     }
   }
