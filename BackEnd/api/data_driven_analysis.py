@@ -47,7 +47,7 @@ class DataDriven:
             self.calculations_remaining = 0         # number of nodes needed to calculate derived score
             self.isExecCode = False                 # whether node is execCode node (used for percentage execCode metric)
             self.tolNumConditions = 0               # total num of conditions to reach node
-            self.diNumConditions = 0                # direct number of conditions to reach node
+            self.tolNumRules = 0                    # number of rules to reach node
 
         def printFunc(self):
             print(self.derived_score, self.description, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
@@ -67,12 +67,13 @@ For any n events e1, e2, ..., en:
 '''
 
 # scores is derived scores tuple
-def Depth_First_Alg(scores, tolNumConditions, node): 
+def Depth_First_Alg(scores, tolNumConditions, tolNumRules, node): 
     # reduce number of nodes needed to make calculation
     node.calculations_remaining -= 1
     
     # adding number of conditions to reach node
     node.tolNumConditions += tolNumConditions
+    node.tolNumRules += tolNumRules
 
     # modifying score
     if node.node_logic == DataDriven.Node_Logic.OR:
@@ -89,9 +90,13 @@ def Depth_First_Alg(scores, tolNumConditions, node):
         if node.node_logic == DataDriven.Node_Logic.OR:
             node.derived_score = 1-node.derived_score             # probability formula 2
 
+        # if rule node, increment number of rules
+        if node.node_type == DataDriven.Node_Type.DERIVATION:
+            node.tolNumRules += 1
+
         # next node(s)
         for next_node in node.next_node:
-            Depth_First_Alg(node.derived_score, node.tolNumConditions, next_node)
+            Depth_First_Alg(node.derived_score, node.tolNumConditions, node.tolNumRules, next_node)
 
 def DerivedScore(leaf_queue):
     global LAG
@@ -104,7 +109,8 @@ def DerivedScore(leaf_queue):
     while len(leaf_queue) > 0:
         node = leaf_queue.pop()
         for next_node in node.next_node:
-            Depth_First_Alg(node.derived_score, 1, next_node)
+            # derived score, #conditions, #rules, next_nodes[]
+            Depth_First_Alg(node.derived_score, 1, 0, next_node)
     
     # calculating computation time
     derived_score_computation_time = time.time() - start_time
@@ -249,7 +255,7 @@ def rules_per_derived_nodes():
         if node.node_type == DataDriven.Node_Type.DERIVED:
             rules_derived.append({
                 "id" : node,
-                "num_conditions" : node.diNumConditions # direct number of rules
+                "num_conditions" : node.tolNumRules  # number of rules
             })
     
     return jsonify({"rules_per_derived_node" : rules_derived})
@@ -264,7 +270,7 @@ def rules_per_execCode_node():
         if node.isExecCode:
             rules_derived.append({
                 "id" : node,
-                "num_conditions" : node.diNumConditions   # direct number of rules
+                "num_conditions" : node.tolNumRules   # num of rules
             })
     
     return jsonify({"rules_per_execCode_node" : rules_derived})
