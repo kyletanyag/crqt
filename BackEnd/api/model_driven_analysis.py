@@ -402,7 +402,7 @@ def closeness_centrality():
 
         if dist > 0.0:
             closeness.append(1.0/dist)
-        else: # unconnected node
+        else: # unconnected node, no path distance
             closeness.append(math.inf)
 
     return closeness

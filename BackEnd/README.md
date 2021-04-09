@@ -62,7 +62,7 @@ To install Ubuntu 20.04 subsystem for Windows go to Window's Control Panel -> Pr
 If problems occur during installation, please refer to https://docs.microsoft.com/en-us/windows/wsl/install-win10 or https://adamtheautomator.com/windows-subsystem-for-linux/ or https://www.youtube.com/watch?v=av0UQy6g2FA.
 
 ## Install
-On Ubuntu Terminal open cve_search directory and run the following commands:
+On **Ubuntu terminal** open cve_search directory and run the following commands:
 ```
 $ cd /mnt/<path_to_crqt>/BackEnd
 $ sudo apt-get install python3
@@ -70,10 +70,6 @@ $ sudo apt-get install python3-pip
 $ sudo apt-get install redis-server
 $ pip3 install flask flask-pymongo
 $ sudo service redis-server start
-```
-
-In same terminal download cve data: 
-```
 $ cd ./dms/cve_search/
 $ python3 ./sbin/db_mgmt_cpe_dictionary.py -p
 $ python3 ./sbin/db_mgmt_json.py -p
@@ -81,18 +77,18 @@ $ python3 ./sbin/db_updater.py -c # This will take >45minutes on a decent machin
 ```
 
 ## To run server:
-In Ubuntu Terminal:
+In **Ubuntu terminal**:
 ```
 $ sudo service redis-server start
 ```
 
-In Windows CMD:
+In **Windows CMD**:
 ```
 > cd <path_to_cqqt>\BackEnd\dms\cve_search
 > python .\web\index.py # this will start flask server on port 2000
 ```
 
-In ubuntu terminal, test web server:
+In **Ubuntu terminal**, test web server:
 ```
 $ curl http://127.0.0.1:2000/api/browse/zyxel
 $ curl http://127.0.0.1:2000/api/cve/CVE-2010-3333
@@ -100,13 +96,13 @@ $ curl http://127.0.0.1:2000/api/search/zyxel/p-660hw
 ```
 
 ## Updating Databases
-For repopulating db, in an Ubuntu terminal:
+For repopulating db, in an **Ubuntu terminal**:
 ```
 $ sudo service redis-server start
 $ python3 ./sbin/db_updater.py -v -f
 ```
 
-For updating without repopulating db, in an Ubuntu terminal:
+For updating without repopulating db, in an Ubuntu terminal **Ubuntu terminal**:
 ```
 $ sudo service redis-server start
 $ python3 ./sbin/db_updater.py -v
