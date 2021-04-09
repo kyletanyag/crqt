@@ -61,17 +61,7 @@ To install Ubuntu 20.04 subsystem for Windows go to Window's Control Panel -> Pr
 
 If problems occur during installation, please refer to https://docs.microsoft.com/en-us/windows/wsl/install-win10 or https://adamtheautomator.com/windows-subsystem-for-linux/ or https://www.youtube.com/watch?v=av0UQy6g2FA.
 
-## Automatic Install
-In Ubuntu Terminal run:
-```
-$ cd /mnt/<path_to_crqt>/BackEnd
-$ chmod 700 ./cve_search_install.sh 
-$ ./cve_search_install.sh
-```
-
-After install, proceed to run server section
-
-## Manual Install
+## Install
 On Ubuntu Terminal open cve_search directory and run the following commands:
 ```
 $ cd /mnt/<path_to_crqt>/BackEnd
