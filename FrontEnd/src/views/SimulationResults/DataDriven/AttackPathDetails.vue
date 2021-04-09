@@ -33,8 +33,8 @@
               <tr v-for="(node, index) in sortedData" :key="index">
                 <td style="width: 15%">{{ node.id }}</td>
                 <td style="width: 35%">{{ node.description }}</td>
-                <td style="width: 20%">{{ node.num_conditions }}</td>
-                <td style="width: 20%">{{ node.num_rules }}</td>
+                <td style="width: 30%">{{ node.num_conditions }}</td>
+                <td style="width: 15%">{{ node.num_rules }}</td>
               </tr>
             </tbody>
           </div>
