@@ -171,6 +171,20 @@ Impact Score ${d.impact_score}\
   }
 }
 
+const layers =
+[
+  "remote_attack",
+  'corp_fw_1',
+  'corp_dmz',
+  'corp_fw_2',
+  'corp_lan',
+  'cs_fw_1',
+  'cs_dmz',
+  'cs_fw_2',
+  'cs_lan'
+]
+
+
 function generateModelDrivenNetworkDiagram(data) {
   const svg = d3.select("#network"),
   width = +svg.attr("width"),
@@ -195,6 +209,13 @@ function generateModelDrivenNetworkDiagram(data) {
     render(null, data);
   
   function render (error, graph) {
+
+    var layerNodes = Array(layers.length);
+
+    for (let i = 0; i < layers.length; i++) {
+      layerNodes[i] = graph.nodes.filter((n) => { return n.layer === layers[i]});
+    }
+
     const simulation = d3.forceSimulation()
       .force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
@@ -202,19 +223,6 @@ function generateModelDrivenNetworkDiagram(data) {
 
 
     if (error) throw error;
-
-    console.log(graph);
-
-    const link = svg.append("g")
-        .attr("class", "links")
-        .attr("stroke", "#999")
-      .selectAll("line")
-      .data(graph.edges)
-      .enter().append("line")
-        .attr("stroke-width", function(d) { return Math.sqrt(d.value); })
-        .attr('color', 'black')
-        .attr('marker-end', 'url(#arrowhead)');
-
 
     const nodeWrapper = svg.append('g')
       .attr('class', 'nodes')
@@ -226,11 +234,25 @@ function generateModelDrivenNetworkDiagram(data) {
     const node = nodeWrapper
       .append("circle")
       .attr("r", 5)
-      .attr("fill", function(d) { return color(d.node_type); })
+      .attr("fill", function(d) { return color(d.layer); })
       .attr("id", function(d) { return `node_${d.id}`; })
-      .attr("cx", function(d) { return d.id; })
-      .attr("cy", function(d) { return d.id + 100; })
+      .attr("cx", function(d) { return getX(d); })
+      .attr("cy", function(d) { return getY(d); });
     
+      const link = svg.append("g")
+        .attr("class", "links")
+        .attr("stroke", "#999")
+        .selectAll("line")
+        .data(graph.edges)
+        .enter().append("line")
+          .attr("stroke-width", function() { return 0.75; })
+          .attr('color', 'black')
+          .attr('marker-end', 'url(#arrowhead)')
+          .attr("x1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5; })
+          .attr("y1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d); })
+          .attr("x2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5; })
+          .attr("y2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d); });
+
     const tooltip = d3.select('#networkContainer')
       .append('div')
       .classed('tooltip', true)
@@ -243,15 +265,8 @@ function generateModelDrivenNetworkDiagram(data) {
           .duration(300)
           .style("opacity", 1) // show the tooltip
           .style('background-color', 'rgba(211, 211, 211, 0.8)')
-        tooltip.html(`<div style="width: 300px">\
-ID: ${d.id} <br>\
-Description: ${d.description} <br>\
-Type: ${d.node_type} <br>\
-Base Score: ${d.base_score} <br>\
-Exploitability Score: ${d.exploitability_score} <br>\
-Impact Score ${d.impact_score}\
-</div>`)
-          .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 350) + "px")
+        tooltip.html(getHTML(d))
+          .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 150) + "px")
           .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 100) + "px");
       })
       .on("mouseleave", function() {
@@ -264,22 +279,35 @@ Impact Score ${d.impact_score}\
       })
 
     simulation
-        .nodes(graph.nodes);
-        // .on("tick", () => {
-        //   link
-        //       .attr("x1", function(d) { return d.source.x; })
-        //       .attr("y1", function(d) { return d.source.y; })
-        //       .attr("x2", function(d) { return d.target.x; })
-        //       .attr("y2", function(d) { return d.target.y; });
-
-        //   node
-        //       .attr("cx", function(d) { return d.x; })
-        //       .attr("cy", function(d) { return d.y; });
-        // });
+        .nodes(graph.nodes)
 
     simulation.force("link")
         .links(graph.edges);
+    
 
+    function getHTML(d) {
+      return `<div style="width: 200px">\
+        ID: ${d.id} <br>\
+        Vendor: ${d.vendor} <br>\
+        Product: ${d.product} <br>\
+        </div>`;
+    }
+
+    function getX(d) {
+      return width - (10 - layers.findIndex((e) => { return e === d.layer; })) * width/10 + 5;
+    }
+
+    function getY(d) {
+      return (layerNodes[layers.findIndex((e) => { return  e === d.layer; })].findIndex((e) => { return e.id === d.id; }) + 1) * height / (layerNodes[layers.findIndex((e) => { return e === d.layer; })].length + 1);
+    }
+
+    function getY1(d) {
+      return Number(d3.select(`#node_${d.source}`).attr("cy")) > Number(d3.select(`#node_${d.target}`).attr("cy")) ? -2.5 : 2.5;
+    }
+
+    function getY2(d) {
+      return Number(d3.select(`#node_${d.source}`).attr("cy")) < Number(d3.select(`#node_${d.target}`).attr("cy")) ? -2.5 : 2.5;
+    }
   }
 
 }
