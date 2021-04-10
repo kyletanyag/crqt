@@ -102,9 +102,9 @@
                   @click="toggleHighlightPath(p.nodes)"
                   @mouseleave="unhighlightPath(p.nodes)"
                 >
-                  <td style="width: 25%">{{ p.path }}</td>
-                  <td style="width: 50%">{{ p.nodes }}</td>
-                  <td style="width: 25%">{{ idx }}</td>
+                  <td style="width: 40%">{{ p.path }}</td>
+                  <td style="width: 33%">{{ p.nodes }}</td>
+                  <td style="width: 33%">{{ idx }}</td>
                 </tr> 
               </tbody>
             </div>
@@ -116,9 +116,9 @@
             <div :style="`overflow-y: auto; height: ${height/4}px;`">
               <thead>
                 <tr>
-                  <th scope="col" style="width: 25%">Path</th>
-                  <th scope="col" style="width: 50%">Node List</th>
-                  <th scope="col" style="width: 30%">Ranking</th>
+                  <th scope="col" style="width: 40%">Path</th>
+                  <th scope="col" style="width: 33%">Node List</th>
+                  <th scope="col" style="width: 33%">Ranking</th>
                 </tr>
               </thead> 
               <tbody>
@@ -126,9 +126,9 @@
                   @mouseover="highlightPath(p.nodes)"
                   @mouseleave="unhighlightPath(p.nodes)"
                 >
-                  <td style="width: 25%">{{ p.path }}</td>
-                  <td style="width: 50%">{{ p.nodes }}</td>
-                  <td style="width: 25%">{{ idx }}</td>
+                  <td style="width: 40%">{{ p.path }}</td>
+                  <td style="width: 33%">{{ p.nodes }}</td>
+                  <td style="width: 33%">{{ idx }}</td>
                 </tr> 
               </tbody>
             </div>
