@@ -34,10 +34,18 @@
                                          to="/network-topology/model-driven">Model-Driven</router-link>                                         
                           </div>
                         </li>
-                        <li class="nav-item">
-                            <router-link class="nav-link"
-                                         active-class="active"
-                                         :to="getSimulationResultsRoute()">Simulation Results</router-link>
+                        <li class="nav-item dropdown" >
+                          <a class="nav-link dropdown-toggle" data-toggle="dropdown">Simulation Results</a>
+                          <div class="dropdown-menu" >
+                            <router-link class="nav-link" style="color: black;"
+                                         active-class="bg-primary text-white"
+                                         :class="{ disabled: !dataDriven }"
+                                         to="/simulation-results/data-driven">Data-Driven</router-link>
+                            <router-link class="nav-link" style="color: black;"
+                                         active-class="bg-primary text-white"
+                                         :class="{ disabled: !modelDriven }"
+                                         to="/simulation-results/model-driven">Model-Driven</router-link>                                         
+                          </div>
                         </li>
                         <li class="nav-item">
                             <router-link class="nav-link"
@@ -53,19 +61,21 @@
         </header>
     </div>
     <div>
-      <router-view @authenticated="setAuthenticated" @inputApproach="setInputApproach" />
+      <router-view @authenticated="setAuthenticated" @uploadedData="checkforResults" />
     </div>
 </div>
 </template>
 
 <script>
+import http from '@/http-common.js';
 export default {
   name: 'App',
 
   data() {
     return {
       authenticated: true, // change to true when developing
-      inputApproach: undefined,
+      dataDriven: false,
+      modelDriven: false,
     }
   },
 
@@ -75,7 +85,8 @@ export default {
     }
   },
   
-  created() {    
+  created() { 
+    this.checkforResults();
   },
 
   methods: {
@@ -92,8 +103,21 @@ export default {
       this.authenticated = false;
     },
 
-    getSimulationResultsRoute(){
-      return `/simulation-results/${this.inputApproach}`;
+    checkforResults(){
+      http.get('data_driven/get_derived_scores').then((r) => {
+        
+        r.data.nodes.length > 0 ? this.dataDriven = true : this.dataDriven = false;
+      }).catch((e) => {
+        console.log(e);
+        this.dataDriven = false;
+      });
+
+      http.get('/model_driven/get_network_topology').then((r) => {
+        r.data.nodes.length > 0 ? this.modelDriven = true: this.modelDriven = false;
+      }).catch((e) => {
+        console.log(e);
+        this.modelDriven = false;
+      });
     }
   }
 }
@@ -122,5 +146,10 @@ export default {
 
 .dropdown-menu{
   color: #0d0852;
+}
+
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
 }
 </style>

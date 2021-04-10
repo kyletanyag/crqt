@@ -192,6 +192,20 @@ function generateModelDrivenNetworkDiagram(data) {
 
   const color = d3.scaleOrdinal(d3.schemeCategory10);
 
+  svg.selectAll("mylabels")
+  .data(layers)
+  .enter()
+  .append("text")
+    .attr("x", 20)
+    .attr("y", function(d){ 
+      var layerVal = layers.findIndex((e) => { return e === d; });
+      return width - (width - (10 - layerVal) * width/10 + 15*(layerVal)) - 20;
+    })
+    .style("fill", function(d){ return color(d)})
+    .text(function(d){ return d})
+    .attr("text-anchor", "left")
+    .style("alignment-baseline", "middle")
+
   svg.append('defs').append('marker')
         .attrs({'id':'arrowhead',
             'viewBox':'-0 -5 10 10',
@@ -234,6 +248,7 @@ function generateModelDrivenNetworkDiagram(data) {
     const node = nodeWrapper
       .append("circle")
       .attr("r", 10)
+      .attr("stroke", "white")
       .attr("fill", function(d) { return color(d.layer); })
       .attr("id", function(d) { return `node_${d.id}`; })
       .attr("cx", function(d) { return getX(d); })
@@ -244,14 +259,16 @@ function generateModelDrivenNetworkDiagram(data) {
         .attr("stroke", "#999")
         .selectAll("line")
         .data(graph.edges)
-        .enter().append("line")
+        .enter().append("path")
           .attr("stroke-width", function() { return 0.75; })
           .attr('color', 'black')
+          .attr('fill', 'none')
           .attr('marker-end', 'url(#arrowhead)')
           .attr("x1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5; })
           .attr("y1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d); })
           .attr("x2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5; })
-          .attr("y2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d); });
+          .attr("y2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d); })
+          .attr("d", function(d) { return curveLink(Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5,Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d),Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5, Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d) )})
 
     const tooltip = d3.select('#networkContainer')
       .append('div')
@@ -267,7 +284,7 @@ function generateModelDrivenNetworkDiagram(data) {
           .style('background-color', 'rgba(211, 211, 211, 0.8)')
         tooltip.html(getHTML(d))
           .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 150) + "px")
-          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 100) + "px");
+          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 200) + "px");
       })
       .on("mouseleave", function() {
         tooltip.transition()
@@ -279,7 +296,7 @@ function generateModelDrivenNetworkDiagram(data) {
       })
 
     simulation
-        .nodes(graph.nodes)
+        .nodes(graph.nodes);
 
     simulation.force("link")
         .links(graph.edges);
@@ -294,11 +311,13 @@ function generateModelDrivenNetworkDiagram(data) {
     }
 
     function getX(d) {
-      return height - (layerNodes[layers.findIndex((e) => { return  e === d.layer; })].findIndex((e) => { return e.id === d.id; }) + 1) * height / (layerNodes[layers.findIndex((e) => { return e === d.layer; })].length + 1);
+      var layerVal = layers.findIndex((e) => { return  e === d.layer; });
+      return height - (layerNodes[layerVal].findIndex((e) => { return e.id === d.id; }) + 1) * height / (layerNodes[layerVal].length + 1) + 50;
     }
 
     function getY(d) {
-      return  width -(width - (10 - layers.findIndex((e) => { return e === d.layer; })) * width/10 + 20);
+      var layerVal = layers.findIndex((e) => { return e === d.layer; });
+      return  width - (width - (10 - layerVal) * width/10 + 15*(layerVal)) - 20;
     }
 
     function getY1(d) {
@@ -307,6 +326,31 @@ function generateModelDrivenNetworkDiagram(data) {
 
     function getY2(d) {
       return Number(d3.select(`#node_${d.source}`).attr("cy")) < Number(d3.select(`#node_${d.target}`).attr("cy")) ? -2.5 : 2.5;
+    }
+
+    function ticked() {
+      link.attr("d", positionLink);
+      node.attr("transform", positionNode);
+  }
+
+  // links are drawn as curved paths between nodes
+    function curveLink(x1, y1, x2, y2) {
+        var offset = 30;
+
+        var midpoint_x = (x1 + x2) / 2;
+        var midpoint_y = (y1 + y2) / 2;
+
+        var dx = (x2- x1);
+        var dy = (y2 - y1);
+
+        var normalise = Math.sqrt((dx * dx) + (dy * dy));
+
+        var offSetX = midpoint_x + offset*(dy/normalise);
+        var offSetY = midpoint_y - offset*(dx/normalise);
+
+        return "M" + x1+ "," + y1 +
+            "S" + offSetX + "," + offSetY +
+            " " + x2 + "," + y2;
     }
   }
 

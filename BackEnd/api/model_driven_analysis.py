@@ -267,7 +267,7 @@ def origin_to_node_metrics(node_index):
         for edge in Solution_Path[ex[0]]:
             path.append(edge.target.index)
         
-        top_exploitable.append({ex[0]+1 : path}) 
+        top_exploitable.append({"path" :ex[0]+1, "nodes": path}) 
     
     # impactful paths
     top_impactful = []
@@ -276,7 +276,7 @@ def origin_to_node_metrics(node_index):
         for edge in Solution_Path[im[0]]:
             path.append(edge.target.index)
         
-        top_impactful.append({im[0] + 1 : path})
+        top_impactful.append({"path" :im[0]+1, "nodes": path})
     
     # calculating processing time
     processing_time = time.time() - start_timer

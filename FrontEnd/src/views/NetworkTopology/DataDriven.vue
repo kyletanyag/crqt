@@ -7,7 +7,7 @@
     You should have prepared: two CSV files - one containing the vertices and the other containing
     the arcs for your network topology.
   </p>
-  <data-driven-input @inputApproach="emitEventUp"></data-driven-input>
+  <data-driven-input @uploadedData="emitEventUp"></data-driven-input>
 </div>
 </template>
 
@@ -22,8 +22,8 @@ export default {
   },
 
   methods: {
-    emitEventUp(val) {
-      this.$emit('input-approach', val);
+    emitEventUp() {
+      this.$emit('uploadedData');
     }
   },
 

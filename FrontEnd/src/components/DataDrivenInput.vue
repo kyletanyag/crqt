@@ -59,7 +59,9 @@
       </div>
     </div>
     <div v-if="preview" class="card mx-2 mb-2" :style="GetCardSize()">
-      <div class="card-header font-weight-bold">JSON Object Preview</div>
+      <div class="card-header font-weight-bold">
+        JSON Object Preview
+      </div>
       <div class="card-body" style="overflow-y: auto;">
         <div>
           {{ network }}
@@ -138,7 +140,7 @@ export default {
           this.progress = Math.round(100 * event.loaded / event.total);
         })
         .then(() => {
-          this.$emit('inputApproach', 'data-driven')
+          this.$emit('uploadedData')
         })
         .catch(() => {
           this.progress = 0;
