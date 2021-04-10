@@ -2,7 +2,7 @@
 <div>
   <result-header 
     title="Recommendations"
-    prevPage="Data Driven Results - Specific Node Information"
+    prevPage="Data Driven Results - Derived Node Exploitation"
     defaultPage="Data Driven Results"
   />
   <div v-if="error" class="alert alert-danger">
@@ -17,11 +17,11 @@
     </div>
   </div>
   <div class=" mx-5 mb-2 row">
-    <div class="col text-left">
-      <div class="pb-4"></div>
+    <div class="col text-left pt-4">
+      <h2>Derived Fact Node Recommendations</h2>
       <p>
         To the right is a table containing a sorted list of all the derived fact nodes from your network
-        ranked from highest derived score probability to lowest derived score probability.
+        ranked from highest derived score to lowest derived score.
       </p>
       <div>
         Our top <strong>{{ Math.min(numRecommend, rankedDerivedFactNodes.length) }}</strong> recommendations: 
@@ -33,13 +33,13 @@
       </div>
     </div>
     <div class="col">
-      <network-data-table :data="rankedDerivedFactNodes" title="Derived Fact Nodes Data Table" />
+      <network-data-table :height="windowHeight * .3" :data="rankedDerivedFactNodes" title="Derived Fact Nodes Data Table" />
     </div>
   </div>
   <hr>
   <div class="mx-5 mb-2 row">
-    <div class="col text-left">
-      <div class="pb-4"></div>
+    <div class="col text-left pt-4">
+      <h2>Vulnerability Recommendations</h2>
       <p>
         To the right is a table containing a sorted list of all the listed vulnerabilities from your network
         ranked from highest derived score probability to lowest derived score probability.
@@ -48,7 +48,7 @@
         Our top <strong>{{ Math.min(numRecommend, rankedVulExistsNodes.length) }}</strong> recommendations: 
         <ol v-if="!loading">
           <li v-for="(node, index) in rankedVulExistsNodes.slice(0,numRecommend)" :key="index">
-            Close vulnerabilty <strong>{{ getCVEID(node.description)}}</strong>
+            Close vulnerabilty <strong><a :href="`https://cve.circl.lu/cve/${getCVEID(node.description)}`" target="_blank">{{ getCVEID(node.description)}}</a></strong>
             at the host: <strong>{{getHost(node.description)}}</strong>
             found at node <strong>{{node.id}}</strong>. 
             <br>The severity level of this node is marked as <strong>{{getSeverityLevel(node.base_score)}}</strong>.
@@ -57,7 +57,7 @@
       </div>
     </div>
     <div class="col">
-      <network-data-table :data="rankedVulExistsNodes" title="Vulnerability Nodes Data Table" />
+      <network-data-table :height="windowHeight * .3"  :data="rankedVulExistsNodes" title="Vulnerability Nodes Data Table" />
     </div>
   </div>
 </div>
@@ -82,6 +82,7 @@ export default {
       derivedFactNodes: [],
       vulExistsNodes: [],
       loading: true,
+      windowHeight: window.screen.height
     }
   },
 

@@ -8,30 +8,29 @@
     <div class="col-7">
       <h3>Network Data</h3>
       <table v-if="network" class="table table-hover" id="network-table">
-        <thead style="display: block;">
-          <tr>
-            <th @click="sort('id')" scope="col" style="width: 7.5%">ID<i :class="sortDirection('id')"></i></th>
-            <th @click="sort('description')" scope="col" style="width: 30%">Description<i :class="sortDirection('description')"></i></th>
-            <th @click="sort('node_type')" scope="col" style="width: 16.6%">Node Type<i :class="sortDirection('node_type')"></i></th>
-            <th @click="sort('base_score')" scope="col" style="width: 16.6%">Base Score<i :class="sortDirection('base_score')"></i></th>
-            <th @click="sort('exploitability_score')" scope="col" style="width: 16.6%">Exploitability Score<i :class="sortDirection('exploitability_score')"></i></th>
-            <th @click="sort('impact_score')" scope="col" style="width: 16.6%">Impact Score<i :class="sortDirection('impact_score')"></i></th>
-            <th scope="col"></th>
-          </tr>
-        </thead> 
         <div :style="`overflow-y: auto; height: ${height}px;`">
-          <tbody v-for="node in sortedNodes" :key="node.id" 
-            @mouseover="highlight(node.id)"
-            @mouseleave="unhighlight(node.id)">
+          <thead>
             <tr>
-              <td style="width: 5%; word-wrap: anywhere;">{{ node.id }}</td>
-              <td style="width: 30%; word-wrap: anywhere;">{{ node.description }}</td>
-              <td style="width: 16.6%; word-wrap: anywhere;">{{ node.node_type}}</td>
-              <td style="width: 16.6%; word-wrap: anywhere;">{{ node.base_score }}</td>
-              <td style="width: 16.6%; word-wrap: anywhere;">{{ node.exploitability_score }}</td>
-              <td style="width: 16.6%; word-wrap: anywhere;">{{ node.impact_score }}</td>
-            </tr> 
-          </tbody>
+              <th @click="sort('id')" scope="col" style="width: 7.5%">ID<i :class="sortDirection('id')"></i></th>
+              <th @click="sort('description')" scope="col" style="width: 30%">Description<i :class="sortDirection('description')"></i></th>
+              <th @click="sort('node_type')" scope="col" style="width: 16.6%">Node Type<i :class="sortDirection('node_type')"></i></th>
+              <th @click="sort('base_score')" scope="col" style="width: 16.6%">Base Score<i :class="sortDirection('base_score')"></i></th>
+              <th @click="sort('exploitability_score')" scope="col" style="width: 16.6%">Exploitability Score<i :class="sortDirection('exploitability_score')"></i></th>
+              <th @click="sort('impact_score')" scope="col" style="width: 16.6%">Impact Score<i :class="sortDirection('impact_score')"></i></th>
+            </tr>
+          </thead> 
+            <tbody v-for="node in sortedNodes" :key="node.id" 
+              @mouseover="highlight(node.id)"
+              @mouseleave="unhighlight(node.id)">
+              <tr>
+                <td style="width: 5%; word-wrap: anywhere;">{{ node.id }}</td>
+                <td style="width: 30%; word-wrap: anywhere;">{{ node.description }}</td>
+                <td style="width: 16.6%; word-wrap: anywhere;">{{ node.node_type}}</td>
+                <td style="width: 16.6%; word-wrap: anywhere;">{{ node.base_score }}</td>
+                <td style="width: 16.6%; word-wrap: anywhere;">{{ node.exploitability_score }}</td>
+                <td style="width: 16.6%; word-wrap: anywhere;">{{ node.impact_score }}</td>
+              </tr> 
+            </tbody>
         </div>
       </table>
     </div>
@@ -121,4 +120,11 @@ export default {
 </script>
 
 <style>
+table thead tr th {
+  text-align: center;
+  position: sticky;
+  top: 0px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+ }
 </style>

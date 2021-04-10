@@ -41,7 +41,19 @@ export default {
     prevPage: String,
     nextPage: String,
     defaultPage: String,
-  }
+  },
+
+  mounted() {
+    const btns = document.getElementsByTagName('button');
+      btns.forEach((b) => {
+        b.disabled = true;
+      });
+    setTimeout(() => {
+        btns.forEach((b) => {
+          b.disabled = false;
+        });
+      }, 1500)
+  },
 }
 </script>
 <style>

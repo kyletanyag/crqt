@@ -5,6 +5,7 @@
     nextPage="Data Driven Results - Network Visualization"
     prevPage="Data Driven Results - Summary"
     defaultPage="Data Driven Results"
+    ref="rh"
   />
   <div v-if="error" class="alert alert-danger">
     {{ error }}
@@ -12,6 +13,7 @@
   <div class="mx-5 row">
     <!-- Overall network compromise/exploitation -->
     <div class="col text-left">
+      <h2>Network Entropy</h2>
       <p>
         The graph to the right shows a histogram of all the computed probabilities of every node in the network by score.
       </p>
@@ -21,6 +23,7 @@
         <br>Impact Score: <strong>{{networkEntropy.impact }}</strong>
         <br>Exploitability Score: <strong>{{networkEntropy.exploitability }}</strong>
       </p>
+      <h2>Network Severity Statistics</h2>
       <p>
         Your total network severity breakdown:
         <br><strong>{{ numHighSeverity }}</strong> nodes are marked as <strong>high</strong> severity. (Computed Score &#8805; 0.7)
@@ -34,7 +37,7 @@
       </p>
     </div>
     <div class="col" v-if="!loadingDerivedScores">
-      <Histogram
+      <Histogram 
         :data="histogramScoreData" 
         :numBins="numBins" 
         :name="histogramScoreName" 
@@ -42,24 +45,33 @@
         style="width: 60%"
         class="container"
       />
-      <div class="btn-group btn-group-toggle pt-2 px-2">
-        <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Base'}">
-          <input type="radio" v-model="histogramScoreType" value="Base" autocomplete="off"> Base
-        </label>
-        <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Impact'}">
-          <input type="radio" v-model="histogramScoreType" value="Impact"  autocomplete="off"> Impact
-        </label>
-        <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Exploitability' }">
-          <input type="radio" v-model="histogramScoreType" value="Exploitability" autocomplete="off"> Exploitability
-        </label>
+      <div class="d-flex justify-content-center">
+        <h5 class="pt-3">Toggle Computed Score:</h5>
+        <div class="btn-group btn-group-toggle pt-2 px-2">
+          <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Base'}">
+            <input class="pause" type="radio" v-model="histogramScoreType" value="Base" autocomplete="off"> Base
+          </label>
+          <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Impact'}">
+            <input class="pause" type="radio" v-model="histogramScoreType" value="Impact"  autocomplete="off"> Impact
+          </label>
+          <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Exploitability' }">
+            <input class="pause" type="radio" v-model="histogramScoreType" value="Exploitability" autocomplete="off"> Exploitability
+          </label>
+        </div>
       </div>
-      <div class="btn-group btn-group-toggle pt-2 px-2"> 
-        <label class="btn btn-secondary" :class="{active: numBins === 5}">
-          <input type="radio" v-model="numBins" :value="5" autocomplete="off"> 5
-        </label>
-        <label class="btn btn-secondary" :class="{active: numBins === 10}">
-          <input type="radio" v-model="numBins" :value="10"  autocomplete="off"> 10
-        </label>
+      <div class="d-flex justify-content-center">
+        <h5 class="pt-3">Toggle Bin Size:</h5>
+        <div class="btn-group btn-group-toggle pt-2 px-2"> 
+          <label class="btn btn-secondary" :class="{active: numBins === 5}">
+            <input class="pause" type="radio" v-model="numBins" :value="5" autocomplete="off"> 5
+          </label>
+          <label class="btn btn-secondary" :class="{active: numBins === 10}">
+            <input class="pause" type="radio" v-model="numBins" :value="10"  autocomplete="off"> 10
+          </label>
+          <label class="btn btn-secondary" :class="{active: numBins === 20}">
+            <input class="pause" type="radio" v-model="numBins" :value="20"  autocomplete="off"> 20
+          </label>
+        </div>
       </div>
     </div>
   </div>
@@ -144,6 +156,18 @@ export default {
 
   watch: {
     histogramScoreType(type) {
+      // Histogram must be fully rendered before switching datasets.
+      // Disables radio buttons for 1200 ms to allow for full render.
+      const btns = document.getElementsByClassName('pause');
+      btns.forEach((b) => {
+        b.disabled = true;
+      });
+      setTimeout(() => {
+        btns.forEach((b) => {
+          b.disabled = false;
+        });
+      }, 1500)
+
       if (type === 'Base')
         this.histogramScoreData = this.baseScores;
       else if (type === 'Impact')
@@ -151,6 +175,18 @@ export default {
       else 
         this.histogramScoreData = this.exploitabilityScores;
     },
+
+    numBins() {
+      const btns = document.getElementsByClassName('pause');
+      btns.forEach((b) => {
+        b.disabled = true;
+      });
+      setTimeout(() => {
+        btns.forEach((b) => {
+          b.disabled = false;
+        });
+      }, 1500)
+    }
   }
 }
 </script>

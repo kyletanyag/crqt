@@ -21,11 +21,6 @@ const DataDrivenResultOptions =
       routeName: 'Data Driven Results - Derived Node Exploitation'
     },
     {
-      title: 'Attack Path Details',
-      description: 'Attack Path Details ... ',
-      routeName: 'Data Driven Results - Attack Path Details'
-    },
-    {
       title: 'Recommendations',
       description: 'Recommendations ... ',
       routeName: 'Data Driven Results - Recommendations'

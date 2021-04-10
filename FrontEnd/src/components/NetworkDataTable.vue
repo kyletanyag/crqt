@@ -1,26 +1,26 @@
 <template>
 <div>
   <h4>{{ title }}</h4>
-  <table v-if="data" class="table table-hover">
-    <thead style="display: block;">
-      <tr>
-        <th @click="sort('id')" scope="col" style="width: 7.5%">ID<i :class="sortDirection('id')"></i></th>
-        <th @click="sort('description')" scope="col" style="width: 35%">Description<i :class="sortDirection('description')"></i></th>
-        <th @click="sort('base_score')" scope="col" style="width: 20%">Base Score<i :class="sortDirection('base_score')"></i></th>
-        <th @click="sort('ranking')" scope="col" style="width: 10%">Ranking<i :class="sortDirection('ranking')"></i></th>
-      </tr>
-    </thead> 
-    <div :style="`overflow-y: auto; height: ${height}px;`">
-      <tbody v-for="(node, index) in sortedData" :key="index">
+  <div :style="`overflow-y: auto; height: ${height}px;`">
+    <table v-if="data" class="table table-hover">
+      <thead>
         <tr>
-          <td style="width: 7.5%">{{ node.id }}</td>
-          <td style="width: 35%">{{ node.description }}</td>
-          <td style="width: 20%">{{ node.base_score }}</td>
-          <td style="width: 10%">{{ node.ranking }}</td>
-        </tr> 
-      </tbody>
-    </div>
-  </table>
+          <th @click="sort('id')" scope="col" style="width: 7.5%">ID<i :class="sortDirection('id')"></i></th>
+          <th @click="sort('description')" scope="col" style="width: 35%">Description<i :class="sortDirection('description')"></i></th>
+          <th @click="sort('base_score')" scope="col" style="width: 20%">Base Score<i :class="sortDirection('base_score')"></i></th>
+          <th @click="sort('ranking')" scope="col" style="width: 10%">Ranking<i :class="sortDirection('ranking')"></i></th>
+        </tr>
+      </thead> 
+        <tbody v-for="(node, index) in sortedData" :key="index">
+          <tr>
+            <td style="width: 7.5%">{{ node.id }}</td>
+            <td style="width: 35%">{{ node.description }}</td>
+            <td style="width: 20%">{{ node.base_score }}</td>
+            <td style="width: 10%">{{ node.ranking }}</td>
+          </tr> 
+        </tbody>
+    </table>
+  </div>
 </div>
 </template>
 
@@ -80,4 +80,11 @@ export default {
 }
 </script>
 <style>
+table thead tr th {
+  text-align: center;
+  position: sticky;
+  top: 0px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+ }
 </style>

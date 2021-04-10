@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col d-flex justify-content-center">
     <div class="card mx-2 mb-2" id="maincard">
-      <div class="card-header font-weight-bold">File Input</div>
+      <div class="card-header font-weight-bold">CSV File Input</div>
         <div class="card-body text-left">
           <h5 class="card-title">Two Input files required:</h5>
           <div class="pr-3 py-2">

@@ -29,12 +29,12 @@ export default defineComponent({
 
   watch: {
     name() {   
-      this.state.chartObj.update();
+      this.state.chartObj.destroy()
       this.renderHistogram();
     },
 
     numBins() {
-      this.state.chartObj.update();
+      this.state.chartObj.destroy()
       this.renderHistogram();     
     }
   },

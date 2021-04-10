@@ -93,11 +93,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "Data Driven Results - Network Visualization" */ '@/views/SimulationResults/DataDriven/NetworkVisualization.vue')
     },
     {
-        path: '/simulation-results/data-driven/attack-path-details',
-        name: 'Data Driven Results - Attack Path Details',
-        component: () => import(/* webpackChunkName: "Data Driven Results - Attack Path Details" */ '@/views/SimulationResults/DataDriven/AttackPathDetails.vue')
-    },
-    {
         path: '/simulation-results/data-driven/recommendations',
         name: 'Data Driven Results - Recommendations',
         component: () => import(/* webpackChunkName: "Data Driven Results - Recommendations" */ '@/views/SimulationResults/DataDriven/Recommendations.vue')
