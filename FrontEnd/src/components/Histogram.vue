@@ -28,13 +28,13 @@ export default defineComponent({
   },
 
   watch: {
-    name() {
-      this.state.chartObj.destroy()
+    name() {   
+      this.state.chartObj.update();
       this.renderHistogram();
     },
 
     numBins() {
-      this.state.chartObj.destroy()
+      this.state.chartObj.update();
       this.renderHistogram();     
     }
   },

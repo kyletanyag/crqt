@@ -1,11 +1,9 @@
 <template>
 <div>
-  <div class="row">
-    <div class="col-6" id="networkContainer">
+  <div class="container">
+    <div id="networkContainer">
       <h3>Network Graph</h3>
       <svg id="network" :width="width" :height="height"></svg>
-    </div>
-    <div class="col-6">
     </div>
   </div> 
 </div>
@@ -49,11 +47,11 @@ export default {
   props: {
     width: {
       type: Number,
-      default: 600,
+      default: 1000,
     },
     height: {
       type: Number,
-      default: 600,
+      default: 1000,
     },
   },
 

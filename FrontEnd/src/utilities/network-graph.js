@@ -233,7 +233,7 @@ function generateModelDrivenNetworkDiagram(data) {
 
     const node = nodeWrapper
       .append("circle")
-      .attr("r", 5)
+      .attr("r", 10)
       .attr("fill", function(d) { return color(d.layer); })
       .attr("id", function(d) { return `node_${d.id}`; })
       .attr("cx", function(d) { return getX(d); })
@@ -294,11 +294,11 @@ function generateModelDrivenNetworkDiagram(data) {
     }
 
     function getX(d) {
-      return width - (10 - layers.findIndex((e) => { return e === d.layer; })) * width/10 + 5;
+      return height - (layerNodes[layers.findIndex((e) => { return  e === d.layer; })].findIndex((e) => { return e.id === d.id; }) + 1) * height / (layerNodes[layers.findIndex((e) => { return e === d.layer; })].length + 1);
     }
 
     function getY(d) {
-      return (layerNodes[layers.findIndex((e) => { return  e === d.layer; })].findIndex((e) => { return e.id === d.id; }) + 1) * height / (layerNodes[layers.findIndex((e) => { return e === d.layer; })].length + 1);
+      return  width -(width - (10 - layers.findIndex((e) => { return e === d.layer; })) * width/10 + 20);
     }
 
     function getY1(d) {

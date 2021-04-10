@@ -42,7 +42,7 @@
         style="width: 60%"
         class="container"
       />
-      <div class="btn-group btn-group-toggle pt-2 px-2" id="histogram score">
+      <div class="btn-group btn-group-toggle pt-2 px-2">
         <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Base'}">
           <input type="radio" v-model="histogramScoreType" value="Base" autocomplete="off"> Base
         </label>
@@ -53,7 +53,7 @@
           <input type="radio" v-model="histogramScoreType" value="Exploitability" autocomplete="off"> Exploitability
         </label>
       </div>
-      <div class="btn-group btn-group-toggle pt-2 px-2" id="histogram bin size"> 
+      <div class="btn-group btn-group-toggle pt-2 px-2"> 
         <label class="btn btn-secondary" :class="{active: numBins === 5}">
           <input type="radio" v-model="numBins" :value="5" autocomplete="off"> 5
         </label>
@@ -131,10 +131,9 @@ export default {
         this.numLowSeverity = r.data.nodes.filter((n) => { return n.base_score < 0.4 }).length;
         this.loadingDerivedScores = false;
        }).catch((e) => {
-         this.error = e;
+         this.error = e; 
        });
     },
-
   },
 
   computed: {
@@ -145,18 +144,6 @@ export default {
 
   watch: {
     histogramScoreType(type) {
-      // Histogram must be fully rendered before switching datasets.
-      // Disables radio buttons for 1200 ms to allow for full render.
-      const btns = document.getElementById('histogram score').getElementsByTagName('input');
-      btns.forEach((b) => {
-        b.disabled = true;
-      });
-      setTimeout(() => {
-        btns.forEach((b) => {
-          b.disabled = false;
-        });
-      }, 1500)
-
       if (type === 'Base')
         this.histogramScoreData = this.baseScores;
       else if (type === 'Impact')
@@ -164,18 +151,6 @@ export default {
       else 
         this.histogramScoreData = this.exploitabilityScores;
     },
-
-    numBins() {
-      const btns = document.getElementById('histogram bin size').getElementsByTagName('input');
-      btns.forEach((b) => {
-        b.disabled = true;
-      });
-      setTimeout(() => {
-        btns.forEach((b) => {
-          b.disabled = false;
-        });
-      }, 1500)
-    }
   }
 }
 </script>

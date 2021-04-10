@@ -3,7 +3,7 @@
   <result-header 
     title="Network Visualization"
     nextPage="Data Driven Results - Derived Node Exploitation"
-    prevPage="'Data Driven Results - Overall Network Compromise'"
+    prevPage="Data Driven Results - Overall Network Compromise"
     defaultPage="Data Driven Results"
   />
   <network-graph></network-graph>
