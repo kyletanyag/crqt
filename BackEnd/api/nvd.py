@@ -41,17 +41,17 @@ def data_driven_cvss_query(cve_id):
     try:
         cvss[0] =  float(data["cvss"]) / 10.0
     except:
-        cvss[0] = 1
+        cvss[0] = 1.0
     
     try:
-        cvss[0] =  float(data["exploitabilityScore"]) / 10.0
+        cvss[1] =  float(data["exploitabilityScore"]) / 10.0
     except:
-        cvss[0] = 1
+        cvss[1] = 1.0
     
     try:
-        cvss[0] =  float(data["impactScore"]) / 10.0
+        cvss[2] =  float(data["impactScore"]) / 10.0
     except:
-        cvss[0] = 1
+        cvss[2] = 1.0
 
     # base, exploitability, impact
     return cvss
