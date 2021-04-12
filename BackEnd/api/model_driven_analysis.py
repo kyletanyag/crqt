@@ -212,7 +212,7 @@ def shortest_paths_gen():
 @model_analysis_bp.route('/model_driven/attack_paths/get_shortest_path_computation_time', methods=['GET'])
 def shortest_path_comp_time():
     global shortest_path_time
-    return jsonify({'shortest_path_computation_time' : shortest_path_time})
+    return jsonify({'shortest_path_computation_time' : round(shortest_path_time,4)})
 
 # find exploitability, impact, and base scoes from origin to node
 @model_analysis_bp.route('/model_driven/attack_paths/<node_index>', methods=['GET'])
@@ -291,7 +291,7 @@ def origin_to_node_metrics(node_index):
             ],
         'top_exploitable': top_exploitable, 
         'top_impactful': top_impactful,
-        'computation_time' : processing_time
+        'computation_time' : round(processing_time,4)
         })
 
 ## Vulnerable Host Percentage Metrics
@@ -319,7 +319,7 @@ def vulnerable_host_percentage():
         'number_hosts': round(number_hosts,3),
         'vulnerable_host_percentage': round(vulnerable_host_percentage,3),
         'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3),
-        'computation_time' : processing_time
+        'computation_time' : round(processing_time,4)
         })
 
 ## Centrality Metrics
@@ -492,15 +492,15 @@ def centrality():
         centrality_time = time.time() - start_timer
     
     return jsonify({
-        "betweeness": centrality_metrics[0],
-        "indegree"  : centrality_metrics[1],
-        "outdegree" : centrality_metrics[2],
-        "degree"    : centrality_metrics[3],
-        "closeness" : centrality_metrics[4],
-        "pagerank"  : [x for x in centrality_metrics[5]],
-        "katz"      : [x[0] for x in centrality_metrics[6]],
-        "shortest_path_computation_time" : shortest_path_time,
-        "centrality_computation_time" : centrality_time
+        "betweeness": [round(x,3) for x in centrality_metrics[0]],
+        "indegree"  : [round(x,3) for x in centrality_metrics[1]],
+        "outdegree" : [round(x,3) for x in centrality_metrics[2]],
+        "degree"    : [round(x,3) for x in centrality_metrics[3]],
+        "closeness" : [round(x,3) for x in centrality_metrics[4]],
+        "pagerank"  : [round(x,3) for x in centrality_metrics[5]],
+        "katz"      : [round(x[0],3) for x in centrality_metrics[6]],
+        "shortest_path_computation_time" : round(shortest_path_time,4),
+        "centrality_computation_time" : round(centrality_time,4)
     })
     
 
@@ -547,11 +547,11 @@ def TOPSIS():
         n = t.calc()        # calculating topsis, n is array of criticalities of each node
 
         for i in range(len(n)):
-            topsis_metrics.append({"node_id" : i + 1, "topsis_score": n[i]})
+            topsis_metrics.append({"node_id" : i + 1, "topsis_score": round(n[i],3)})
 
         topsis_time = time.time() - start_timer
     
     return jsonify({
         "topsis" : topsis_metrics,
-        "topsis_computation_time" : topsis_time
+        "topsis_computation_time" : round(topsis_time,4)
     })
