@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, request
 from enum import Enum, auto
 from copy import deepcopy 
 from collections import deque
-from . import db 
 import math
 import requests
 import time

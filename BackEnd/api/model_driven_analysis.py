@@ -305,8 +305,8 @@ def vulnerable_host_percentage():
     # counting number of nodes with incoming edges
     number_vulnerable_hosts = sum(len(node.in_edges) > 0 for node in vulnerability_graph)
 
-    # num of hosts (nodes with no incoming edges)
-    number_hosts = len(vulnerability_graph) - number_vulnerable_hosts
+    # num of hosts
+    number_hosts = len(vulnerability_graph)
 
     vulnerable_host_percentage = 100.0 * number_vulnerable_hosts / len(vulnerability_graph)
     non_vulnerable_host_percentage = 100 - vulnerable_host_percentage
