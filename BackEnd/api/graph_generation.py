@@ -59,7 +59,7 @@ def network_topology_data_driven_input():
         # checking if derivation node
         if node["description"][:4] == 'RULE':
             LAG[-1].node_type = DataDriven.Node_Type.DERIVATION
-            # LAG[-1].derived_score[:] = network["sim_config"]
+            LAG[-1].derived_score[:] = network["sim_config"]
 
         # checking if primitive fact node (primitive fact nodes are always leafs)
         elif LAG[-1].node_logic == DataDriven.Node_Logic.LEAF: 
