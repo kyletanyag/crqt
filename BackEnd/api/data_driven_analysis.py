@@ -159,7 +159,7 @@ def execCode_node_probabilities():
     for node in LAG: 
         if node.isExecCode:
             vertices.append({
-                'id' : node,
+                'id' : node.index,
                 'description' : node.description,
                 'node_type' : 'Derived Fact', 
                 'base_score' : round(node.derived_score[0],3),
@@ -178,7 +178,7 @@ def derived_node_probabilities():
     for node in LAG: 
         if node.node_type == DataDriven.Node_Type.DERIVED:
             vertices.append({
-                'id' : node,
+                'id' : node.index,
                 'description' : node.description,
                 'node_type' : 'Derived Fact', 
                 'base_score' : round(node.derived_score[0],3),

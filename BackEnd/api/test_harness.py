@@ -270,15 +270,6 @@ class data_driven_tests:
 
         print("Output:", "2nd layer (rule node):", LAG[num_nodes].derived_score, "| fourth layer (derived node):", LAG[-1].derived_score)
 
-# testing cve-search
-def cve_search_test(cve_ids=[]):
-    from nvd import data_driven_cvss_query
-
-    # querying cve_ids then comparing with NVD online
-    for cve_id in cve_ids:
-        print(data_driven_cvss_query(cve_id))
-
-
 if __name__ == "__main__":
     # print("2-nodes:")
     # data_driven_tests.derived_score_propagation_test(2)
