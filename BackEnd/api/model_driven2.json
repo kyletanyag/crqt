@@ -1,0 +1,40 @@
+{
+    "vertices":[
+        { "id": 1, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_fw_1", "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]},
+        { "id": 2, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_fw_1", "cve_ids" : ["CVE-2007-1220"]},
+        { "id": 3, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_fw_1", "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]},
+        { "id": 4, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_fw_1", "cve_ids" : ["CVE-2007-1221"]},
+        { "id": 5, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_dmz", "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]},
+        { "id": 6, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_dmz", "cve_ids" : ["CVE-2007-1220"]},
+        { "id": 7, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_dmz", "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]},
+        { "id": 8, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_dmz", "cve_ids" : ["CVE-2007-1220"]},
+        { "id": 9, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_dmz", "cve_ids" : ["CVE-2007-1221"]},
+        { "id": 10, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_dmz", "cve_ids" : ["CVE-2007-1220"]},
+        { "id": 11, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_dmz", "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]},
+        { "id": 12, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_fw_2", "cve_ids" : ["CVE-2007-1221"]},
+        { "id": 13, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_fw_2", "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]},
+        { "id": 14, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_fw_2", "cve_ids" : ["CVE-2007-1221"]},
+        { "id": 15, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_fw_2", "cve_ids" : ["CVE-2007-1221"]},
+        { "id": 16, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_lan", "cve_ids" : ["CVE-2007-1220"]},
+        { "id": 17, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_lan", "cve_ids" : ["CVE-2007-1220"]},
+        { "id": 18, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_lan", "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]},
+        { "id": 19, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_lan", "cve_ids" : ["CVE-2007-1220","CVE-2007-1221"]},
+        { "id": 20, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_lan", "cve_ids" : ["CVE-2007-1221"]}
+    ],
+    "arcs": [ 
+        { "currNode": 0, "nextNode": [1,2,3,4]}, 
+        { "currNode": 1, "nextNode": [5,6,7]}, 
+        { "currNode": 2, "nextNode": [7,8,9]},  
+        { "currNode": 3, "nextNode": [8,10,11]}, 
+        { "currNode": 5, "nextNode": [12]}, 
+        { "currNode": 6, "nextNode": [12]}, 
+        { "currNode": 7, "nextNode": [12,13]}, 
+        { "currNode": 8, "nextNode": [12,13,14]}, 
+        { "currNode": 9, "nextNode": [14]}, 
+        { "currNode": 10, "nextNode": [14,15]},  
+        { "currNode": 12, "nextNode": [16,18]}, 
+        { "currNode": 13, "nextNode": [17,19]}, 
+        { "currNode": 14, "nextNode": [18,19]}, 
+        { "currNode": 15, "nextNode": [19,20]}
+    ]
+}

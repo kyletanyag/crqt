@@ -108,9 +108,9 @@ def get_network_topology():
             edges.append({
                 'source'                : node.index,
                 'target'                : e.target.index,
-                'base_score'            : e.target.weights[0],
-                'exploitability_score'  : e.target.weights[1],
-                'impact_score'          : e.target.weights[2]
+                'base_score'            : round(e.target.weights[0],3),
+                'exploitability_score'  : round(e.target.weights[1],3),
+                'impact_score'          : round(e.target.weights[2],3)
             })
     
     return {'nodes': vertices, 'edges' : edges}, 200
@@ -245,7 +245,8 @@ def origin_to_node_metrics(node_index):
         score_sum += score
         
         metrics_per_path.append({
-                'path' : len(exploitability_list) + 1,
+                'path_id' : len(exploitability_list) + 1,
+                'path'    : [x.target.index for x in path],
                 'base_score' : round(score[0],3),
                 'exploitability_score' : round(score[1],3),
                 'impact_score' : round(score[2],3)
