@@ -1,3 +1,0 @@
-Let user pick which CVE ID based on vendor product they can check 
-which ones to run just in case they are patched or not.
-

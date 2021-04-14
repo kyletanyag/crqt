@@ -46,7 +46,7 @@ export default {
 
         if (r.data.access) {
           this.$emit("authenticated", true);
-          this.$router.replace({ name: "Secure" });
+          this.$router.replace({ name: "Home" });
         } else {
           this.error = r.data.error;
         }

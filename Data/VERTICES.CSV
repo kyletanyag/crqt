@@ -1,0 +1,56 @@
+Id,Description,Logic,Direction
+1,"execCode(hmi,root)",OR,0
+2,RULE 2 (remote exploit of a server program),AND,0
+3,"netAccess(hmi,sshProtocol,sshPort)",OR,0
+4,RULE 10 (multi-hop access),AND,0
+5,"hacl(historian,hmi,sshProtocol,sshPort)",LEAF,1
+6,"execCode(historian,root)",OR,0
+7,RULE 2 (remote exploit of a server program),AND,0
+8,"netAccess(historian,ftpProtocol,ftpPort)",OR,0
+9,RULE 10 (multi-hop access),AND,0
+10,"hacl(workStation1,historian,ftpProtocol,ftpPort)",LEAF,1
+11,"execCode(workStation1,root)",OR,0
+12,RULE 2 (remote exploit of a server program),AND,0
+13,"netAccess(workStation1,sshProtocol,sshPort)",OR,0
+14,RULE 10 (multi-hop access),AND,0
+15,"hacl(webServer,workStation1,sshProtocol,sshPort)",LEAF,1
+16,"execCode(webServer,root)",OR,0
+17,RULE 0 (When a principal is compromised any machine he has an account on will also be compromised),AND,0
+18,canAccessHost(webServer),OR,0
+19,RULE 13 (Access a host through executing code on the machine),AND,0
+20,"hasAccount(account_webServer,webServer,root)",LEAF,1
+21,principalCompromised(account_webServer),OR,0
+22,RULE 16 (password sniffing),AND,0
+23,RULE 17 (password sniffing),AND,0
+24,RULE 2 (remote exploit of a server program),AND,0
+25,"netAccess(webServer,httpProtocol,httpPort)",OR,0
+26,RULE 11 (direct network access),AND,0
+27,"hacl(internet,webServer,httpProtocol,httpPort)",LEAF,1
+28,attackerLocated(internet),LEAF,1
+29,"networkServiceInfo(webServer,httpd,httpProtocol,httpPort,root)",LEAF,1
+30,"vulExists(webServer,'CVE-2019-7305',httpd,remoteExploit,privEscalation)",LEAF,1
+31,"networkServiceInfo(workStation1,sshd,sshProtocol,sshPort,root)",LEAF,1
+32,"vulExists(workStation1,'CVE-2019-18376',sshd,remoteExploit,privEscalation)",LEAF,1
+33,"networkServiceInfo(historian,ftpd,ftpProtocol,ftpPort,root)",LEAF,1
+34,"vulExists(historian,'CVE-2019-11013',ftpd,remoteExploit,privEscalation)",LEAF,1
+35,RULE 10 (multi-hop access),AND,0
+36,"hacl(workStation2,hmi,sshProtocol,sshPort)",LEAF,1
+37,"execCode(workStation2,root)",OR,0
+38,RULE 2 (remote exploit of a server program),AND,0
+39,"netAccess(workStation2,sshProtocol,sshPort)",OR,0
+40,RULE 10 (multi-hop access),AND,0
+41,"hacl(historian,workStation2,sshProtocol,sshPort)",LEAF,1
+42,"networkServiceInfo(workStation2,sshd,sshProtocol,sshPort,root)",LEAF,1
+43,"vulExists(workStation2,'CVE-2020-0796',sshd,remoteExploit,privEscalation)",LEAF,1
+44,"networkServiceInfo(hmi,sshd,sshProtocol,sshPort,root)",LEAF,1
+45,"vulExists(hmi,'CVE-2018-13814',sshd,remoteExploit,privEscalation)",LEAF,1
+46,taskImpact(t2Reporting),OR,0
+47,RULE 32 (An impacted host impacts dependent task),AND,0
+48,"task(t2Reporting,dependency,historian)",LEAF,1
+49,taskImpact(t3Monitoring),OR,0
+50,RULE 32 (An impacted host impacts dependent task),AND,0
+51,"task(t3Monitoring,dependency,workStation2)",LEAF,1
+52,taskImpact(t4Corrective),OR,0
+53,RULE 32 (An impacted host impacts dependent task),AND,0
+54,"task(t4Corrective,dependency,hmi)",LEAF,1
+55,RULE 33 (Either of the impacted task impacts dependent task),AND,0
