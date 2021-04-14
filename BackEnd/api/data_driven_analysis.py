@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, request
 from enum import Enum, auto
 from copy import deepcopy 
 from collections import deque
-from . import db 
 import math
 import requests
 import time
@@ -160,7 +159,7 @@ def execCode_node_probabilities():
     for node in LAG: 
         if node.isExecCode:
             vertices.append({
-                'id' : node,
+                'id' : node.index,
                 'description' : node.description,
                 'node_type' : 'Derived Fact', 
                 'base_score' : round(node.derived_score[0],3),
@@ -179,7 +178,7 @@ def derived_node_probabilities():
     for node in LAG: 
         if node.node_type == DataDriven.Node_Type.DERIVED:
             vertices.append({
-                'id' : node,
+                'id' : node.index,
                 'description' : node.description,
                 'node_type' : 'Derived Fact', 
                 'base_score' : round(node.derived_score[0],3),

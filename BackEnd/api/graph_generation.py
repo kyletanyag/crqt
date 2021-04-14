@@ -102,7 +102,7 @@ def network_topology_data_driven_input():
     # calculates derived scores for all nodes
     DerivedScore(leaf_queue)
 
-    return {'parsing_time': parsing_time}, 200
+    return {'parsing_time': round(parsing_time,4)}, 200
 
         
 

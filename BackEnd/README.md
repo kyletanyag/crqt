@@ -62,13 +62,14 @@ To install Ubuntu 20.04 subsystem for Windows go to Window's Control Panel -> Pr
 If problems occur during installation, please refer to https://docs.microsoft.com/en-us/windows/wsl/install-win10 or https://adamtheautomator.com/windows-subsystem-for-linux/ or https://www.youtube.com/watch?v=av0UQy6g2FA.
 
 ## Install
-On **Ubuntu terminal** open cve_search directory and run the following commands:
+On **Ubuntu terminal** the following commands:
 ```
 $ cd /mnt/<path_to_crqt>/BackEnd
+$ sudo apt-get update
 $ sudo apt-get install python3
 $ sudo apt-get install python3-pip
 $ sudo apt-get install redis-server
-$ pip3 install flask flask-pymongo
+$ pip3 install -r requirements.txt
 $ sudo service redis-server start
 $ cd ./dms/cve_search/
 $ python3 ./sbin/db_mgmt_cpe_dictionary.py -p

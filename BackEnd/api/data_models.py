@@ -26,15 +26,6 @@ class Users(db.Model):
     otp_secret = db.Column(db.String(16)) # OTP KEY
     enabled_2fa = db.Column(db.Integer, default=False) 
 
-# NVD Table
-class NVD(db.Model):
-    __bind_key__ = 'nvd'
-    cve_id = db.Column(db.String(16), primary_key=True)
-    base_score = db.Column(db.Float)
-    exploitabiliy_score_v2 = db.Column(db.Float)
-    impact_score_v2 = db.Column(db.Float)
-    description = db.Column(db.String(4000))
-
 # Products Table
 class Products(db.Model):
     __bind_key__ = 'products'
