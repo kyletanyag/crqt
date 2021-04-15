@@ -212,7 +212,7 @@ def shortest_paths_gen():
 @model_analysis_bp.route('/model_driven/attack_paths/get_shortest_path_computation_time', methods=['GET'])
 def shortest_path_comp_time():
     global shortest_path_time
-    return jsonify({'shortest_path_computation_time' : round(shortest_path_time,4)})
+    return jsonify({'shortest_path_computation_time' : round(shortest_path_time,4)}), 200
 
 # find exploitability, impact, and base scoes from origin to node
 @model_analysis_bp.route('/model_driven/attack_paths/<node_index>', methods=['GET'])
@@ -293,7 +293,7 @@ def origin_to_node_metrics(node_index):
         'top_exploitable': top_exploitable, 
         'top_impactful': top_impactful,
         'computation_time' : round(processing_time,4)
-        })
+        }), 200
 
 ## Vulnerable Host Percentage Metrics
 @model_analysis_bp.route('/model_driven/vulnerable_host_percentage', methods=['GET'])
@@ -321,7 +321,7 @@ def vulnerable_host_percentage():
         'vulnerable_host_percentage': round(vulnerable_host_percentage,3),
         'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3),
         'computation_time' : round(processing_time,4)
-        })
+        }), 200
 
 ## Centrality Metrics
 # Reference: http://www.uvm.edu/pdodds/research/papers/others/2001/brandes2001a.pdf
@@ -502,7 +502,7 @@ def centrality():
         "katz"      : [round(x[0],3) for x in centrality_metrics[6]],
         "shortest_path_computation_time" : round(shortest_path_time,4),
         "centrality_computation_time" : round(centrality_time,4)
-    })
+    }), 200
     
 
 # ref: Modeling Cyber Resilience for Energy Delivery Systems using critical system functionality      
@@ -555,4 +555,4 @@ def TOPSIS():
     return jsonify({
         "topsis" : topsis_metrics,
         "topsis_computation_time" : round(topsis_time,4)
-    })
+    }), 200

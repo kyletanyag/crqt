@@ -41,8 +41,21 @@
       <model-driven-connection 
         :layerNodes1="filterNodes('cs_fw_2')" :layerNodes2="filterNodes('cs_lan')" 
         :layerName1="layerNames[6]" :layerName2="layerNames[7]" ref="15" />
-      <div style="padding-left:15px; margin-top:20px">
-        <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveEdges(); Submit()" value="Submit">
+      <div class="pl-2 pt-3">
+        <input type="button" class="btn btn-primary btn-lg active mx-2" @click="saveEdges(); Submit()" value="Submit">
+        <button type="button" class="btn btn-secondary btn-lg mx-2" @click="preview = !preview">Preview</button>
+        <button type="button" class="btn btn-success btn-lg mx-2" @click="Save">Save</button>
+        <a id="downloadAnchorElem" style="display:none"></a>
+      </div>
+      <div v-if="preview" class="card mx-2 mb-2">
+        <div class="card-header font-weight-bold">
+          JSON Object Preview
+        </div>
+        <div class="card-body" style="overflow-y: auto;">
+          <div>
+            {{ network }}
+          </div>
+        </div>
       </div>
       <div class="progress">
         <div class="progress-bar progress-bar-info"
@@ -114,7 +127,8 @@ export default {
       CSLan: CSLanSystemServerTypes,
       layerNames: NISTLayerNames,
       progress: 0,
-      network_title: ""
+      network_title: "",
+      preview: false,
     };
   },  
   computed: {
@@ -176,9 +190,12 @@ export default {
       this.Upload(this.network, (event) => {
         this.progress = Math.round(100 * event.loaded / event.total);
       })
-      .then((response) => {
-        console.log(response.data.message);
-        // this.$router.push({name: 'Sandbox'});
+      .then(() => {
+        this.$emit('uploadedData');
+      })
+      .catch(() => {
+        this.progress = 0;
+        console.log('Could not upload data!');
       });
     },
 
@@ -191,6 +208,14 @@ export default {
         'width' : 100,
         'height' : 100
       };
+    },
+
+    Save() {
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.network, undefined, 2));
+      var dlAnchorElem = document.getElementById('downloadAnchorElem');
+      dlAnchorElem.setAttribute("href", dataStr);
+      dlAnchorElem.setAttribute("download", `${this.network.network_title.toLowerCase()}.json`);
+      dlAnchorElem.click();
     },
   }
 }; 

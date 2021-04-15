@@ -140,7 +140,7 @@ export default {
           this.progress = Math.round(100 * event.loaded / event.total);
         })
         .then(() => {
-          this.$emit('uploadedData')
+          this.$emit('uploadedData');
         })
         .catch(() => {
           this.progress = 0;

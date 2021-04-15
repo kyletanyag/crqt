@@ -36,6 +36,11 @@ export default defineComponent({
     numBins() {
       this.state.chartObj.destroy()
       this.renderHistogram();     
+    },
+
+    data() {
+      this.state.chartObj.destroy()
+      this.renderHistogram();
     }
   },
 

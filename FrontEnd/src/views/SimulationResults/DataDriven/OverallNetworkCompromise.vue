@@ -46,7 +46,7 @@
         class="container"
       />
       <div class="d-flex justify-content-center">
-        <h5 class="pt-3">Toggle Computed Score:</h5>
+        <h5 class="pt-3">Select Computed Score:</h5>
         <div class="btn-group btn-group-toggle pt-2 px-2">
           <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Base'}">
             <input class="pause" type="radio" v-model="histogramScoreType" value="Base" autocomplete="off"> Base
@@ -60,7 +60,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-center">
-        <h5 class="pt-3">Toggle Bin Size:</h5>
+        <h5 class="pt-3">Select Bin Size:</h5>
         <div class="btn-group btn-group-toggle pt-2 px-2"> 
           <label class="btn btn-secondary" :class="{active: numBins === 5}">
             <input class="pause" type="radio" v-model="numBins" :value="5" autocomplete="off"> 5

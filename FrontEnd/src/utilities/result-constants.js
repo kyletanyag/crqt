@@ -55,11 +55,6 @@ const DataDrivenResultOptions =
       routeName: 'Model Driven Results - Node Specific Metrics'
     },
     {
-      title: 'Vulnerable Host Percentage Metrics',
-      description: 'Vulnerable Host Percentage Metrics ... ',
-      routeName: 'Model Driven Results - Vulnerable Host Percentage Metrics'
-    },
-    {
       title: 'Severity Display',
       description: 'Severity Display ... ',
       routeName: 'Model Driven Results - Severity Display'

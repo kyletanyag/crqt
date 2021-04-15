@@ -247,7 +247,7 @@ function generateModelDrivenNetworkDiagram(data) {
 
     const node = nodeWrapper
       .append("circle")
-      .attr("r", 10)
+      .attr("r", 15)
       .attr("stroke", "white")
       .attr("fill", function(d) { return color(d.layer); })
       .attr("id", function(d) { return `node_${d.id}`; })

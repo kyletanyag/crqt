@@ -128,11 +128,6 @@ const routes = [
         component: () => import(/* webpackChunkName: "Model Driven Results - Node Specific Metrics" */ '@/views/SimulationResults/ModelDriven/NodeSpecificMetrics.vue')
     },
     {
-        path: '/simulation-results/model-driven/vulnerable-host-percentage-metrics',
-        name: 'Model Driven Results - Vulnerable Host Percentage Metrics',
-        component: () => import(/* webpackChunkName: "Model Driven Results - Vulnerable Host Percentage Metrics" */ '@/views/SimulationResults/ModelDriven/VulnerableHostPercentageMetrics.vue')
-    },
-    {
         path: '/simulation-results/model-driven/severity-display',
         name: 'Model Driven Results - Severity Display',
         component: () => import(/* webpackChunkName: "Model Driven Results - Severity Display" */ '@/views/SimulationResults/ModelDriven/SeverityDisplay.vue')
