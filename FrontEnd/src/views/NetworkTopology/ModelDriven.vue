@@ -130,12 +130,9 @@ export default {
       layerNames: NISTLayerNames,
       progress: 0,
       network_title: "",
-<<<<<<< HEAD
       preview: false,
-=======
       isCheckAll: false,
       selectedNodes:[],
->>>>>>> origin/back-end
     };
   },  
   computed: {
