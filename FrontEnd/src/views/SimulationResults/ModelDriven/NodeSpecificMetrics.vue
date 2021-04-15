@@ -2,7 +2,7 @@
 <div>
   <result-header 
     title="Node Specific Metrics"
-    nextPage="Model Driven Results - Vulnerable Host Percentage Metrics"
+    nextPage="Model Driven Results - Severity Display"
     prevPage="Model Driven Results - Graph Metrics"
     defaultPage="Model Driven Results"
   />
@@ -26,16 +26,16 @@
               <button class="ml-2 btn btn-primary btn-sm pause" id="id_submit" @click="GetAttackPaths(desiredNodeID)">Submit</button>
             </div>
             <div class="row pl-3 my-2">
-              <div v-if="desiredNodeID > 0 && desiredNodeID <= lastNodeID" class="col-6 text-left">
-                  Computation Time: <strong v-if="!loading">{{ compTime }}</strong>
-                  <br>
-                  Number of Attack Paths: <strong v-if="!loading">{{ numPaths }}</strong>
-                  <br>
-                  Average Base Score Cost: <strong v-if="!loading">{{ avgBasScore }}</strong>
-                  <br>
-                  Average Exploitability Score Cost: <strong v-if="!loading">{{ avgExpScore }}</strong>
-                  <br>
-                  Average Impact Score Cost: <strong v-if="!loading">{{ avgImpScore }}</strong>
+              <div class="col-6 text-left">
+                Computation Time: <strong v-if="!loading && desiredNodeID > 0 && desiredNodeID <= lastNodeID">{{ compTime }}</strong>
+                <br>
+                Number of Attack Paths: <strong v-if="!loading && desiredNodeID > 0 && desiredNodeID <= lastNodeID">{{ numPaths }}</strong>
+                <br>
+                Average Base Score Cost: <strong v-if="!loading && desiredNodeID > 0 && desiredNodeID <= lastNodeID">{{ avgBasScore }}</strong>
+                <br>
+                Average Exploitability Score Cost: <strong v-if="!loading && desiredNodeID > 0 && desiredNodeID <= lastNodeID">{{ avgExpScore }}</strong>
+                <br>
+                Average Impact Score Cost: <strong v-if="!loading && desiredNodeID > 0 && desiredNodeID <= lastNodeID">{{ avgImpScore }}</strong>
               </div>
               <div class="col-6">
                 <tr>
@@ -141,6 +141,9 @@
                 <Histogram
                   :data="baseScores"
                   :numBins="10"
+                  :range="[0, 10]"
+                  yAxis="Frequency"
+                  xAxis="Base Score"
                   name="Base Scores"
                   barColor='#f87979'
                   class="col-6" 
@@ -148,6 +151,9 @@
                 <Histogram
                   :data="exploitabilityScores"
                   :numBins="10"
+                  :range="[0, 10]"
+                  yAxis="Frequency"
+                  xAxis="Exploitability Score"
                   name="Exploitability Scores"
                   barColor='#78BCFF'
                   class="col-6"
@@ -155,6 +161,9 @@
                 <Histogram
                   :data="impactScores"
                   :numBins="10"
+                  :range="[0, 10]"
+                  yAxis="Frequency"
+                  xAxis="Impact Score"
                   name="Impact Scores"
                   barColor='#81DFA9'
                   class="col-6"

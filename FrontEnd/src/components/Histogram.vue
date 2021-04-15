@@ -28,6 +28,14 @@ export default defineComponent({
       default: function() {return [0,1] } // most of the time, we want a range from 0 to 1.
     },
     name: String,
+    xAxis: {
+      type: String,
+      default: 'X-Axis'
+    },
+    yAxis: {
+      type: String,
+      default: 'Y-Axis'
+    },
     barColor: String
   },
 
@@ -41,11 +49,6 @@ export default defineComponent({
       this.state.chartObj.destroy()
       this.renderHistogram();     
     },
-
-    data() {
-      this.state.chartObj.destroy()
-      this.renderHistogram();
-    }
   },
 
   methods: {
@@ -87,17 +90,37 @@ export default defineComponent({
         labelArray = this.binNames;
       }
 
-      this.renderChart({
-        //labels: new Array(this.data.length),
-        labels: labelArray,
-        datasets: [
-          {
-            label: this.name,
-            backgroundColor: this.barColor,
-            data: numInEachBin
-          }
-        ]
-      });
+      this.renderChart(
+        { // data
+          labels: labelArray,
+          datasets: [
+            {
+              label: this.name,
+              backgroundColor: this.barColor,
+              data: numInEachBin
+            }
+          ],
+        },
+        { // options
+          scales: {
+            yAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: this.yAxis
+              },
+              ticks: {
+                beginAtZero: true
+              }
+            }],
+            xAxes: [{
+              scaleLabel: {
+                display: true,
+                labelString: this.xAxis
+              }
+            }]
+          },
+        }
+      );
     }
   },
 

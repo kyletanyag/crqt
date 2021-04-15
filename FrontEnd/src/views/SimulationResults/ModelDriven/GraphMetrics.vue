@@ -21,20 +21,29 @@
         <Histogram
           :data="degree"
           :numBins="10"
+          :range="[Math.min(...degree), Math.max(...degree)]"
+          yAxis="Frequency"
+          xAxis="Value"
           name="Degree Centrality"
-          barColor='#f87979'
+          barColor='#78BCFF'
           class="col-4"
         />
         <Histogram
           :data="closeness"
           :numBins="10"
+          :range="[Math.min(...degree), Math.max(...degree)]"
+          yAxis="Frequency"
+          xAxis="Value"
           name="Closeness Centrality"
-          barColor='#f87979'
+          barColor='#81DFA9'
           class="col-4"
         />
         <Histogram
           :data="betweeness"
           :numBins="10"
+          :range="[Math.min(...betweeness), Math.max(...betweeness)]"
+          yAxis="Frequency"
+          xAxis="Value"
           name="Betweeness Centrality"
           barColor='#f87979'
           class="col-4"
@@ -44,20 +53,29 @@
         <Histogram
           :data="pagerank"
           :numBins="10"
+          :range="[Math.min(...pagerank), Math.max(...pagerank)]"
+          yAxis="Frequency"
+          xAxis="Value"
           name="Pagerank Centrality"
-          barColor='#f87979'
+          barColor='#78BCFF'
           class="col-4"
         />
         <Histogram
           :data="katz"
           :numBins="10"
+          :range="[Math.min(...katz), Math.max(...katz)]"
+          yAxis="Frequency"
+          xAxis="Value"
           name="Katz Centrality"
-          barColor='#f87979'
+          barColor='#81DFA9'
           class="col-4"
         />
         <Histogram
           :data="outdegree"
           :numBins="10"
+          :range="[Math.min(...outdegree), Math.max(...outdegree)]"
+          yAxis="Frequency"
+          xAxis="Value"
           name="Outdegree Centrality"
           barColor='#f87979'
           class="col-4"
@@ -69,10 +87,12 @@
           something goes here
         </p>
       </div>
-      <div class="row py-2 justify-content-center">
+      <div class="row py-2 justify-content-center" v-if="indegree.length && outdegree.length && degree.length">
         <Histogram
           :data="indegreeProb"
           :numBins="10"
+          yAxis="Frequency"
+          xAxis="Probability"
           name="In Degree"
           barColor='#78BCFF'
           class="col-4"
@@ -80,6 +100,8 @@
         <Histogram
           :data="outdegreeProb"
           :numBins="10"
+          yAxis="Frequency"
+          xAxis="Probability"
           name="Out Degree"
           barColor='#81DFA9'
           class="col-4"
@@ -89,17 +111,19 @@
         <Histogram
           :data="degreeProb"
           :numBins="10"
+          yAxis="Frequency"
+          xAxis="Probability"
           name="Degree"
           barColor='#C29AD3'
           class="col-4"
         />
-        <Histogram
+        <!-- <Histogram
           :data="degreeProb"
           :numBins="10"
           name="Combined Degree Distributions"
           barColor='#f87979'
           class="col-4"
-        />
+        /> -->
       </div>
     </div>
   </div>
@@ -172,7 +196,7 @@ export default {
     outdegreeProb() {
       var ratio = Math.max.apply(Math, this.outdegree);
       return this.outdegree.map(x => x /= ratio);
-    }
+    },
   }
 }
 </script>

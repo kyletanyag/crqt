@@ -10,14 +10,14 @@
   </div>
   <div class="mx-5 text-left row">
     <div class="col">
-      <div>
+      <div class="pb-2">
         <h2>Network Breakdown</h2>
         <p>
           You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ inputDate }}</strong>. 
           It took <strong>{{ compTime }}</strong> second(s) to compute the generated metrics. 
         </p>
         <p>
-          The computed metrics use NVD Vulnerability data updated as recent as <strong>{{ NVDDate }}</strong>.
+          The computed metrics use NVD Vulnerability data updated as recent as <strong v-if="!loadingNVD">{{ NVDDate }}</strong>.
         </p>
         <p>
           Your inputted network contains a total of <strong>{{ nodes.length }}</strong> nodes and <strong>{{ edges.length }}</strong> edges.
@@ -73,8 +73,16 @@
 
     </div>
     <div class="col">
-      <doughnut-chart
+      <doughnut-chart v-if="!loading"
         name="Network Topology Layer Breakdown"
+        :data="[
+          corpFW1.length, corpDMZ.length, corpFW2.length, corpLAN.length,
+          csFW1.length, csDMZ.length, csFW2.length, csLAN.length
+        ]"
+        :labels="[
+          'Corporate Firewall 1', 'Corporate DMZ', 'Corporate Firewall 2', 'Corporate LAN',
+          'Control Sytem Firewall 1', 'Control Sytem DMZ', 'Control Sytem Firewall 2', 'Control Sytem LAN'
+        ]"
       />
     </div>
   </div>
@@ -107,7 +115,8 @@ export default {
       inputDate: undefined,
       nodes: [],
       edges: [],
-      loading: true
+      loading: true,
+      loadingNVD: true,
     }
   },
 
@@ -118,10 +127,33 @@ export default {
   methods: {
     GetData() {
       this.loading = true;
+      this.loadingNVD = true;
+        http.get('/nvd/get_nvd_update_date').then((r) => {
+          console.log(r);
+          this.NVDDate = r.data.date;
+          this.loadingNVD = false;
+        }).catch((e) => {
+          this.error = e;
+        });
+  
+        http.get('get_network_title').then((r) => {
+          // console.log(r);
+          this.title = r.data.network_title;
+        }).catch((e) => {
+          this.error = e;
+        });
+  
+        http.get('get_input_date').then((r) => {
+          // console.log(r);
+          this.inputDate = r.data.input_date;
+        }).catch((e) => {
+          this.error = e;
+        });
 
       http.get('/model_driven/get_network_topology').then((r) => {
         this.edges = r.data.edges;
         this.nodes = r.data.nodes;
+        this.loading = false;
       }).catch((e) => {
         this.error = e;
       });
@@ -136,26 +168,6 @@ export default {
         this.error = e;
       });
 
-      http.get('/nvd/get_nvd_update_date').then((r) => {
-        // console.log(r);
-        this.NVDDate = r.data.date;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('get_network_title').then((r) => {
-        // console.log(r);
-        this.title = r.data.network_title;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('get_input_date').then((r) => {
-        // console.log(r);
-        this.inputDate = r.data.input_date;
-      }).catch((e) => {
-        this.error = e;
-      });
     }
   },
 

@@ -16,8 +16,8 @@
     <div class="col">
       <div class="row-12 my-2">
         <h2>Network Edge Data</h2>
-        <table v-if="network" class="table table-hover">
-          <div :style="`overflow-y: auto; height: 500px;`">
+        <div :style="`overflow-y: auto; height: 800px;`">
+          <table v-if="network" class="table table-hover">
             <thead>
               <tr>
                 <th @click="sort('target.id')" scope="col" style="width: 7.5%">ID<i :class="sortDirection('id')"></i></th>
@@ -43,8 +43,8 @@
                 <td style="width: 16.6%; word-wrap: anywhere;">{{ edge.impact_score }}</td>
               </tr> 
             </tbody>
-          </div>
-        </table>
+          </table>
+        </div>
       </div>
     </div>
   </div>

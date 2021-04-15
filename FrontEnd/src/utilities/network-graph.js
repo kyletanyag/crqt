@@ -254,21 +254,27 @@ function generateModelDrivenNetworkDiagram(data) {
       .attr("cx", function(d) { return getX(d); })
       .attr("cy", function(d) { return getY(d); });
     
-      const link = svg.append("g")
-        .attr("class", "links")
-        .attr("stroke", "#999")
-        .selectAll("line")
-        .data(graph.edges)
-        .enter().append("path")
-          .attr("stroke-width", function() { return 0.75; })
-          .attr('color', 'black')
-          .attr('fill', 'none')
-          .attr('marker-end', 'url(#arrowhead)')
-          .attr("x1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5; })
-          .attr("y1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d); })
-          .attr("x2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5; })
-          .attr("y2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d); })
-          .attr("d", function(d) { return curveLink(Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5,Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d),Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5, Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d) )})
+    const linkWrapper = svg.append('g')
+      .attr('class', 'links')
+      .selectAll('.link')
+      .data(graph.edges)
+      .enter().append('g')
+      .attr('class', 'linkWrapper')
+
+    const link = linkWrapper
+      .append("path")
+      .attr("class", "links")
+      .attr("id", function(d) { return `edge_${d.source}_${d.target}`; })
+      .attr("stroke", "#999")
+      .attr("stroke-width", function() { return 0.75; })
+      .attr('color', 'black')
+      .attr('fill', 'none')
+      .attr('marker-end', 'url(#arrowhead)')
+      .attr("x1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5; })
+      .attr("y1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d); })
+      .attr("x2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5; })
+      .attr("y2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d); })
+      .attr("d", function(d) { return curveLink(Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5,Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d),Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5, Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d) )})
 
     const tooltip = d3.select('#networkContainer')
       .append('div')
@@ -282,7 +288,7 @@ function generateModelDrivenNetworkDiagram(data) {
           .duration(300)
           .style("opacity", 1) // show the tooltip
           .style('background-color', 'rgba(211, 211, 211, 0.8)')
-        tooltip.html(getHTML(d))
+        tooltip.html(getNodeHTML(d))
           .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 150) + "px")
           .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 200) + "px");
       })
@@ -293,7 +299,26 @@ function generateModelDrivenNetworkDiagram(data) {
           .style('left', 0 + 'px')
           .style('top', 0 + 'px');
         tooltip.html('<div />')
+      });
+
+      linkWrapper
+      .on("mouseover", function(d) {
+        tooltip.transition()
+          .duration(300)
+          .style("opacity", 1) // show the tooltip
+          .style('background-color', 'rgba(211, 211, 211, 0.8)')
+        tooltip.html(getLinkHTML(d))
+          .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 150) + "px")
+          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 200) + "px");
       })
+      .on("mouseleave", function() {
+        tooltip.transition()
+          .duration(0)
+          .style("opacity", 0)
+          .style('left', 0 + 'px')
+          .style('top', 0 + 'px');
+        tooltip.html('<div />')
+      });
 
     simulation
         .nodes(graph.nodes);
@@ -302,11 +327,20 @@ function generateModelDrivenNetworkDiagram(data) {
         .links(graph.edges);
     
 
-    function getHTML(d) {
+    function getNodeHTML(d) {
       return `<div style="width: 200px">\
         ID: ${d.id} <br>\
         Vendor: ${d.vendor} <br>\
         Product: ${d.product} <br>\
+        </div>`;
+    }
+
+    function getLinkHTML(d) {
+      return `<div style="width: 200px">\
+        Edge: (${d.source.id}, ${d.target.id}) <br>\
+        Base Score: ${d.base_score} <br>\
+        Exploitability Score: ${d.exploitability_score} <br>\
+        Impact Score: ${d.impact_score} <br>\
         </div>`;
     }
 

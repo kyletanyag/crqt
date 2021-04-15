@@ -41,6 +41,8 @@
         :data="histogramScoreData" 
         :numBins="numBins" 
         :name="histogramScoreName" 
+        yAxis="Frequency"
+        xAxis="Probability Score"
         barColor='#f87979'
         style="width: 60%"
         class="container"
