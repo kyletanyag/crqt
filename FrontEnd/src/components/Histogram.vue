@@ -23,6 +23,10 @@ export default defineComponent({
       type: Array, // Assume the input is always in ascending order.
       default: function() {return [-1] } //assume a user will never enter a bin limit set of "-1". That doesnt make sense.
     },
+    range: {
+      type: Array, // Assume the range is given from lowest to highest
+      default: function() {return [0,1] } // most of the time, we want a range from 0 to 1.
+    },
     name: String,
     barColor: String
   },
@@ -42,12 +46,14 @@ export default defineComponent({
   methods: {
     renderHistogram() {
 
+      var rangeSize = this.range[1]-this.range[0];
+
       // Bin the data
       let numInEachBin = new Array(this.numBins); for (let i=0; i<this.numBins; ++i) numInEachBin[i] = 0;
       if (this.binLimits == -1){ //if its the default value, automatically definine bins
-        var binSize = 1/this.numBins; // Assuming the range is 0-1
+        var binSize = rangeSize/this.numBins; // divide the range by the number of bins
         for (var k = 0; k < this.data.length; k++) { // for each data point
-          numInEachBin[this.data[k] !== 1 ? Math.floor(this.data[k]/binSize) : this.numBins - 1]++; // determine which bin it is in, then add one to the total number in that bin.
+          numInEachBin[this.data[k] !== +this.range[1] ? Math.floor(this.data[k]/binSize) : this.numBins - 1]++; // determine which bin it is in, then add one to the total number in that bin.
         }
       }
       else{ // if the user is using custom bin sizes
@@ -65,12 +71,12 @@ export default defineComponent({
       var labelArray = new Array(this.numBins);
       if (this.binNames == "automatic"){
         // Generate bin labels
-        labelArray[0] = "[0, " + (1/this.numBins).toFixed(2).toString() + ")";
+        labelArray[0] = "[" + this.range[0].toFixed(2).toString() + ", " + ((rangeSize/this.numBins)+this.range[0]).toFixed(2).toString() + ")";
         for (var j = 1; j < this.numBins-1; j++){
-          labelArray[j] = "[" + ((1/this.numBins)*j).toFixed(2).toString() + ", " + ((1/this.numBins) * (j+1)).toFixed(2).toString() + ")"; // Again, we've hard-coded the domain max as 1
+          labelArray[j] = "[" + (((rangeSize/this.numBins)*j)+this.range[0]).toFixed(2).toString() + ", " + (((rangeSize/this.numBins) * (j+1))+this.range[0]).toFixed(2).toString() + ")"; // Again, we've hard-coded the domain max as 1
         }
         //the last bin should range from [x, 1], notice the use of brackets for the end of the domain.
-        labelArray[j] = "[" + ((1/this.numBins)*j).toFixed(2).toString() + ", 1]";
+        labelArray[j] = "[" + (((rangeSize/this.numBins)*j)+this.range[0]).toFixed(2).toString() + ", " + this.range[1].toFixed(2).toString() + "]";
       }
       else{
         labelArray = this.binNames;
