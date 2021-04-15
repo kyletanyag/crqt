@@ -14,7 +14,8 @@
             </p>
         </td>
         <td>
-          <div v-for="(node2, index2) in layerNodes2" :key="index2">                         
+          <!-- <input type='checkbox' @click='checkAll()' v-model='isCheckAll' @change='updateCheckall()'> Check All -->
+          <div v-for="(node2, index2) in layerNodes2" :key="index2" @change='updateCheckall()'>                         
             <input type="checkbox" v-model="selectedNodes[index1]" :value="node2.id" />
             {{node2.vendor}} {{node2.product}} (Node ID: {{node2.id}}) 
           </div>
@@ -36,7 +37,26 @@ export default {
     layerName1: String,
     layerName2: String,
   },
-
+  methods:{
+    checkAll:function(){
+      this.selectedNodes =[];
+      
+        for(var key in this.layerNodes2){
+          console.log(this.layerNodes2[key].id)
+          this.selectedNodes.push(this.layerNodes2[key].id)
+        }
+      
+      return this.selectedNodes;
+    },
+    updateCheckall: function(){
+      console.log(this.selectedNodes.length == this.layerNodes2.length)
+      if(this.selectedNodes.length == this.layerNodes2.length){
+         this.isCheckAll = true;
+      }else{
+         this.isCheckAll = false;
+      }
+    },
+  },
   computed:{
     rowData() {
       if (!this.selectedNodes) return;
@@ -50,6 +70,7 @@ export default {
       }
       return edges;
     }, 
+
   },
 
   data() {
@@ -59,7 +80,8 @@ export default {
     }
 
     return {
-      selectedNodes
+      selectedNodes,
+      isCheckAll: false,
     };
   },
 }
