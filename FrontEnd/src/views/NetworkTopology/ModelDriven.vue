@@ -15,11 +15,12 @@
     <model-driven-setting title="Control System LAN" :serverTypes="CSLan" 
       :vendors="servers" layer="cs_lan" ref="8"/>
     <div style="padding-left:15px; margin-top:20px">
-      <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveNodes(), submit = !submit" value="Continue">
+      <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveNodes()" value="Continue">
     </div>
     <!-- <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button> -->
           
     <div v-if="submit">
+      <input type='checkbox' @click='checkAll()' v-model='isCheckAll'> Check All
       <model-driven-connection 
         :layerNodes1="filterNodes('corp_fw_1')" :layerNodes2="filterNodes('corp_dmz')" 
         :layerName1="layerNames[0]" :layerName2="layerNames[1]" ref="9" />
@@ -108,13 +109,16 @@ export default {
       nodes:[],
       edges:[],
       submit: false,
+      missingField: false,
       CorpDMZ: CorpDMZServerTypes,
       CorpLAN: CorpLANServerTypes,
       CSDMZ: CSDMZserverTypes,
       CSLan: CSLanSystemServerTypes,
       layerNames: NISTLayerNames,
       progress: 0,
-      network_title: ""
+      network_title: "",
+      isCheckAll: false,
+      selectedNodes:[],
     };
   },  
   computed: {
@@ -133,22 +137,38 @@ export default {
     saveNodes() {
       var ID = 1;
       this.nodes = []
+      this.missingField = false;
       for (let layer = 1; layer <= 8; layer++) {
-        for (let i = 0; i < this.$refs[`${layer}`].rowData.length; i++) {          
+        for (let i = 0; i < this.$refs[`${layer}`].rowData.length; i++) {    
+
           this.$refs[`${layer}`].rowData[i].id = ID++;
           this.nodes.push(this.$refs[`${layer}`].rowData[i]);
-          this.checkNodes(this.nodes[i])
+          if(this.$refs[`${layer}`].rowData[i].id % 2 ==0){
+            if(this.$refs[`${layer}`].rowData[i].vendor==null || this.$refs[`${layer}`].rowData[i].product==null ||
+              this.$refs[`${layer}`].rowData[i].type==null){
+                console.log(this.$refs[`${layer}`].rowData[i])
+              this.missingField = true;
+            }
+          }
+          else{
+            if(this.$refs[`${layer}`].rowData[i].vendor==null || this.$refs[`${layer}`].rowData[i].product==null){
+                console.log(this.$refs[`${layer}`].rowData[i])
+              this.missingField = true;
+            }
+          }
         }
       }
-    },
-    checkNodes(Layer){
-      console.log("Hello "+Layer)
-      for(let i=0; i<=Layer.length;i++){
-        
-        if(Layer[i]==""){
-          console.log("Blank Spaces")
-        }
+      console.log(this.missingField)
+      if(this.missingField == false){
+         this.submit = !this.submit
       }
+      else{
+        this.submit = !this.submit  /// TAKE THIS OUT WHEN DONE TESTING
+        //alert('Please make sure to fill out all fields'); // UNCOMMENT WHEN DONE TESTING
+        this.missingField = false;
+        console.log(this.missingField)
+      }
+      ///this.checkNodes()
     },
     filterNodes(layerName) {
       return this.nodes.filter((n) => {
@@ -164,7 +184,25 @@ export default {
         }
       }
     },
-
+    checkAll:function(){
+      console.log("CheckAll")
+      this.isCheckAll = !this.isCheckAll;
+      //var selectedNodes =[];
+      for (let conn = 9; conn <= 15; conn++) {
+        //for (let i = 0; i < this.$refs[`${conn}`].layerNodes2; i++) {
+          this.$refs[`${conn}`].checkAll()
+          this.selectedNodes.push(this.$refs[`${conn}`].selectedNodes)
+        //}
+      }
+    },
+    // updateCheckall: function(){
+    //   console.log(this.selectedNodes.length == this.layerNodes2.length)
+    //   if(this.selectedNodes.length == this.layerNodes2.length){
+    //      this.isCheckAll = true;
+    //   }else{
+    //      this.isCheckAll = false;
+    //   }
+    // },
     Submit() {
       if (!this.networkTitle) {
         const d = new Date();
@@ -214,6 +252,7 @@ export default {
    font-size: 17px;
    font-weight: 550;
    padding-left: 10px;
+   padding-bottom:5px;
    }
 
 </style>

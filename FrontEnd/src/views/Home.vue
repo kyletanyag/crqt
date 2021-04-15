@@ -1,54 +1,22 @@
 <template>
-<div class="pt-5 mt-5">
-  <div class="pt-5">
-    <img alt="CRQT logo" src="../assets/logo.png">
-    <h1 class="pt-2">Welcome to the Cyber Resilience Quantification Tool (CRQT)</h1>
-    <h2>Developed by: </h2>
-      <ul class="list-unstyled">
-        <li v-for="member in team" :key="member">
-          <h4>
-            {{ member }}
-          </h4>
-        </li>
-      </ul>
-  </div>
-</div>
-</template>
+<img alt="CRQT logo" src="../assets/logo.png">
+<h1 class="pt-2">Welcome to the Cyber Resilience Quantification Tool (CRQT)</h1>
+  <h5>We are currently working on the development of a simulation platform which takes into account the guidelines 
+	as discussed in the NIST 800-82 recommended Defense-In-Depth architecture for Industrial Control System (ICS).  
+	The primary objective of the tool is to be able to perform Security audit of bulk power systems by providing 
+	measurable values for the cyber security metrics such as resilience, robustness, redundancy and risk. The tool 
+	considers various network components within different layers of a power system communication network and the 
+	associated vulnerabilities for those network elements as defined in the NVD (National Vulnerability Database). 
+	Primarily we are considering only the products (means vendor and product model) for each layer such as 
+	corporate DMZ, corporate LAN, control system DMZ and control system LAN layers to have the corresponding 
+	vulnerabilities in node level. Right now, we are considering the impacts in the physical layer by considering 
+	a IEEE 9-bus system as discussed in [2]. We are working on how to allocate physical impacts (MW power lost due to an attack)
+	by considering the power station nodes (such generation nodes and transmission nodes) connectivity. </h5>
+
+ </template>
 
 <script>
-import axios from 'axios';
-export default {
-  name: 'Home',
 
-  data() {
-    return {
-      team: [
-        'Gul Ayaz',
-        'Cierra Hall',
-        'Thomas Laverghetta',
-        'Alex Soliza',
-        'Kyle Tanyag'
-      ]
-    }
-  },
-
-  created() {
-    axios.get('http://localhost:5000/test_connection')
-      .then((r) => {
-        console.log(r);
-        axios.get('http://localhost:2000/api/browse/microsoft')
-          .then((r) => {
-            console.log(r);
-          })
-          .catch(() => {
-            this.$router.push({name: 'Error', params: {errorCode: 'CVE-Search'}})
-          })
-      })
-      .catch(() => {
-        this.$router.push({name: 'Error', params: {errorCode: 'Flask'}})
-      });
-  },
-}
 </script>
 
 <style>

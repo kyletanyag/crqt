@@ -32,7 +32,7 @@
                   <div align="center">
                      <p>Server Product</p>
                      <select v-model="rows[index][2]">
-                        <option v-for="item in serverProduct[index]" :key="item" :value="item">{{item}}</option>                        
+                        <option v-for="item in serverProduct[index]" :key="item" :value="item" >{{item}}</option>                        
                      </select>
                   </div>
                </td>
@@ -60,6 +60,7 @@
 <script>
 import Multiselect from '@vueform/multiselect'
 import http from '@/http-common.js';
+import axios from 'axios';
 export default {
   name: 'Model Driven Setting',
     
@@ -92,7 +93,26 @@ export default {
       return nodes;
     }
   },
-
+  watch: {
+    selectedVendor() { 
+      for(let i =0; i< this.rows.length; i++){
+      http.get(`product_query/server/${this.rows[i][1]}`)
+      .then((r) => {
+        if (r.data.error) console.log(r.data.error);
+        this.products = r.data.query;
+      });
+      }
+    },
+    selectedProduct() { // Example of how to get data from CVE-Search !!! 
+    this.vulnerability_list = [];
+    for(let i =0; i< this.rows.length; i++){
+      axios.get(`http://localhost:2000/api/search/${this.rows[i][1].toLowerCase()}/${this.rows[i][2].toLowerCase()}`).then((r) => {
+        console.log(r);
+        r.data.results.forEach((e) => {this.vulnerability_list.push(e.id)});
+      });
+    }
+    }
+  },
   methods: {
     addRow() {
       this.rows.push([undefined, undefined, undefined, 1]);
@@ -112,6 +132,7 @@ export default {
     return{
       rows: [[undefined, undefined, undefined, 1]],
       serverProduct: [],
+      vulnerability_list: [],
       selectedVulnerabilities:[]
     };
   },
