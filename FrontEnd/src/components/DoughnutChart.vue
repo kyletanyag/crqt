@@ -25,9 +25,16 @@ export default defineComponent({
           data: this.data,
           label: this.name,
           backgroundColor: [  // add more background colors !!!
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)'
+            'rgb(255, 0, 0)',
+            'rgb(0, 0, 255)',
+            'rgb(242, 117, 0)',
+            'rgb(204, 0, 255)',
+            'rgb(255, 242, 0)',
+            'rgb(3, 206, 237)',
+            'rgb(255, 0, 162)',
+            'rgb(0, 255, 0)'
+
+
           ],
         }
       ],
