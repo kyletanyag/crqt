@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify
 from .nvd import model_driven_cvss_query 
+from .round_sig import round_sig
 from enum import IntEnum, auto
 from copy import deepcopy 
 from collections import deque
@@ -108,9 +109,9 @@ def get_network_topology():
             edges.append({
                 'source'                : node.index,
                 'target'                : e.target.index,
-                'base_score'            : round(e.target.weights[0],3),
-                'exploitability_score'  : round(e.target.weights[1],3),
-                'impact_score'          : round(e.target.weights[2],3)
+                'base_score'            : round_sig(e.target.weights[0],3),
+                'exploitability_score'  : round_sig(e.target.weights[1],3),
+                'impact_score'          : round_sig(e.target.weights[2],3)
             })
     
     return {'nodes': vertices, 'edges' : edges}, 200
@@ -212,7 +213,7 @@ def shortest_paths_gen():
 @model_analysis_bp.route('/model_driven/attack_paths/get_shortest_path_computation_time', methods=['GET'])
 def shortest_path_comp_time():
     global shortest_path_time
-    return jsonify({'shortest_path_computation_time' : round(shortest_path_time,4)})
+    return jsonify({'shortest_path_computation_time' : round_sig(shortest_path_time,4)})
 
 # find exploitability, impact, and base scoes from origin to node
 @model_analysis_bp.route('/model_driven/attack_paths/<node_index>', methods=['GET'])
@@ -247,13 +248,13 @@ def origin_to_node_metrics(node_index):
         metrics_per_path.append({
                 'path_id' : len(exploitability_list) + 1,
                 'path'    : [x.target.index for x in path],
-                'base_score' : round(score[0],3),
-                'exploitability_score' : round(score[1],3),
-                'impact_score' : round(score[2],3)
+                'base_score' : round_sig(score[0],3),
+                'exploitability_score' : round_sig(score[1],3),
+                'impact_score' : round_sig(score[2],3)
                 })
 
-        exploitability_list.append([len(metrics_per_path) - 1,round(score[1],3)])
-        impact_list.append([len(metrics_per_path) - 1,round(score[2],3)])
+        exploitability_list.append([len(metrics_per_path) - 1,round_sig(score[1],3)])
+        impact_list.append([len(metrics_per_path) - 1,round_sig(score[2],3)])
 
     
     ## finding top 5 most vulnerable paths
@@ -286,13 +287,13 @@ def origin_to_node_metrics(node_index):
         'metrics_per_path': metrics_per_path,
         'number_attack_paths' : len(Solution_Path),
         'averge_length_attack_paths' : [
-            round(score_sum[0] / len(Solution_Path),3), 
-            round(score_sum[1] / len(Solution_Path),3), 
-            round(score_sum[2] / len(Solution_Path),3)
+            round_sig(score_sum[0] / len(Solution_Path),3), 
+            round_sig(score_sum[1] / len(Solution_Path),3), 
+            round_sig(score_sum[2] / len(Solution_Path),3)
             ],
         'top_exploitable': top_exploitable, 
         'top_impactful': top_impactful,
-        'computation_time' : round(processing_time,4)
+        'computation_time' : round_sig(processing_time,4)
         })
 
 ## Vulnerable Host Percentage Metrics
@@ -306,21 +307,21 @@ def vulnerable_host_percentage():
     # counting number of nodes with incoming edges
     number_vulnerable_hosts = sum(len(node.in_edges) > 0 for node in vulnerability_graph)
 
-    # num of hosts
-    number_hosts = len(vulnerability_graph)
+    # num of hosts (all nodes except remote)
+    number_hosts = len(vulnerability_graph) - 1
 
-    vulnerable_host_percentage = 100.0 * number_vulnerable_hosts / len(vulnerability_graph)
+    vulnerable_host_percentage = 100.0 * number_vulnerable_hosts / number_hosts
     non_vulnerable_host_percentage = 100 - vulnerable_host_percentage
 
     # processing time calc
     processing_time = time.time() - start_timer
 
     return jsonify({
-        'number_vulnerable_hosts': round(number_vulnerable_hosts,3),
-        'number_hosts': round(number_hosts,3),
-        'vulnerable_host_percentage': round(vulnerable_host_percentage,3),
-        'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3),
-        'computation_time' : round(processing_time,4)
+        'number_vulnerable_hosts': round_sig(number_vulnerable_hosts,3),
+        'number_hosts': round_sig(number_hosts,3),
+        'vulnerable_host_percentage': round_sig(vulnerable_host_percentage,3),
+        'non_vulnerable_host_percentage': round_sig(non_vulnerable_host_percentage,3),
+        'computation_time' : round_sig(processing_time,4)
         })
 
 ## Centrality Metrics
@@ -493,15 +494,15 @@ def centrality():
         centrality_time = time.time() - start_timer
     
     return jsonify({
-        "betweeness": [round(x,3) for x in centrality_metrics[0]],
-        "indegree"  : [round(x,3) for x in centrality_metrics[1]],
-        "outdegree" : [round(x,3) for x in centrality_metrics[2]],
-        "degree"    : [round(x,3) for x in centrality_metrics[3]],
-        "closeness" : [round(x,3) for x in centrality_metrics[4]],
-        "pagerank"  : [round(x,3) for x in centrality_metrics[5]],
-        "katz"      : [round(x[0],3) for x in centrality_metrics[6]],
-        "shortest_path_computation_time" : round(shortest_path_time,4),
-        "centrality_computation_time" : round(centrality_time,4)
+        "betweeness": [round_sig(x,3) for x in centrality_metrics[0]],
+        "indegree"  : [round_sig(x,3) for x in centrality_metrics[1]],
+        "outdegree" : [round_sig(x,3) for x in centrality_metrics[2]],
+        "degree"    : [round_sig(x,3) for x in centrality_metrics[3]],
+        "closeness" : [round_sig(x,3) for x in centrality_metrics[4]],
+        "pagerank"  : [round_sig(x,3) for x in centrality_metrics[5]],
+        "katz"      : [round_sig(x[0],3) for x in centrality_metrics[6]],
+        "shortest_path_computation_time" : round_sig(shortest_path_time,4),
+        "centrality_computation_time" : round_sig(centrality_time,4)
     })
     
 
@@ -548,11 +549,10 @@ def TOPSIS():
         n = t.calc()        # calculating topsis, n is array of criticalities of each node
 
         for i in range(len(n)):
-            topsis_metrics.append({"node_id" : i + 1, "topsis_score": round(n[i],3)})
+            topsis_metrics.append({"node_id" : i + 1, "topsis_score": round_sig(n[i],3)})
 
         topsis_time = time.time() - start_timer
-    
     return jsonify({
         "topsis" : topsis_metrics,
-        "topsis_computation_time" : round(topsis_time,4)
+        "topsis_computation_time" : round_sig(topsis_time,4)
     })

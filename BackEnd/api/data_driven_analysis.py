@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from .round_sig import round_sig
 from enum import Enum, auto
 from copy import deepcopy 
 from collections import deque
@@ -134,9 +135,9 @@ def getDerivedScores():
             'id' : node.index,
             'description' : node.description,
             'node_type' : node_type_to_str[node.node_type], 
-            'base_score' : round(node.derived_score[0],3),
-            'exploitability_score' : round(node.derived_score[1],3),
-            'impact_score' : round(node.derived_score[2],3)
+            'base_score' : round_sig(node.derived_score[0],3),
+            'exploitability_score' : round_sig(node.derived_score[1],3),
+            'impact_score' : round_sig(node.derived_score[2],3)
         })
         for e in node.next_node:
             edges.append({'source' : node.index, 'target' : e.index})
@@ -148,7 +149,7 @@ def getDerivedScores():
 def percentage_execCode_nodes():
     global LAG
     result = float(sum(node.isExecCode for node in LAG)) / float(len(LAG)) * 100.0
-    return jsonify({'percentage_execCode_nodes': round(result,3)})
+    return jsonify({'percentage_execCode_nodes': round_sig(result,3)})
 
 # returns the execCode nodes with their probabilities
 @data_analysis_bp.route('/data_driven/execCode_node_probabilities', methods=['GET'])
@@ -162,9 +163,9 @@ def execCode_node_probabilities():
                 'id' : node.index,
                 'description' : node.description,
                 'node_type' : 'Derived Fact', 
-                'base_score' : round(node.derived_score[0],3),
-                'exploitability_score' : round(node.derived_score[1],3),
-                'impact_score' : round(node.derived_score[2],3)
+                'base_score' : round_sig(node.derived_score[0],3),
+                'exploitability_score' : round_sig(node.derived_score[1],3),
+                'impact_score' : round_sig(node.derived_score[2],3)
             })
     
     return jsonify({'nodes': vertices})
@@ -181,9 +182,9 @@ def derived_node_probabilities():
                 'id' : node.index,
                 'description' : node.description,
                 'node_type' : 'Derived Fact', 
-                'base_score' : round(node.derived_score[0],3),
-                'exploitability_score' : round(node.derived_score[1],3),
-                'impact_score' : round(node.derived_score[2],3)
+                'base_score' : round_sig(node.derived_score[0],3),
+                'exploitability_score' : round_sig(node.derived_score[1],3),
+                'impact_score' : round_sig(node.derived_score[2],3)
             })
     
     return jsonify({'nodes': vertices})
@@ -192,13 +193,13 @@ def derived_node_probabilities():
 def percentage_rule_nodes():
     global LAG
     result = float(sum(node.node_type == DataDriven.Node_Type.DERIVATION for node in LAG)) / float(len(LAG)) * 100.0
-    return jsonify({'percentage_rule_nodes': round(result,3)})
+    return jsonify({'percentage_rule_nodes': round_sig(result,3)})
 
 @data_analysis_bp.route('/data_driven/percentage_derived_nodes', methods=['GET'])
 def percentage_derived_nodes():
     global LAG
     result=(float(sum(node.node_type == DataDriven.Node_Type.DERIVED for node in LAG)) / float(len(LAG)) * 100.0)  
-    return jsonify({'percentage_derived_nodes': round(result,3)})
+    return jsonify({'percentage_derived_nodes': round_sig(result,3)})
 
 @data_analysis_bp.route('/data_driven/network_entropy', methods=['GET'])
 def network_entropy():
@@ -208,9 +209,9 @@ def network_entropy():
     
     return jsonify({
         'network_entropy': [
-                {'base' : round(net_entropy[0],3)},
-                {'exploitability' : round(net_entropy[1],3)},
-                {'impact' : round(net_entropy[2],3)}
+                {'base' : round_sig(net_entropy[0],3)},
+                {'exploitability' : round_sig(net_entropy[1],3)},
+                {'impact' : round_sig(net_entropy[2],3)}
             ]
         })
 
