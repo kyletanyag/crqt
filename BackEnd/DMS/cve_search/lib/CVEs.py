@@ -77,12 +77,12 @@ class CveHandler(object):
             if "vulnerable_configuration" in e:
                 vulconf = []
                 ranking = []
-                for conf in e["vulnerable_configuration"]:
-                    vulconf.append({"id": conf, "title": self.getcpe(cpeid=conf)})
-                    if self.rankinglookup:
-                        rank = self.getranking(cpeid=conf)
-                        if rank and rank not in ranking:
-                            ranking.append(rank)
+                # for conf in e["vulnerable_configuration"]:
+                #     vulconf.append({"id": conf, "title": self.getcpe(cpeid=conf)})
+                #     if self.rankinglookup:
+                #         rank = self.getranking(cpeid=conf)
+                #         if rank and rank not in ranking:
+                #             ranking.append(rank)
                 e["vulnerable_configuration"] = vulconf
             if self.rankinglookup and len(ranking) > 0:
                 e["ranking"] = ranking
@@ -93,7 +93,7 @@ class CveHandler(object):
         else:
             e = None
 
-        return e
+        return {"cvss" : e["cvss"], "impactScore" : e["impactScore"], "exploitabilityScore" : e["exploitabilityScore"]}
 
     def getranking(self, cpeid=None, loosy=True):
 

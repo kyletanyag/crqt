@@ -11,31 +11,40 @@ from .data_driven_analysis import DataDriven, DerivedScore, DataDriven_init
 from .model_driven_analysis import ModelDriven, shortest_paths_gen, ModelDriven_init
 import time
 
+# load percentage - percentage of loading file
+load_percentage = 0.0
+
 # input variables
-title = ""                      # title/name of network
-input_date = ""                 # date/time of network input into system
+title_data_driven = ""                      # title/name of network
+input_date_data_driven = ""                 # date/time of network input into system
 
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
+
+@graph_bp.route('/file_load_percentage', methods=['GET'])
+def file_load_percentage():
+    global load_percentage
+    return {"file_load_percentage" : load_percentage}
 
 @graph_bp.route('/test_connection', methods=['GET'])
 def test_connection():
     return 'Good Connection', 200
 
-@graph_bp.route('/get_network_title', methods=['GET'])
+@graph_bp.route('/data_driven/get_network_title', methods=['GET'])
 def get_network_title():
-    global title
-    return jsonify({"network_title" : title})
+    global title_data_driven
+    return jsonify({"network_title" : title_data_driven})
 
-@graph_bp.route('/get_input_date', methods=['GET'])
+@graph_bp.route('/data_driven/get_input_date', methods=['GET'])
 def get_input_date():
-    global input_date
-    return jsonify({"input_date" : input_date})
+    global input_date_data_driven
+    return jsonify({"input_date" : input_date_data_driven})
 
 @graph_bp.route('/network_topology_data_driven_input', methods=['POST'])
 def network_topology_data_driven_input():
-    global title
-    global input_date 
+    global title_data_driven
+    global input_date_data_driven 
+    global load_percentage
     from .data_driven_analysis import LAG
 
     network = request.get_json()  # json network topology data driven
@@ -47,8 +56,8 @@ def network_topology_data_driven_input():
     DataDriven_init()
     
     # setting title and input date
-    title = network["network_title"]
-    input_date = network["date"]
+    title_data_driven = network["network_title"]
+    input_date_data_driven = network["date"]
 
     leaf_queue = deque()
 
@@ -86,7 +95,10 @@ def network_topology_data_driven_input():
             execCode_index = node["description"].find('execCode')
             if execCode_index != -1:
                 # if execCode node, flag
-                LAG[-1].isExecCode = True            
+                LAG[-1].isExecCode = True
+
+        # calculating load percentage
+        load_percentage = len(LAG) / len(network["vertices"])            
 
     # sorting LAG by id
     LAG.sort(key=lambda node: node.index)
@@ -104,19 +116,32 @@ def network_topology_data_driven_input():
 
     return {'parsing_time': round(parsing_time,4)}, 200
 
-        
+
+
+title_model_driven = ""                      # title/name of network
+input_date_model_driven = ""                 # date/time of network input into system
+
+@graph_bp.route('/model_drivenn/get_network_title', methods=['GET'])
+def get_network_title():
+    global title_model_driven
+    return jsonify({"network_title" : title_model_driven})
+
+@graph_bp.route('/model_driven/get_input_date', methods=['GET'])
+def get_input_date():
+    global input_date_model_driven
+    return jsonify({"input_date" : input_date_model_driven})  
 
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
 def network_topology_model_driven_input():
-    global title
-    global input_date 
+    global title_model_driven
+    global input_date_model_driven 
     from .model_driven_analysis import vulnerability_graph
 
     network = request.get_json()  # json network topology data driven
 
     # setting title and input date
-    title = network["network_title"]
-    input_date = network["date"]
+    title_model_driven = network["network_title"]
+    input_date_model_driven = network["date"]
 
     # initializing model-driven 
     ModelDriven_init() 
@@ -132,6 +157,9 @@ def network_topology_model_driven_input():
             index=node["id"],
             cve_ids=node["cve_ids"]
             ))
+        
+        # calculating load percentage
+        load_percentage = len(vulnerability_graph) / len(network["vertices"])
 
     # sorting vulnerability node list by index ascending order
     vulnerability_graph.sort(key=lambda node: node.index)
