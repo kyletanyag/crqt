@@ -3,6 +3,8 @@
     <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
     <h5 style="padding-left:10px" >Please input all the correct settings for each server and firewall</h5>
     <p></p>
+    <p></p>
+    <p></p>
     <p>Title of Network: <input style="padding-left:10px" v-model="networkTitle" placeholder="Title of Network" type="text"></p>
     <p>If you would like to upload previously saved settings, please upload the saved file: 
     <input style="padding-left:10px" type="file" @change="selectFile"></p>
@@ -284,7 +286,7 @@ export default {
 
 <style>
    table, th, td {
-   border: 1px solid rgb(226, 226, 226);
+   border: 1px solid rgba(86, 98, 143, 0.603);
    border-collapse: collapse;
    margin-left:7px;
    }

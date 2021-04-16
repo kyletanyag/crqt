@@ -6,7 +6,7 @@
     <form>
       <input type="button" style="margin-bottom:5px;" class="btn btn-secondary mx-2" @click="addRow(index)" value="Add Server">
     </form>
-      <table id="AddServer" width="100%">
+      <table id="AddServer" style="width: 80%">
          <tbody>
             <tr v-for="(row, index) in rows" :key="index" :row="row">
                <td>
@@ -141,4 +141,5 @@ export default {
 </script>
 
 <style>
+
 </style>

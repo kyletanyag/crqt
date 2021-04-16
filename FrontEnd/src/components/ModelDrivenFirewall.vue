@@ -3,7 +3,7 @@
   <h4> {{ title }} Settings:</h4>
   
     <p> Please select the product vendor, model, and quantity for your {{ layer }}.</p>
-    <table width=100% border="0" cellspacing="0" >
+    <table style="width: 80%" border="0" cellspacing="0" >
         <tbody>
           <tr>
               <td width="33%">
