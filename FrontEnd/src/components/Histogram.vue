@@ -9,7 +9,13 @@ export default defineComponent({
 
   options: {
     responsive: true,
-    maintainAspectRatio: true
+    maintainAspectRatio: true,
+    legend: {
+      display: false
+    },
+    tooltips: {
+      enabled: false
+    },
   },
 
   props: {
@@ -36,7 +42,25 @@ export default defineComponent({
       type: String,
       default: 'Y-Axis'
     },
-    barColor: String
+    barColor: String,
+
+    // Line-chart Props:
+    usingLineChart: {
+      type: Boolean,
+      default: false
+    },
+    lineData: {
+      type: Array,
+      default: function() {return [] }
+    },
+    // lineName: {   /// Line name isnt displayed anymore
+    //   type: String,
+    //   default: ''
+    // },
+    lineColor: {
+      type: String,
+      default: '#7979f8'
+    },
   },
 
   watch: {
@@ -94,7 +118,16 @@ export default defineComponent({
         { // data
           labels: labelArray,
           datasets: [
+            { // Line dataset comes first so that it's drawn on top of the histogram.
+              type: 'line',
+              //label: this.lineName,
+              borderColor: this.lineColor,
+              data: this.lineData,
+              fill: false, // we never want to fill in the space beneath the line. It looks awful
+              hidden: !this.usingLineChart
+            },
             {
+              type: 'bar',
               label: this.name,
               backgroundColor: this.barColor,
               data: numInEachBin
@@ -119,6 +152,16 @@ export default defineComponent({
               }
             }]
           },
+          legend: {
+            display: false
+          },
+          tooltips: {
+            enabled: false
+          },
+          title: {
+            display: true,
+            text: this.name
+          }
         }
       );
     }
