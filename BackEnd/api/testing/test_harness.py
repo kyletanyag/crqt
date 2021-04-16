@@ -12,7 +12,7 @@ class model_driven_tests:
     '''
     def generate_graph(filename):
         # test file opening
-        from model_driven_analysis import vulnerability_graph, ModelDriven_init, ModelDriven
+        from model_driven_analysis import vulnerability_graph, ModelDriven_init, ModelDriven, get_network_topology
         import json
         with open(filename) as f:
             network = json.load(f)
@@ -32,7 +32,7 @@ class model_driven_tests:
                 cve_ids=None
                 ))
             # setting node weight
-            vulnerability_graph[-1].weights[0] = 1.0/int(node["id"])
+            vulnerability_graph[-1].weights[:] = 1.0/int(node["id"])
 
         # sorting vulnerability node list by index ascending order
         vulnerability_graph.sort(key=lambda node: node.index)
@@ -49,7 +49,7 @@ class model_driven_tests:
 
     '''
     def centrality_test(filename):
-        from model_driven_analysis import ModelDriven_init, betweenness_centrality, degree_centrality, closeness_centrality, katz_centrality, pagerank_centrality
+        from model_driven_analysis import betweenness_centrality, degree_centrality, closeness_centrality, katz_centrality, pagerank_centrality
         
         # generate graph
         model_driven_tests.generate_graph(filename)
@@ -60,25 +60,46 @@ class model_driven_tests:
         pagerank = pagerank_centrality()    # pagerank
         kc = katz_centrality()              # katz cen
 
-        print("in-degree:",  [x for x in degree[0]])
-        print("out-degree:", [x for x in degree[1]])
-        print("tol-degree:", [x for x in degree[2]])
-        print("closeness:",  ["{:.2e}".format(x) for x in closeness])
-        print("betweenness:",["{:.2e}".format(x) for x in between])
-        print("pagerank:",   ["{:.2e}".format(x) for x in pagerank])
-        print("Katz:", ["{:.2e}".format(x[0]) for x in kc])
+        # print("in-degree:",  [x for x in degree[0]])
+        # print("out-degree:", [x for x in degree[1]])
+        # print("tol-degree:", [x for x in degree[2]])
+        print("pagerank")
+        for x in between:
+            print(x)
+        # print("closeness:",  [x for x in closeness])
+        # print("betweenness:",["{:.2e}".format(x) for x in between])
+        # print("pagerank:",   ["{:.2e}".format(x) for x in pagerank])
+        # print("Katz:", ["{:.2e}".format(x[0]) for x in kc])
 
     '''
 
     '''
     def attack_path_test(filename):
-        pass
+        from model_driven_analysis import origin_to_node_metrics 
+
+        # generate graph
+        model_driven_tests.generate_graph(filename)
+
+
+        print(origin_to_node_metrics(19))
+        print(origin_to_node_metrics(18))
+        print(origin_to_node_metrics(17))
 
     def vulnerable_host_test(filename):
-        pass
+        from model_driven_analysis import vulnerable_host_percentage
+
+        # generate graph
+        model_driven_tests.generate_graph(filename)
+
+        print(vulnerable_host_percentage())
 
     def topsis_test(filename):
-        pass
+        from model_driven_analysis import TOPSIS
+
+        # generate graph
+        model_driven_tests.generate_graph(filename)
+
+        print(TOPSIS())
 
 
 class data_driven_tests:
@@ -277,4 +298,4 @@ if __name__ == "__main__":
     # data_driven_tests.derived_score_propagation_test(4)
     # print("\n8-nodes:")
     # data_driven_tests.derived_score_propagation_test(8)
-    model_driven_tests.centrality_test('./model_driven2.json')
+    model_driven_tests.vulnerable_host_test('./model_driven2.json')
