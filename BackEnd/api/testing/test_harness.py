@@ -43,6 +43,12 @@ class model_driven_tests:
             for tar in edges["nextNode"]:
                 ModelDriven.Edge(vulnerability_graph[curr], vulnerability_graph[tar])
 
+        # connecting remote attacker
+        for node in vulnerability_graph:
+            if node.layer == ModelDriven.Layers.CORP_FW1:
+                ModelDriven.Edge(vulnerability_graph[0], node)
+        
+        print(get_network_topology())
         return 'Done', 21
     
     '''
@@ -298,4 +304,4 @@ if __name__ == "__main__":
     # data_driven_tests.derived_score_propagation_test(4)
     # print("\n8-nodes:")
     # data_driven_tests.derived_score_propagation_test(8)
-    model_driven_tests.vulnerable_host_test('./model_driven2.json')
+    model_driven_tests.generate_graph('./model_driven2.json')

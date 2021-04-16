@@ -141,7 +141,11 @@ def network_topology_model_driven_input():
         curr = edges["currNode"]
         for tar in edges["nextNode"]:
             ModelDriven.Edge(vulnerability_graph[curr], vulnerability_graph[tar])
-
+    
+    # connecting remote attacker
+    for node in vulnerability_graph:
+        if node.layer == ModelDriven.Layers.CORP_FW1:
+            ModelDriven.Edge(vulnerability_graph[0], node)
 
     # start generating shorest paths
     shortest_paths_gen()
