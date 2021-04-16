@@ -227,7 +227,7 @@ export default {
 
       reader.readAsText(file);
     },
-    
+
     Submit() {
       if (!this.networkTitle) {
         const d = new Date();
@@ -271,7 +271,7 @@ export default {
 </script>
 
 <style>
-   table, th, td {
+   /* table, th, td {
    border: 1px solid rgba(86, 98, 143, 0.603);
    border-collapse: collapse;
    margin-left:7px;
@@ -289,7 +289,7 @@ export default {
    font-weight: 550;
    padding-left: 10px;
    padding-bottom:5px;
-   }
+   } */
 
 </style>
 <style src="@vueform/multiselect/themes/default.css"></style>

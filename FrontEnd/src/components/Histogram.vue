@@ -1,5 +1,5 @@
 <script>
-
+/*eslint-disable */
 import { defineComponent } from 'vue'
 import { Bar } from 'vue3-chart-v2'
 
@@ -46,7 +46,6 @@ export default defineComponent({
     },
 
     numBins() {
-      this.state.chartObj.destroy()
       this.renderHistogram();     
     },
   },
