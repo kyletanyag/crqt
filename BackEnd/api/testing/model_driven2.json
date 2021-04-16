@@ -22,7 +22,6 @@
         { "id": 20, "vendor": "microsoft", "product": "xbox_360", "layer" : "corp_lan", "cve_ids" : ["CVE-2007-1221"]}
     ],
     "arcs": [ 
-        { "currNode": 0, "nextNode": [1,2,3,4]}, 
         { "currNode": 1, "nextNode": [5,6,7]}, 
         { "currNode": 2, "nextNode": [7,8,9]},  
         { "currNode": 3, "nextNode": [8,10,11]}, 
