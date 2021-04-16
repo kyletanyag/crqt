@@ -1,10 +1,12 @@
 <template>
   <body>
     <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-    <p>Please input all the correct settings for your</p>
-    <input v-model="networkTitle" placeholder="Title of Network" type="text">
+    <h5 style="padding-left:10px" >Please input all the correct settings for each server and firewall</h5>
     <p></p>
-    <input type="file" @change="selectFile">
+    <p>Title of Network: <input style="padding-left:10px" v-model="networkTitle" placeholder="Title of Network" type="text"></p>
+    <p>If you would like to upload previously saved settings, please upload the saved file: 
+    <input style="padding-left:10px" type="file" @change="selectFile"></p>
+
     <model-driven-firewall title="Corporate Firewall L1" :vendors="firewalls" layer="corp_fw_1" ref="1"/>
     <model-driven-setting title="Corporate DMZ" :serverTypes="CorpDMZ" 
       :vendors="servers" layer="corp_dmz" ref="2"/>
