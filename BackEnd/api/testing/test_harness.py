@@ -12,7 +12,7 @@ class model_driven_tests:
     '''
     def generate_graph(filename):
         # test file opening
-        from model_driven_analysis import vulnerability_graph, ModelDriven_init, ModelDriven
+        from model_driven_analysis import vulnerability_graph, ModelDriven_init, ModelDriven, get_network_topology
         import json
         with open(filename) as f:
             network = json.load(f)
