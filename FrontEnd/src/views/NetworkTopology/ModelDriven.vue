@@ -213,14 +213,6 @@ export default {
       }
     },
 
-    // updateCheckall: function(){
-    //   console.log(this.selectedNodes.length == this.layerNodes2.length)
-    //   if(this.selectedNodes.length == this.layerNodes2.length){
-    //      this.isCheckAll = true;
-    //   }else{
-    //      this.isCheckAll = false;
-    //   }
-    // },
     selectFile(event) {
       var file = event.target.files[0]
       var reader = new FileReader();
@@ -235,6 +227,7 @@ export default {
 
       reader.readAsText(file);
     },
+    
     Submit() {
       if (!this.networkTitle) {
         const d = new Date();
