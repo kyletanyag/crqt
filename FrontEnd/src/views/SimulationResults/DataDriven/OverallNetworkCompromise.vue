@@ -65,10 +65,10 @@
         <h5 class="pt-3">Select Bin Size:</h5>
         <div class="btn-group btn-group-toggle pt-2 px-2"> 
           <label class="btn btn-secondary" :class="{active: numBins === 5}">
-            <input class="pause" type="radio" v-model="numBins" :value="5" autocomplete="off"> 5
+            <input  type="radio" v-model="numBins" :value="5" autocomplete="off"> 5
           </label>
           <label class="btn btn-secondary" :class="{active: numBins === 10}">
-            <input class="pause" type="radio" v-model="numBins" :value="10"  autocomplete="off"> 10
+            <input  type="radio" v-model="numBins" :value="10"  autocomplete="off"> 10
           </label>
           <label class="btn btn-secondary" :class="{active: numBins === 20}">
             <input class="pause" type="radio" v-model="numBins" :value="20"  autocomplete="off"> 20

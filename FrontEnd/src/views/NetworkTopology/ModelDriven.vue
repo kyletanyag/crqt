@@ -1,6 +1,13 @@
 <template>
   <body>
     <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
+    <h5 style="padding-left:10px" >Please input all the correct settings for each server and firewall</h5>
+    <p></p>
+    <p></p>
+    <p></p>
+    <p>Title of Network: <input style="padding-left:10px" v-model="networkTitle" placeholder="Title of Network" type="text"></p>
+    <p>If you would like to upload previously saved settings, please upload the saved file: 
+    <input style="padding-left:10px" type="file" @change="selectFile"></p>
 
     <model-driven-firewall title="Corporate Firewall L1" :vendors="firewalls" layer="corp_fw_1" ref="1"/>
     <model-driven-setting title="Corporate DMZ" :serverTypes="CorpDMZ" 
@@ -173,17 +180,17 @@ export default {
         }
       }
       console.log(this.missingField)
-      if(this.missingField == false){
+      if (this.missingField == false) {
          this.submit = !this.submit
-      }
-      else{
+      } else {
         this.submit = !this.submit  /// TAKE THIS OUT WHEN DONE TESTING
-        //alert('Please make sure to fill out all fields'); // UNCOMMENT WHEN DONE TESTING
+        // alert('Please make sure to fill out all fields'); // UNCOMMENT WHEN DONE TESTING
         this.missingField = false;
         console.log(this.missingField)
       }
       ///this.checkNodes()
     },
+
     filterNodes(layerName) {
       return this.nodes.filter((n) => {
         return n.layer == layerName;
@@ -198,25 +205,29 @@ export default {
         }
       }
     },
-    checkAll:function(){
-      console.log("CheckAll")
+
+    checkAll() {
       this.isCheckAll = !this.isCheckAll;
-      //var selectedNodes =[];
       for (let conn = 9; conn <= 15; conn++) {
-        //for (let i = 0; i < this.$refs[`${conn}`].layerNodes2; i++) {
-          this.$refs[`${conn}`].checkAll()
-          this.selectedNodes.push(this.$refs[`${conn}`].selectedNodes)
-        //}
+        this.isCheckAll ? this.$refs[`${conn}`].checkAll() : this.$refs[`${conn}`].uncheckAll();
       }
     },
-    // updateCheckall: function(){
-    //   console.log(this.selectedNodes.length == this.layerNodes2.length)
-    //   if(this.selectedNodes.length == this.layerNodes2.length){
-    //      this.isCheckAll = true;
-    //   }else{
-    //      this.isCheckAll = false;
-    //   }
-    // },
+
+    selectFile(event) {
+      var file = event.target.files[0]
+      var reader = new FileReader();
+
+      reader.onload = ((event) => {
+        var obj = JSON.parse(event.target.result);
+        console.log(obj)
+        this.nodes = obj.vertices;
+        this.edges = obj.arcs;
+        this.network_title = obj.network_title
+      });
+
+      reader.readAsText(file);
+    },
+
     Submit() {
       if (!this.networkTitle) {
         const d = new Date();
@@ -260,8 +271,8 @@ export default {
 </script>
 
 <style>
-   table, th, td {
-   border: 1px solid rgb(226, 226, 226);
+   /* table, th, td {
+   border: 1px solid rgba(86, 98, 143, 0.603);
    border-collapse: collapse;
    margin-left:7px;
    }
@@ -278,7 +289,7 @@ export default {
    font-weight: 550;
    padding-left: 10px;
    padding-bottom:5px;
-   }
+   } */
 
 </style>
 <style src="@vueform/multiselect/themes/default.css"></style>

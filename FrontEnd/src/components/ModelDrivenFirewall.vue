@@ -3,7 +3,7 @@
   <h4> {{ title }} Settings:</h4>
   
     <p> Please select the product vendor, model, and quantity for your {{ layer }}.</p>
-    <table width=100% border="0" cellspacing="0" >
+    <table style="width: 80%" border="0" cellspacing="0" >
         <tbody>
           <tr>
               <td width="33%">
@@ -58,7 +58,7 @@ export default {
     rowData() {
       var nodes = [];
       for (let i = 0; i < this.numfirewalls; i++) {
-        let cve_list = []
+        let cve_list = [];
         for (let j = 0; j < this.selectedVulnerabilities.length; j++)  {
           cve_list.push(this.vulnerability_list[this.selectedVulnerabilities[j]]);
         }

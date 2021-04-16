@@ -38,25 +38,22 @@ export default {
     layerName2: String,
   },
   methods:{
-    checkAll:function(){
-      this.selectedNodes =[];
-      
-        for(var key in this.layerNodes2){
-          console.log(this.layerNodes2[key].id)
-          this.selectedNodes.push(this.layerNodes2[key].id)
-        }
-      
-      return this.selectedNodes;
-    },
-    updateCheckall: function(){
-      console.log(this.selectedNodes.length == this.layerNodes2.length)
-      if(this.selectedNodes.length == this.layerNodes2.length){
-         this.isCheckAll = true;
-      }else{
-         this.isCheckAll = false;
+    checkAll() {
+      for (let i = 0; i < this.layerNodes1.length; i++) {
+        this.selectedNodes[i] = [];
+        this.layerNodes2.forEach((n) => {
+          this.selectedNodes[i].push(n.id);
+        });
       }
     },
+
+    uncheckAll() {
+      for (let i = 0; i < this.layerNodes1.length; i++) {
+        this.selectedNodes[i] = [];
+      }   
+    }
   },
+
   computed:{
     rowData() {
       if (!this.selectedNodes) return;
@@ -74,8 +71,14 @@ export default {
   },
 
   data() {
+    // inits selected nodes array to be multi-dimensional
+    // for v-model checkbox selections
     var selectedNodes = [];
     for (let i = 0; i < this.layerNodes1.length; i++) {
+      let a = [];
+      for (let j = 0; j < this.layerNodes2.length; j++) {
+        a.push(0);
+      }
       selectedNodes.push([]);
     }
 

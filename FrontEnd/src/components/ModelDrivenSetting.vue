@@ -6,7 +6,7 @@
     <form>
       <input type="button" style="margin-bottom:5px;" class="btn btn-secondary mx-2" @click="addRow(index)" value="Add Server">
     </form>
-      <table id="AddServer" width="100%">
+      <table id="AddServer" style="width: 80%">
          <tbody>
             <tr v-for="(row, index) in rows" :key="index" :row="row">
                <td>
@@ -31,7 +31,7 @@
                <td width="20%">
                   <div align="center">
                      <p>Server Product</p>
-                     <select v-model="rows[index][2]">
+                     <select v-model="rows[index][2]" @change="getVulnerabilities(index)">
                         <option v-for="item in serverProduct[index]" :key="item" :value="item" >{{item}}</option>                        
                      </select>
                   </div>
@@ -45,10 +45,10 @@
                <td width="20%">
                 <div>
                   <Multiselect v-if="rows[index][2]" 
-                    v-model="selectedVulnerabilities"
+                    v-model="rows[index][4]"
                     mode="multiple"
                     placeholder="Select your Vulnerabilites"
-                    :options="vulnerability_list"
+                    :options="vulnerability_list[index]"
                   />
                 </div>
                </td>
@@ -79,14 +79,19 @@ export default {
     rowData() {
       var nodes = []
       for (let i = 0; i < this.rows.length; i++) {
-        for(let j = 0; j < this.rows[i][3]; j++){
+        let cve_list = [];
+        for (let j = 0; j < this.rows[i][4].length; j++)  {
+          cve_list.push(this.vulnerability_list[i][this.rows[i][4][j]]);
+        }
+
+        for (let k = 0; k < this.rows[i][3]; k++) {
           nodes.push({
             layer: this.layer,
-            id: j, 
+            id: k, 
             type:this.rows[i][0],
             vendor: this.rows[i][1],
             product: this.rows[i][2],   
-            cve_ids: null
+            cve_ids: cve_list
           });
         }
       }
@@ -103,19 +108,11 @@ export default {
       });
       }
     },
-    selectedProduct() { // Example of how to get data from CVE-Search !!! 
-    this.vulnerability_list = [];
-    for(let i =0; i< this.rows.length; i++){
-      axios.get(`http://localhost:2000/api/search/${this.rows[i][1].toLowerCase()}/${this.rows[i][2].toLowerCase()}`).then((r) => {
-        console.log(r);
-        r.data.results.forEach((e) => {this.vulnerability_list.push(e.id)});
-      });
-    }
-    }
+
   },
   methods: {
     addRow() {
-      this.rows.push([undefined, undefined, undefined, 1]);
+      this.rows.push([undefined, undefined, undefined, 1, new Array()]);
     },
     removeRow(index) {
       this.rows.splice(index, 1);
@@ -127,17 +124,26 @@ export default {
         this.serverProduct[index] = r.data.query;
       });
     },
+    getVulnerabilities(index) { // Example of how to get data from CVE-Search !!! 
+    this.vulnerability_list[index] = [];
+    //for(let i =0; i< this.rows.length; i++){
+      axios.get(`http://localhost:2000/api/search/${this.rows[index][1].toLowerCase()}/${this.rows[index][2].toLowerCase()}`).then((r) => {
+        console.log(r);
+        r.data.results.forEach((e) => {this.vulnerability_list[index].push(e.id)});
+      });
+    //}
+    }
   },
   data() {
     return{
-      rows: [[undefined, undefined, undefined, 1]],
+      rows: [[undefined, undefined, undefined, 1, new Array()]],
       serverProduct: [],
       vulnerability_list: [],
-      selectedVulnerabilities:[]
     };
   },
 }
 </script>
 
 <style>
+
 </style>

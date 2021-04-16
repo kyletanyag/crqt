@@ -5,6 +5,7 @@
     <img alt="CRQT logo" src="../assets/logo.png">
     <h2>Developed by: </h2>
       <ul class="list-unstyled">
+        
         <li v-for="member in team" :key="member">
         
           <h4>
