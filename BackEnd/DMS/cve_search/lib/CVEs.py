@@ -69,27 +69,27 @@ class CveHandler(object):
     def getcve(self, cveid=None):
         if cveid is not None:
             e = getCVE(cveid, collection=self.collection)
-            if e is None:
-                return None
-            if "cwe" in e and self.capeclookup:
-                if e["cwe"].lower() != "unknown":
-                    e["capec"] = self.getcapec(cweid=(e["cwe"].split("-")[1]))
-            if "vulnerable_configuration" in e:
-                vulconf = []
-                ranking = []
-                # for conf in e["vulnerable_configuration"]:
-                #     vulconf.append({"id": conf, "title": self.getcpe(cpeid=conf)})
-                #     if self.rankinglookup:
-                #         rank = self.getranking(cpeid=conf)
-                #         if rank and rank not in ranking:
-                #             ranking.append(rank)
-                e["vulnerable_configuration"] = vulconf
-            if self.rankinglookup and len(ranking) > 0:
-                e["ranking"] = ranking
-            if self.via4lookup:
-                f = self.getVIA4(cveid)
-                if isinstance(f, dict):
-                    e = dict(itertools.chain(e.items(), f.items()))
+            # if e is None:
+            #     return None
+            # if "cwe" in e and self.capeclookup:
+            #     if e["cwe"].lower() != "unknown":
+            #         e["capec"] = self.getcapec(cweid=(e["cwe"].split("-")[1]))
+            # if "vulnerable_configuration" in e:
+            #     vulconf = []
+            #     ranking = []
+            #     # for conf in e["vulnerable_configuration"]:
+            #     #     vulconf.append({"id": conf, "title": self.getcpe(cpeid=conf)})
+            #     #     if self.rankinglookup:
+            #     #         rank = self.getranking(cpeid=conf)
+            #     #         if rank and rank not in ranking:
+            #     #             ranking.append(rank)
+            #     e["vulnerable_configuration"] = vulconf
+            # if self.rankinglookup and len(ranking) > 0:
+            #     e["ranking"] = ranking
+            # if self.via4lookup:
+            #     f = self.getVIA4(cveid)
+            #     if isinstance(f, dict):
+            #         e = dict(itertools.chain(e.items(), f.items()))
         else:
             e = None
 
