@@ -31,7 +31,7 @@
                <td width="20%">
                   <div align="center">
                      <p>Server Product</p>
-                     <select v-model="rows[index][2]">
+                     <select v-model="rows[index][2]" @change="getVulnerabilities(index)">
                         <option v-for="item in serverProduct[index]" :key="item" :value="item" >{{item}}</option>                        
                      </select>
                   </div>
@@ -48,7 +48,7 @@
                     v-model="selectedVulnerabilities"
                     mode="multiple"
                     placeholder="Select your Vulnerabilites"
-                    :options="vulnerability_list"
+                    :options="vulnerability_list[index]"
                   />
                 </div>
                </td>
@@ -103,15 +103,7 @@ export default {
       });
       }
     },
-    selectedProduct() { // Example of how to get data from CVE-Search !!! 
-    this.vulnerability_list = [];
-    for(let i =0; i< this.rows.length; i++){
-      axios.get(`http://localhost:2000/api/search/${this.rows[i][1].toLowerCase()}/${this.rows[i][2].toLowerCase()}`).then((r) => {
-        console.log(r);
-        r.data.results.forEach((e) => {this.vulnerability_list.push(e.id)});
-      });
-    }
-    }
+
   },
   methods: {
     addRow() {
@@ -127,6 +119,15 @@ export default {
         this.serverProduct[index] = r.data.query;
       });
     },
+    getVulnerabilities(index) { // Example of how to get data from CVE-Search !!! 
+    this.vulnerability_list[index] = [];
+    //for(let i =0; i< this.rows.length; i++){
+      axios.get(`http://localhost:2000/api/search/${this.rows[index][1].toLowerCase()}/${this.rows[index][2].toLowerCase()}`).then((r) => {
+        console.log(r);
+        r.data.results.forEach((e) => {this.vulnerability_list[index].push(e.id)});
+      });
+    //}
+    }
   },
   data() {
     return{

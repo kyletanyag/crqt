@@ -1,7 +1,10 @@
 <template>
   <body>
     <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-
+    <p>Please input all the correct settings for your</p>
+    <input v-model="networkTitle" placeholder="Title of Network" type="text">
+    <p></p>
+    <input type="file" @change="selectFile">
     <model-driven-firewall title="Corporate Firewall L1" :vendors="firewalls" layer="corp_fw_1" ref="1"/>
     <model-driven-setting title="Corporate DMZ" :serverTypes="CorpDMZ" 
       :vendors="servers" layer="corp_dmz" ref="2"/>
@@ -177,8 +180,8 @@ export default {
          this.submit = !this.submit
       }
       else{
-        this.submit = !this.submit  /// TAKE THIS OUT WHEN DONE TESTING
-        //alert('Please make sure to fill out all fields'); // UNCOMMENT WHEN DONE TESTING
+        //this.submit = !this.submit  /// TAKE THIS OUT WHEN DONE TESTING
+        alert('Please make sure to fill out all fields'); // UNCOMMENT WHEN DONE TESTING
         this.missingField = false;
         console.log(this.missingField)
       }
@@ -217,6 +220,24 @@ export default {
     //      this.isCheckAll = false;
     //   }
     // },
+    selectFile(){
+        var reader = new FileReader();
+        reader.onload =(function (event) {
+                console.log(event.target.result);
+                var obj = JSON.parse(event.target.result);
+                alert('Name : ' + obj.vertices[0].layer);
+                //this.alert_data();
+            })
+        reader.readAsText(event.target.files[0]);
+    },
+    // onReaderLoad(event){
+    //     console.log(event.target.result);
+    //     var obj = JSON.parse(event.target.result);
+    //     //alert_data(obj.name, obj.family);
+    // },
+    alert_data(){
+        //alert('Name : ' + name + ', Family : ' + family);
+    },
     Submit() {
       if (!this.networkTitle) {
         const d = new Date();

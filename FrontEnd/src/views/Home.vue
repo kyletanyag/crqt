@@ -1,6 +1,19 @@
 <template>
 <img alt="CRQT logo" src="../assets/logo.png">
 <h1 class="pt-2">Welcome to the Cyber Resilience Quantification Tool (CRQT)</h1>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3>Purpose</h3>
+    </div>
+    <div class="col-6">
+      2 of 3 (wider)
+    </div>
+    <div class="col">
+      3 of 3
+    </div>
+  </div>
+  </div>
   <h5>We are currently working on the development of a simulation platform which takes into account the guidelines 
 	as discussed in the NIST 800-82 recommended Defense-In-Depth architecture for Industrial Control System (ICS).  
 	The primary objective of the tool is to be able to perform Security audit of bulk power systems by providing 
