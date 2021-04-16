@@ -21,9 +21,7 @@
             <div class="col-12">
               Which node are you interested in analyzing? ID:&nbsp;&nbsp;
               <input type="number" v-model.number="desiredNodeID" :max="lastNodeID" min="1" maxlength="2"
-              @change="NotifyChange"
-              @keydown="NotifyChange">
-              <button class="ml-2 btn btn-primary btn-sm pause" id="id_submit" @click="GetAttackPaths(desiredNodeID)">Submit</button>
+                @change="GetAttackPaths(desiredNodeID)">
             </div>
             <div class="row pl-3 my-2">
               <div class="col-6 text-left">
@@ -43,7 +41,7 @@
                     <button :class="toggleBtnState(pathShow)" style="width: 100%" @click="pathShow = !pathShow">Show Path Data</button>
                   </td>
                   <td class="px-2 py-1">
-                    <button :class="toggleBtnStatePause(histogramShow)" style="width: 100%" @click="histogramShow = !histogramShow; if(histogramShow) pause();">Show Histograms</button>
+                    <button :class="toggleBtnState(histogramShow)" style="width: 100%" @click="histogramShow = !histogramShow">Show Histograms</button>
                   </td>
                 </tr>
                 <tr>
@@ -260,7 +258,7 @@ export default {
     },
 
     NotifyChange() {
-      document.getElementById('id_submit').className = "ml-2 btn btn-primary btn-sm pause";
+      document.getElementById('id_submit').className = "ml-2 btn btn-primary btn-sm";
     },
 
     sort(s) {
@@ -296,28 +294,12 @@ export default {
       }).catch((e) => {
         this.error = e;
       });
-      document.getElementById('id_submit').className = "ml-2 btn btn-secondary btn-sm pause";
-    },
-
-    pause() {
-      const btns = document.getElementsByClassName('pause');
-      btns.forEach((b) => {
-        b.disabled = true;
-      });
-      setTimeout(() => {
-        btns.forEach((b) => {
-          b.disabled = false;
-        });
-      }, 1500)
+      document.getElementById('id_submit').className = "ml-2 btn btn-secondary btn-sm";
     },
 
     toggleBtnState(x) {
       return x ? 'btn btn-secondary' : 'btn btn-primary'
     },
-
-    toggleBtnStatePause(x) {
-      return x ? 'btn btn-secondary pause' : 'btn btn-primary pause'
-    }
   },
 
   computed: {
@@ -349,8 +331,6 @@ export default {
     desiredNodeID() {
       if (this.desiredNodeID > this.lastNodeID) this.desiredNodeID = this.lastNodeID;
       if (this.desiredNodeID < 1) this.desiredNodeID = null;
-      
-      this.pause();
     }
   }
 }

@@ -1,33 +1,67 @@
 <template>
-  <body>
-    <h3 style="padding-left:10px"> Input Settings: Corporate Firewall, Corporate DMZ and Corporate LAN</h3>
-    <h5 style="padding-left:10px" >Please input all the correct settings for each server and firewall</h5>
-    <p></p>
-    <p></p>
-    <p></p>
-    <p>Title of Network: <input style="padding-left:10px" v-model="networkTitle" placeholder="Title of Network" type="text"></p>
-    <p>If you would like to upload previously saved settings, please upload the saved file: 
-    <input style="padding-left:10px" type="file" @change="selectFile"></p>
+  <div class="text-left mx-5">
+    <h1 class="text-center">Model-Driven Input</h1>
+    <div class="my-4">
+      <h2>Background:</h2>
+      <p>
 
-    <model-driven-firewall title="Corporate Firewall L1" :vendors="firewalls" layer="corp_fw_1" ref="1"/>
-    <model-driven-setting title="Corporate DMZ" :serverTypes="CorpDMZ" 
-      :vendors="servers" layer="corp_dmz" ref="2"/>
-    <model-driven-firewall title="Corporate Firewall L2" :vendors="firewalls" layer="corp_fw_2" ref="3"/>
-    <model-driven-setting title="Corporate LAN" :serverTypes="CorpLAN" 
-      :vendors="servers" layer="corp_lan" ref="4"/>
-    <model-driven-firewall title="Control System Firewall L1" :vendors="firewalls" layer="cs_fw_1" ref="5"/>
-    <model-driven-setting title="Control System DMZ" :serverTypes="CSDMZ" 
-      :vendors="servers" layer="cs_dmz" ref="6"/>
-    <model-driven-firewall title="Control System Firewall L2" :vendors="firewalls" layer="cs_fw_2" ref="7"/>
-    <model-driven-setting title="Control System LAN" :serverTypes="CSLan" 
-      :vendors="servers" layer="cs_lan" ref="8"/>
-    <div style="padding-left:15px; margin-top:20px">
-      <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveNodes()" value="Continue">
+      </p>
+    </div>
+    <hr>
+    <div class="my-4">
+      <h3>JSON File Upload:</h3>
+      <p>
+        If you would like to upload a previously built network topology, please upload the JSON file here: 
+      </p>
+      <input class="form-control-file pb-2" type="file" @change="selectFile" accept="application/JSON"> 
+      <button class="btn btn-primary" @click="Submit">Upload</button>
+    </div>
+    <hr>
+    <div class="my-4">
+      <h3> Build Your Own Network Topology: </h3>
+      <div class="my-3">
+        <h4>Title of Network:</h4>
+        <p>
+          Please type the name of your network topology that you are building. This will be useful
+          if you decide to save your network or network results later on.
+        </p>
+        <input v-model="network_title" placeholder="Title of Network" type="text">
+      </div>
+      <div class="my-3">
+        <h3>Select Network Nodes:</h3>
+        <p>
+          In this section, you will select the different network components for each layer that defines your network topology.
+        </p>
+        <model-driven-firewall class="pb-3" title="Corporate Firewall 1" :vendors="firewalls" layer="corp_fw_1" ref="1"/>
+        <model-driven-setting title="Corporate DMZ" :serverTypes="CorpDMZ" 
+          :vendors="servers" layer="corp_dmz" ref="2"/>
+        <model-driven-firewall title="Corporate Firewall 2" :vendors="firewalls" layer="corp_fw_2" ref="3"/>
+        <model-driven-setting title="Corporate LAN" :serverTypes="CorpLAN" 
+          :vendors="servers" layer="corp_lan" ref="4"/>
+        <model-driven-firewall title="Control System Firewall 1" :vendors="firewalls" layer="cs_fw_1" ref="5"/>
+        <model-driven-setting title="Control System DMZ" :serverTypes="CSDMZ" 
+          :vendors="servers" layer="cs_dmz" ref="6"/>
+        <model-driven-firewall title="Control System Firewall 2" :vendors="firewalls" layer="cs_fw_2" ref="7"/>
+        <model-driven-setting title="Control System LAN" :serverTypes="CSLan" 
+          :vendors="servers" layer="cs_lan" ref="8"/>
+        <div style="padding-left:15px; margin-top:20px">
+          <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveNodes()" value="Continue">
+        </div>
+      </div>
     </div>
     <!-- <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button> -->
           
     <div v-if="submit">
-      <input type='checkbox' @click='checkAll()' v-model='isCheckAll'> Check All
+      <h3>Define Network Connections:</h3>
+      <p>
+        In this section, you will define all different network connections between layers for each node.
+        <br>
+        If you are unsure how to define to your network connections, you can select the checkbox below have
+        all nodes connected to each other.
+      </p>
+      <div class="mb-2 mx-5">
+        <input class="form-check-input" type='checkbox' @click='checkAll()' v-model='isCheckAll'> <strong> Check All</strong>
+      </div>
       <model-driven-connection 
         :layerNodes1="filterNodes('corp_fw_1')" :layerNodes2="filterNodes('corp_dmz')" 
         :layerName1="layerNames[0]" :layerName2="layerNames[1]" ref="9" />
@@ -55,7 +89,7 @@
         <button type="button" class="btn btn-success btn-lg mx-2" @click="Save">Save</button>
         <a id="downloadAnchorElem" style="display:none"></a>
       </div>
-      <div v-if="preview" class="card mx-2 mb-2">
+      <div v-if="preview" class="card mx-2 mt-4 mb-2">
         <div class="card-header font-weight-bold">
           JSON Object Preview
         </div>
@@ -65,7 +99,7 @@
           </div>
         </div>
       </div>
-      <div class="progress">
+      <div class="progress my-4" style="width: 80%">
         <div class="progress-bar progress-bar-info"
           role="progressbar"
           :style="{ width: progress + '%' }"
@@ -77,7 +111,7 @@
         </div>
       </div>
     </div>
-  </body>
+  </div>
 </template>
 
 
@@ -198,7 +232,14 @@ export default {
     },
 
     saveEdges() {
-      this.edges =[]
+      this.edges = []
+
+      // defines edges from remote attack to all 1st layer nodes
+      this.edges.push({
+        currNode: 0,
+        nextNode: this.filterNodes('corp_fw_1').map(n => n.id)
+      });
+
       for (let conn = 9; conn <= 15; conn++) {
         for (let i = 0; i < this.$refs[`${conn}`].rowData.length; i++) {
           this.edges.push(this.$refs[`${conn}`].rowData[i])
@@ -271,25 +312,5 @@ export default {
 </script>
 
 <style>
-   /* table, th, td {
-   border: 1px solid rgba(86, 98, 143, 0.603);
-   border-collapse: collapse;
-   margin-left:7px;
-   }
-   th, td {
-   padding: 2px;
-    
-   }
-   h4{
-   padding-left: 5px;
-   padding-top: 10px;
-   }
-   p{
-   font-size: 17px;
-   font-weight: 550;
-   padding-left: 10px;
-   padding-bottom:5px;
-   } */
-
 </style>
 <style src="@vueform/multiselect/themes/default.css"></style>

@@ -65,8 +65,10 @@ export default defineComponent({
 
   watch: {
     name() {   
-      this.state.chartObj.destroy()
-      this.renderHistogram();
+      // this.state.chartObj.destroy()
+      // this.renderHistogram();
+      this.state.chartObj.data = this.parseData();
+      this.state.chartObj.update();
     },
 
     numBins() {
@@ -160,7 +162,7 @@ export default defineComponent({
             display: false
           },
           tooltips: {
-            enabled: false
+            enabled: true
           },
           title: {
             display: true,

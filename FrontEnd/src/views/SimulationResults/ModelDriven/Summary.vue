@@ -83,6 +83,8 @@
           'Corporate Firewall 1', 'Corporate DMZ', 'Corporate Firewall 2', 'Corporate LAN',
           'Control Sytem Firewall 1', 'Control Sytem DMZ', 'Control Sytem Firewall 2', 'Control Sytem LAN'
         ]"
+        style="width: 50%; height: 20%"
+        class="container"        
       />
     </div>
   </div>

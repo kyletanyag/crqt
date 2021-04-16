@@ -1,60 +1,67 @@
 <template>
 <div>
   <h4> {{ title }} Settings:</h4>
- 
-    <p> Please select the product vendor, model, and quantity for your {{ title }}. Use the "Add Server" button to add and "Remove Server" button to remove</p>
-    <form>
-      <input type="button" style="margin-bottom:5px;" class="btn btn-secondary mx-2" @click="addRow(index)" value="Add Server">
-    </form>
-      <table id="AddServer" style="width: 80%">
-         <tbody>
-            <tr v-for="(row, index) in rows" :key="index" :row="row">
-               <td>
-                 <input type="button" class="btn btn-secondary mx-2" @click="removeRow(index)" value="Remove">
-               </td>
-               <td width="20%">
-                  <div align="center">
-                     <p align="center">Server Type</p>
-                     <select v-model="rows[index][0]">
-                        <option v-for="item in serverTypes" :key="item" :value="item">{{item}}</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="20%">
-                  <div align="center">
-                     <p>Server Vendor</p>
-                     <select v-model="rows[index][1]" @change="getProducts(index)">
-                        <option v-for="item in vendors" :key="item" :value="item">{{item}}</option>
-                     </select>
-                  </div>
-               </td>
-               <td width="20%">
-                  <div align="center">
-                     <p>Server Product</p>
-                     <select v-model="rows[index][2]" @change="getVulnerabilities(index)">
-                        <option v-for="item in serverProduct[index]" :key="item" :value="item" >{{item}}</option>                        
-                     </select>
-                  </div>
-               </td>
-               <td width="20%">
-                  <div align="center">
-                     <p>Number of Servers</p>
-                         <input type="text" v-model="rows[index][3]" placeholder="None" @click="getRowData"/>      
-                  </div>
-               </td>
-               <td width="20%">
-                <div>
-                  <Multiselect v-if="rows[index][2]" 
-                    v-model="rows[index][4]"
-                    mode="multiple"
-                    placeholder="Select your Vulnerabilites"
-                    :options="vulnerability_list[index]"
-                  />
-                </div>
-               </td>
-            </tr>
-         </tbody>
-      </table>
+  <div class="pb-2"> 
+    Please select the product vendor, model, and quantity for your {{ title }}. Use the "Add Server" button to add and "Remove Server" button to remove
+  </div>
+  <button class="btn btn-success mx-2 mb-2" @click="addRow(index)"> 
+    <i class="fa fa-plus" aria-hidden="true"></i> Add Server
+  </button>
+  <table class="table table-bordered" style="width: 80%">
+      <tbody>
+        <tr v-for="(row, index) in rows" :key="index" :row="row">
+            <td style="vertical-align: middle;" width="10%">
+              <div style="text-align: center;">
+              <button class="btn btn-danger" @click="removeRow(index)">
+                <i class="fa fa-times" aria-hidden="true"></i> Remove
+              </button>
+              </div>
+            </td>
+            <td width="20%">
+              <div class="text-center pt-1 pb-2">
+                  <h5>Server Type</h5>
+                  <select v-model="rows[index][0]">
+                    <option v-for="item in serverTypes" :key="item" :value="item">{{item}}</option>
+                  </select>
+              </div>
+            </td>
+            <td width="15%">
+              <div class="text-center pt-1 pb-2">
+                  <h5>Vendor</h5>
+                  <select style="width: 50%;" v-model="rows[index][1]" @change="getProducts(index)">
+                    <option v-for="item in vendors" :key="item" :value="item">{{item}}</option>
+                  </select>
+              </div>
+            </td>
+            <td width="20%">
+              <div class="text-center pt-1 pb-2">
+                  <h5>Product</h5>
+                  <select style="width: 80%" v-model="rows[index][2]" @change="getVulnerabilities(index)">
+                    <option v-for="item in serverProduct[index]" :key="item" :value="item" >{{item}}</option>                        
+                  </select>
+              </div>
+            </td>
+            <td width="15%">
+              <div class="text-center pt-1 pb-2">
+                  <h5>Number of Servers</h5>
+                  <input style="width: 50%;" type="number" v-model="rows[index][3]" placeholder="None" @click="getRowData" min="1"
+                    onkeyup="if(this.value < 0) this.value = 1;"/>      
+              </div>
+            </td>
+            <td width="20%">
+            <div class="text-center">
+              <h5>Vulnerabilites</h5>
+              <Multiselect
+                v-model="rows[index][4]"
+                mode="multiple"
+                placeholder="Select your Vulnerabilites"
+                :options="vulnerability_list[index]"
+              />
+            </div>
+            </td>
+        </tr>
+      </tbody>
+  </table>
 </div>
 </template>
 <script>
@@ -91,7 +98,7 @@ export default {
             type:this.rows[i][0],
             vendor: this.rows[i][1],
             product: this.rows[i][2],   
-            cve_ids: cve_list
+            cve_ids: this.rows[i][4].length > 0 ? cve_list : JSON.parse(JSON.stringify(this.vulnerability_list[i]))
           });
         }
       }

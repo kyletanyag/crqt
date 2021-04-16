@@ -1,38 +1,38 @@
 <template>
 <div>
   <h4> {{ title }} Settings:</h4>
-  
-    <p> Please select the product vendor, model, and quantity for your {{ layer }}.</p>
-    <table style="width: 80%" border="0" cellspacing="0" >
-        <tbody>
-          <tr>
-              <td width="33%">
-                <div align="center">
-                    <p align="center">{{ title }} Vendor</p>
-                    <select v-model="selectedVendor">
-                      <option v-for="item in vendors" :key="item" :value="item">{{ item }}</option>
-                    </select>
-                </div>
-              </td> 
-              <td align="center" width="33%">
-                <div align="center">
-                    <p> {{ title }} Product</p>
-                    <select v-model="selectedProduct">
-                      <option v-for="item in products" :key="item" :value="item">{{ item }}</option>               
-                    </select>
-                </div>
-              </td>
-              <td width="33%">
-                <div align="center">
-                    <p>Number of Coporate Firewall 1</p>                     
-                      <!-- <input type="text" v-model="NumberFireWall" placeholder="Number of Firewalls 1" />         -->
-                      <input type="text" v-model="numfirewalls" placeholder="1" />
-                </div>
-              </td> 
-          </tr>
-          <tr width="100%">
-              <td>
-              <div v-if="selectedProduct">
+  <div class="pb-2"> 
+    Please select the vendor, product, quantity, and associated vulnerabilites for {{ title }}.
+  </div>
+  <table class="table table-bordered" style="width: 80%">
+      <tbody>
+        <tr>
+            <td width="15%">
+              <div class="pt-1 text-center px-0 mx-0">
+                <h5>Vendor</h5>
+                <select style="width: 50%;" v-model="selectedVendor">
+                  <option class="text-center" v-for="item in vendors" :key="item" :value="item">{{ item }}</option>
+                </select>
+              </div>
+            </td> 
+            <td width="20%">
+              <div class="text-center pt-1 pb-2">
+                <h5>Product</h5>
+                <select style="width: 60%" v-model="selectedProduct">
+                  <option v-for="item in products" :key="item" :value="item">{{ item }}</option>               
+                </select>
+              </div>
+            </td>
+            <td width="15%">
+              <div class="text-center pt-1 pb-2">
+                <h5>Number of Firewalls</h5>                     
+                <input style="width: 50%" type="number" v-model="numfirewalls" placeholder="1" min="1"
+                  onkeyup="if(this.value < 0) this.value = 1;"/>
+              </div>
+            </td> 
+            <td width="20%">
+              <div class="text-center">
+                <h5>Vulnerabilites</h5>
                 <Multiselect 
                   v-model="selectedVulnerabilities"
                   mode="multiple"
@@ -40,10 +40,10 @@
                   :options="vulnerability_list"
                 />
               </div>
-              </td>
-              </tr>
-        </tbody>
-    </table>
+            </td>
+          </tr>
+      </tbody>
+  </table>
 </div>
 </template>
 <script>

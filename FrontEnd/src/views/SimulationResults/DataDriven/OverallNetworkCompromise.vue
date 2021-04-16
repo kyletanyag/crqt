@@ -51,13 +51,13 @@
         <h5 class="pt-3">Select Computed Score:</h5>
         <div class="btn-group btn-group-toggle pt-2 px-2">
           <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Base'}">
-            <input class="pause" type="radio" v-model="histogramScoreType" value="Base" autocomplete="off"> Base
+            <input type="radio" v-model="histogramScoreType" value="Base" autocomplete="off"> Base
           </label>
           <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Impact'}">
-            <input class="pause" type="radio" v-model="histogramScoreType" value="Impact"  autocomplete="off"> Impact
+            <input type="radio" v-model="histogramScoreType" value="Impact"  autocomplete="off"> Impact
           </label>
           <label class="btn btn-secondary" :class="{active: histogramScoreType === 'Exploitability' }">
-            <input class="pause" type="radio" v-model="histogramScoreType" value="Exploitability" autocomplete="off"> Exploitability
+            <input type="radio" v-model="histogramScoreType" value="Exploitability" autocomplete="off"> Exploitability
           </label>
         </div>
       </div>
@@ -71,7 +71,7 @@
             <input  type="radio" v-model="numBins" :value="10"  autocomplete="off"> 10
           </label>
           <label class="btn btn-secondary" :class="{active: numBins === 20}">
-            <input class="pause" type="radio" v-model="numBins" :value="20"  autocomplete="off"> 20
+            <input type="radio" v-model="numBins" :value="20"  autocomplete="off"> 20
           </label>
         </div>
       </div>
@@ -158,18 +158,6 @@ export default {
 
   watch: {
     histogramScoreType(type) {
-      // Histogram must be fully rendered before switching datasets.
-      // Disables radio buttons for 1200 ms to allow for full render.
-      const btns = document.getElementsByClassName('pause');
-      btns.forEach((b) => {
-        b.disabled = true;
-      });
-      setTimeout(() => {
-        btns.forEach((b) => {
-          b.disabled = false;
-        });
-      }, 1500)
-
       if (type === 'Base')
         this.histogramScoreData = this.baseScores;
       else if (type === 'Impact')
@@ -177,18 +165,6 @@ export default {
       else 
         this.histogramScoreData = this.exploitabilityScores;
     },
-
-    numBins() {
-      const btns = document.getElementsByClassName('pause');
-      btns.forEach((b) => {
-        b.disabled = true;
-      });
-      setTimeout(() => {
-        btns.forEach((b) => {
-          b.disabled = false;
-        });
-      }, 1500)
-    }
   }
 }
 </script>

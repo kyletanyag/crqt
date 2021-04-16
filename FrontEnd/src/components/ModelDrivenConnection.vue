@@ -1,19 +1,22 @@
 <template>
 <div> 
-  <h3>{{layerName1}} to {{layerName2}}</h3>
-  <div> 
-  <table width=100% border="0" cellspacing="0">
+  <h4>{{layerName1}} to {{layerName2}} Connections:</h4>
+  <div class="pb-2"> 
+  <p>
+    Please define the network connections between nodes from {{layerName1}} to {{layerName2}}.
+  </p>
+  <table class="table table-bordered" style="width: 80%">
     <tbody>
-      <tr v-for="(node1, index1) in layerNodes1" :key="index1" width=100%>
-        <td width="33%">
+      <tr v-for="(node1, index1) in layerNodes1" :key="index1">
+        <td width="40%">
+          <h5>Node ID: <strong>{{node1.id}}</strong></h5>
           <p>
-            <strong>Node ID: {{node1.id}}</strong>
-            <br>
             <strong>{{node1.vendor}} {{node1.product}}</strong> is one of your selected nodes from <strong>{{layerName1}}</strong>. 
-            Please select which node(s) from <strong>{{layerName2}}</strong> you would like to connect.
+            Please select which node(s) from <strong>{{layerName2}}</strong> you would like it to connect to.
             </p>
         </td>
         <td>
+          <h5>Possible Connecting Nodes:</h5>
           <!-- <input type='checkbox' @click='checkAll()' v-model='isCheckAll' @change='updateCheckall()'> Check All -->
           <div v-for="(node2, index2) in layerNodes2" :key="index2" @change='updateCheckall()'>                         
             <input type="checkbox" v-model="selectedNodes[index1]" :value="node2.id" />

@@ -122,8 +122,8 @@ export default {
 }
 </script>
 <style>
-table, th, td {
+/* table, th, td {
   border-collapse: collapse;
   margin-left: 7px;
-}
+} */
 </style>
