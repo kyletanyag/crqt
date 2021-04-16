@@ -45,7 +45,7 @@
                <td width="20%">
                 <div>
                   <Multiselect v-if="rows[index][2]" 
-                    v-model="selectedVulnerabilities"
+                    v-model="rows[index][4]"
                     mode="multiple"
                     placeholder="Select your Vulnerabilites"
                     :options="vulnerability_list[index]"
@@ -79,14 +79,19 @@ export default {
     rowData() {
       var nodes = []
       for (let i = 0; i < this.rows.length; i++) {
-        for(let j = 0; j < this.rows[i][3]; j++){
+        let cve_list = [];
+        for (let j = 0; j < this.rows[i][4].length; j++)  {
+          cve_list.push(this.vulnerability_list[i][this.rows[i][4][j]]);
+        }
+
+        for (let k = 0; k < this.rows[i][3]; k++) {
           nodes.push({
             layer: this.layer,
-            id: j, 
+            id: k, 
             type:this.rows[i][0],
             vendor: this.rows[i][1],
             product: this.rows[i][2],   
-            cve_ids: null
+            cve_ids: cve_list
           });
         }
       }
@@ -107,7 +112,7 @@ export default {
   },
   methods: {
     addRow() {
-      this.rows.push([undefined, undefined, undefined, 1]);
+      this.rows.push([undefined, undefined, undefined, 1, new Array()]);
     },
     removeRow(index) {
       this.rows.splice(index, 1);
@@ -131,10 +136,9 @@ export default {
   },
   data() {
     return{
-      rows: [[undefined, undefined, undefined, 1]],
+      rows: [[undefined, undefined, undefined, 1, new Array()]],
       serverProduct: [],
       vulnerability_list: [],
-      selectedVulnerabilities:[]
     };
   },
 }

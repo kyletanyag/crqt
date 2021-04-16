@@ -180,17 +180,17 @@ export default {
         }
       }
       console.log(this.missingField)
-      if(this.missingField == false){
+      if (this.missingField == false) {
          this.submit = !this.submit
-      }
-      else{
-        //this.submit = !this.submit  /// TAKE THIS OUT WHEN DONE TESTING
-        alert('Please make sure to fill out all fields'); // UNCOMMENT WHEN DONE TESTING
+      } else {
+        this.submit = !this.submit  /// TAKE THIS OUT WHEN DONE TESTING
+        // alert('Please make sure to fill out all fields'); // UNCOMMENT WHEN DONE TESTING
         this.missingField = false;
         console.log(this.missingField)
       }
       ///this.checkNodes()
     },
+
     filterNodes(layerName) {
       return this.nodes.filter((n) => {
         return n.layer == layerName;
@@ -205,17 +205,14 @@ export default {
         }
       }
     },
-    checkAll:function(){
-      console.log("CheckAll")
+
+    checkAll() {
       this.isCheckAll = !this.isCheckAll;
-      //var selectedNodes =[];
       for (let conn = 9; conn <= 15; conn++) {
-        //for (let i = 0; i < this.$refs[`${conn}`].layerNodes2; i++) {
-          this.$refs[`${conn}`].checkAll()
-          this.selectedNodes.push(this.$refs[`${conn}`].selectedNodes)
-        //}
+        this.isCheckAll ? this.$refs[`${conn}`].checkAll() : this.$refs[`${conn}`].uncheckAll();
       }
     },
+
     // updateCheckall: function(){
     //   console.log(this.selectedNodes.length == this.layerNodes2.length)
     //   if(this.selectedNodes.length == this.layerNodes2.length){
@@ -224,23 +221,19 @@ export default {
     //      this.isCheckAll = false;
     //   }
     // },
-    selectFile(){
-        var reader = new FileReader();
-        reader.onload =(function (event) {
-                console.log(event.target.result);
-                var obj = JSON.parse(event.target.result);
-                alert('Name : ' + obj.vertices[0].layer);
-                //this.alert_data();
-            })
-        reader.readAsText(event.target.files[0]);
-    },
-    // onReaderLoad(event){
-    //     console.log(event.target.result);
-    //     var obj = JSON.parse(event.target.result);
-    //     //alert_data(obj.name, obj.family);
-    // },
-    alert_data(){
-        //alert('Name : ' + name + ', Family : ' + family);
+    selectFile(event) {
+      var file = event.target.files[0]
+      var reader = new FileReader();
+
+      reader.onload = ((event) => {
+        var obj = JSON.parse(event.target.result);
+        console.log(obj)
+        this.nodes = obj.vertices;
+        this.edges = obj.arcs;
+        this.network_title = obj.network_title
+      });
+
+      reader.readAsText(file);
     },
     Submit() {
       if (!this.networkTitle) {

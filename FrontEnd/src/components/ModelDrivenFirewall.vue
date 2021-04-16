@@ -58,7 +58,7 @@ export default {
     rowData() {
       var nodes = [];
       for (let i = 0; i < this.numfirewalls; i++) {
-        let cve_list = []
+        let cve_list = [];
         for (let j = 0; j < this.selectedVulnerabilities.length; j++)  {
           cve_list.push(this.vulnerability_list[this.selectedVulnerabilities[j]]);
         }
