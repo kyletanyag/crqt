@@ -84,7 +84,7 @@
         :layerNodes1="filterNodes('cs_fw_2')" :layerNodes2="filterNodes('cs_lan')" 
         :layerName1="layerNames[6]" :layerName2="layerNames[7]" ref="15" />
       <div class="pl-2 pt-3">
-        <input type="button" class="btn btn-primary btn-lg active mx-2" @click="saveEdges(); Submit()" value="Submit">
+        <input type="button" class="btn btn-primary btn-lg mx-2" @click="saveEdges(); Submit()" value="Submit">
         <button type="button" class="btn btn-secondary btn-lg mx-2" @click="preview = !preview">Preview</button>
         <button type="button" class="btn btn-success btn-lg mx-2" @click="Save">Save</button>
         <a id="downloadAnchorElem" style="display:none"></a>
@@ -232,8 +232,7 @@ export default {
     },
 
     saveEdges() {
-      this.edges = []
-
+      this.edges = [];
       // defines edges from remote attack to all 1st layer nodes
       this.edges.push({
         currNode: 0,
