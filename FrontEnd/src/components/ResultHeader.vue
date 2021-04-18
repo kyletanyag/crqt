@@ -1,7 +1,7 @@
 <template>
 <div>
   <div class="d-flex flex-row pb-2">
-    <button class="btn btn-secondary"
+    <button class="btn btn-secondary pause"
       v-if="defaultPage"
       @click="this.$router.push({name: defaultPage})"
     >
@@ -10,7 +10,7 @@
   </div>
   <div class="d-flex justify-content-between pb-2">
     <div class="col-2">
-      <button class="btn btn-primary btn-lg" 
+      <button class="btn btn-primary btn-lg pause" 
         v-if="prevPage"
         @click="this.$router.push({name: prevPage})"
       >
@@ -21,7 +21,7 @@
       <h1 class="pb-1">{{ title }}</h1>
     </div>
     <div class="col-2">
-      <button class="btn btn-primary btn-lg" 
+      <button class="btn btn-primary btn-lg pause" 
         v-if="nextPage"
         @click="this.$router.push({name: nextPage})"
       >
@@ -44,7 +44,7 @@ export default {
   },
 
   mounted() {
-    const btns = document.getElementsByTagName('button');
+    const btns = document.getElementsByClassName('pause');
       btns.forEach((b) => {
         b.disabled = true;
       });

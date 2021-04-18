@@ -50,7 +50,7 @@
                         <li class="nav-item">
                             <router-link class="nav-link"
                                          active-class="active"
-                                         to="/ContactUs">Contact Us</router-link>
+                                         to="/About">About</router-link>
                         </li>     
                     </ul>
                 </div>

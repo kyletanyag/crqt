@@ -41,7 +41,7 @@
                     <button :class="toggleBtnState(pathShow)" style="width: 100%" @click="pathShow = !pathShow">Show Path Data</button>
                   </td>
                   <td class="px-2 py-1">
-                    <button :class="toggleBtnState(histogramShow)" style="width: 100%" @click="histogramShow = !histogramShow">Show Histograms</button>
+                    <button :class="toggleBtnState(histogramShow) + ' pause'" style="width: 100%" @click="histogramShow = !histogramShow; pause()">Show Histograms</button>
                   </td>
                 </tr>
                 <tr>
@@ -300,6 +300,20 @@ export default {
     toggleBtnState(x) {
       return x ? 'btn btn-secondary' : 'btn btn-primary'
     },
+
+    pause() {
+      if (this.histogramShow) {
+        const btns = document.getElementsByClassName('pause');
+          btns.forEach((b) => {
+            b.disabled = true;
+          });
+        setTimeout(() => {
+            btns.forEach((b) => {
+              b.disabled = false;
+            });
+          }, 1500)
+      }
+    }
   },
 
   computed: {

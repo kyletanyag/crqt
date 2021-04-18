@@ -1,16 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 
-import Error from '@/views/Error'
+import ErrorComponent from '@/views/Error'
 
 // Testing page for Kyle
 import Sandbox from "../views/_Sandbox.vue";
 
 const routes = [
     {
-      path: '/ContactUs',
-      name: 'ContactUs',
-      component: () => import(/* webpackChunkName: "ContactUs" */ '../views/ContactUs.vue')
+      path: '/About',
+      name: 'About',
+      component: () => import(/* webpackChunkName: "ContactUs" */ '../views/About.vue')
     },
     {
         path: '/network-topology/data-driven',
@@ -30,7 +30,7 @@ const routes = [
     {
         path: '/error/:errorCode',
         name: 'Error',
-        component: Error,
+        component: ErrorComponent,
         props: true,
     },
     {

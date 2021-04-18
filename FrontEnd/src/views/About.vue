@@ -20,7 +20,7 @@
 <script>
 import axios from 'axios';
 export default {
-  name: 'Home',
+  name: 'About',
 
   data() {
     return {
