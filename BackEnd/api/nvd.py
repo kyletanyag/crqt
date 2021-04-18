@@ -78,8 +78,7 @@ def model_driven_cvss_query(cve_ids):
         url = httpHost + "/api/cve/" + cve
 
         # making request to CVE ID
-        r = requests.get(url)
-        data = json.loads(r.text)
+        data = json.loads(requests.get(url).text)
         
         # testing if cvss scores exist
         try:

@@ -29,10 +29,8 @@ class model_driven_tests:
                 None,
                 layer=node["layer"],
                 index=node["id"], 
-                cve_ids=None
-                ))
-            # setting node weight
-            vulnerability_graph[-1].weights[:] = 1.0/int(node["id"])
+                cve_ids=node["cve_ids"]
+            ))
 
         # sorting vulnerability node list by index ascending order
         vulnerability_graph.sort(key=lambda node: node.index)
@@ -304,4 +302,4 @@ if __name__ == "__main__":
     # data_driven_tests.derived_score_propagation_test(4)
     # print("\n8-nodes:")
     # data_driven_tests.derived_score_propagation_test(8)
-    model_driven_tests.generate_graph('./model_driven2.json')
+    model_driven_tests.generate_graph('./test_network.json')
