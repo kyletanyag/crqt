@@ -31,12 +31,12 @@ def test_connection():
     return 'Good Connection', 200
 
 @graph_bp.route('/data_driven/get_network_title', methods=['GET'])
-def get_network_title():
+def get_data_driven_network_title():
     global title_data_driven
     return jsonify({"network_title" : title_data_driven})
 
 @graph_bp.route('/data_driven/get_input_date', methods=['GET'])
-def get_input_date():
+def get_data_driven_input_date():
     global input_date_data_driven
     return jsonify({"input_date" : input_date_data_driven})
 
@@ -121,13 +121,13 @@ def network_topology_data_driven_input():
 title_model_driven = ""                      # title/name of network
 input_date_model_driven = ""                 # date/time of network input into system
 
-@graph_bp.route('/model_drivenn/get_network_title', methods=['GET'])
-def get_network_title():
+@graph_bp.route('/model_driven/get_network_title', methods=['GET'])
+def get_model_driven_network_title():
     global title_model_driven
     return jsonify({"network_title" : title_model_driven})
 
 @graph_bp.route('/model_driven/get_input_date', methods=['GET'])
-def get_input_date():
+def get_model_driven_input_date():
     global input_date_model_driven
     return jsonify({"input_date" : input_date_model_driven})  
 

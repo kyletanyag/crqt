@@ -138,14 +138,14 @@ export default {
           this.error = e;
         });
   
-        http.get('get_network_title').then((r) => {
+        http.get('/model_driven/get_network_title').then((r) => {
           // console.log(r);
           this.title = r.data.network_title;
         }).catch((e) => {
           this.error = e;
         });
   
-        http.get('get_input_date').then((r) => {
+        http.get('/model_driven/get_input_date').then((r) => {
           // console.log(r);
           this.inputDate = r.data.input_date;
         }).catch((e) => {

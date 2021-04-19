@@ -7,6 +7,10 @@ Make sure you have the following downloaded:
 - [Install Mongo Windows Service](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/#run-mongodb-from-cmd)
 - [Python w/ pip](https://www.python.org/downloads/)
 
+### Installing Ubuntu 20.04 subsystem for Windows
+To install Ubuntu 20.04 subsystem for Windows go to Window's Control Panel -> Programs and select Turn Windows features on or off. From there, check mark Windows Subsystem for Linux and press ok. After this, it will install subsystem functionality and require restart. After restart, goto Microsoft store and install Ubuntu 20.04. Once installed, open Ubuntu 20.04 so to put username and passwd for terminal. Once completed, you can open Ubuntu 20.04 in Windows Terminal and cd to CRQT directory.  
+
+If problems occur during installation, please refer to https://docs.microsoft.com/en-us/windows/wsl/install-win10 or https://adamtheautomator.com/windows-subsystem-for-linux/ or https://www.youtube.com/watch?v=av0UQy6g2FA.
 
 ## Initial Project Setup
 ### 1. You will need to download all the dependencies for the front-end application.
@@ -25,31 +29,19 @@ pip install -r requirements.txt
 ```
 
 ### 3. You will need to begin intialization of the [CVE-Search](https://github.com/cve-search/cve-search) project
-#### For automatic install of CVE-Search:
-In Ubuntu Terminal from root folder run the following commands:
+In **Ubuntu terminal** the following commands:
 ```
-$ cd ./BackEnd
-$ chmod 700 ./cve_search_install.sh 
-$ ./cve_search_install.sh
-```
-
-#### For manual install of CVE-Search:
-In Ubuntu Terminal from root folder run the following commands:
-```
-$ cd ./BackEnd/DMS/cve_search/
+$ cd /mnt/<path_to_crqt>/BackEnd
+$ sudo apt-get update
 $ sudo apt-get install python3
 $ sudo apt-get install python3-pip
 $ sudo apt-get install redis-server
-$ pip3 install flask flask-pymongo
+$ pip3 install -r requirements.txt
 $ sudo service redis-server start
-```
-
-In same terminal, download cve data: 
-```
+$ cd ./dms/cve_search/
 $ python3 ./sbin/db_mgmt_cpe_dictionary.py -p
 $ python3 ./sbin/db_mgmt_json.py -p
-$ python3 ./sbin/db_updater.py -c # This will take >45minutes on a decent machine, please be patient.
-```
+$ python3 ./sbin/db_updater.py -c # This will take >45minutes on a decent machine,please be patient
 
 
 ## To Run Project

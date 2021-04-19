@@ -52,77 +52,57 @@ export default {
       rawData: {
         nodes: [],
         edges: [],
-        attack_paths: [],
         vhp: undefined,
         centrality: undefined,
         topsis: undefined,
-
       }
     }
   },
 
-  created() {
-    this.GetData();
-  },
-
   methods: {
-    GetData() {
-      http.get('get_network_title').then((r) => {
+    DownloadRawData() {
+      http.get('/model_driven/get_network_title').then((r) => {
         this.rawData.network_title = r.data.network_title;
       }).catch((e) => {
         this.error = e;
-      });
-
-      http.get('get_input_date').then((r) => {
-        this.rawData.input_date = r.data.input_date;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('/model_driven/get_network_topology').then((r) => {
-        this.rawData.nodes = r.data.nodes;
-        this.rawData.edges = r.data.edges;
       }).then(() => {
-        for (let i = 1; i <= 10; i++) { // restrict to 10 api calls to not overload the system
-          http.get(`/model_driven/attack_paths/${i}`).then((r) => {
-            console.log(r);
-            this.rawData.attack_paths.push(r.data);
+        http.get('/model_driven/get_input_date').then((r) => {
+          this.rawData.input_date = r.data.input_date;
+        }).catch((e) => {
+          this.error = e;
+        }).then(() => {
+          http.get('/model_driven/get_network_topology').then((r) => {
+            this.rawData.nodes = r.data.nodes;
+            this.rawData.edges = r.data.edges;
           }).catch((e) => {
             this.error = e;
+          }).then(() => {
+            http.get('/model_driven/vulnerable_host_percentage').then((r) => {
+              this.rawData.vhp = r.data;
+            }).catch((e) => {
+              this.error = e;
+            }).then(() => {
+              http.get('/model_driven/centrality').then((r) => {
+                this.rawData.centrality = r.data;
+              }).catch((e) => {
+                this.error = e;
+              }).then(() => {
+                http.get('/model_driven/topsis').then((r) => {
+                  this.rawData.topsis = r.data.topsis;
+                }).catch((e) => {
+                  this.error = e;
+                }).then(() => {
+                  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.rawData, undefined, 2));
+                  var dlAnchorElem = document.getElementById('downloadAnchorElem');
+                  dlAnchorElem.setAttribute("href", dataStr);
+                  dlAnchorElem.setAttribute("download", `${this.rawData.network_title.toLowerCase()}_results.json`);
+                  dlAnchorElem.click();
+                }); 
+              });
+            });
           });
-        }
-      }).catch((e) => {
-        this.error = e;
+        });
       });
-
-      http.get('/model_driven/vulnerable_host_percentage').then((r) => {
-        this.rawData.vhp = r.data;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('/model_driven/centrality').then((r) => {
-        this.rawData.centrality = r.data;
-      }).catch((e) => {
-        this.error = e;
-      });
-
-      http.get('/model_driven/topsis').then((r) => {
-        this.rawData.topsis = r.data.topsis;
-      }).catch((e) => {
-        this.error = e;
-      });      
-      
-      
-
-    },
-
-    DownloadRawData() {
-      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.rawData, undefined, 2));
-      var dlAnchorElem = document.getElementById('downloadAnchorElem');
-      dlAnchorElem.setAttribute("href", dataStr);
-      dlAnchorElem.setAttribute("download", `${this.rawData.network_title.toLowerCase()}_results.json`);
-      dlAnchorElem.click();
     }
   },
 }

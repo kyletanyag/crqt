@@ -20,12 +20,15 @@
           <div class="row-12 py-2 align-center">
             <div class="col-12">
               Which node are you interested in analyzing? ID:&nbsp;&nbsp;
-              <input type="number" v-model.number="desiredNodeID" :max="lastNodeID" min="1" maxlength="2"
-                @change="GetAttackPaths(desiredNodeID)">
+              <input type="number" v-model.number="desiredNodeID" :max="lastNodeID" min="1" maxlength="2"  style="width: 75px" 
+              @change="NotifyChange"
+              @keydown="NotifyChange">
+              <button class="ml-2 btn btn-primary btn-sm pause" id="id_submit" @click="GetAttackPaths(desiredNodeID)">Submit</button>
+              <span v-if="loading" class="pl-1"><strong>Loading ...</strong></span>
             </div>
             <div class="row pl-3 my-2">
               <div class="col-6 text-left">
-                Computation Time: <strong v-if="!loading && desiredNodeID > 0 && desiredNodeID <= lastNodeID">{{ compTime }}</strong>
+                Computation Time: <strong v-if="!loading && desiredNodeID > 0 && desiredNodeID <= lastNodeID">{{ compTime }} s</strong>
                 <br>
                 Number of Attack Paths: <strong v-if="!loading && desiredNodeID > 0 && desiredNodeID <= lastNodeID">{{ numPaths }}</strong>
                 <br>
@@ -70,8 +73,10 @@
                     <tbody>
                       <tr v-for="p in sortedPaths" 
                         :key="p.path_id"
-                        @mouseover="highlightPath(p.path)"
-                        @mouseleave="unhighlightPath(p.path)"
+                      @mouseover="highlightPath(p.path)"
+                      @click="toggleHighlightPath(p.path)"
+                      @mouseleave="unhighlightPath(p.path)"
+                      :class="cssHighlightedRow(p.path)"
                       >
                         <td style="width: 15%">{{ p.path_id }}</td>
                         <td style="width: 20%; word-wrap: anywhere;">{{ p.path }}</td>
@@ -99,10 +104,11 @@
                       @mouseover="highlightPath(p.nodes)"
                       @click="toggleHighlightPath(p.nodes)"
                       @mouseleave="unhighlightPath(p.nodes)"
+                      :class="cssHighlightedRow(p.nodes)"
                     >
                       <td style="width: 20%">{{ p.path }}</td>
                       <td style="width: 60%">{{ p.nodes }}</td>
-                      <td style="width: 20%">{{ idx }}</td>
+                      <td style="width: 20%">{{ idx + 1 }}</td>
                     </tr> 
                   </tbody>
                 </table>
@@ -124,10 +130,11 @@
                       @mouseover="highlightPath(p.nodes)"
                       @click="toggleHighlightPath(p.nodes)"
                       @mouseleave="unhighlightPath(p.nodes)"
+                      :class="cssHighlightedRow(p.nodes)"
                     >
                       <td style="width: 20%">{{ p.path }}</td>
                       <td style="width: 60%">{{ p.nodes }}</td>
-                      <td style="width: 20%">{{ idx }}</td>
+                      <td style="width: 20%">{{ idx + 1 }}</td>
                     </tr> 
                   </tbody>
                 </table>
@@ -187,7 +194,7 @@ export default {
   components: {
     ResultHeader,
     NetworkGraph,
-    Histogram
+    Histogram,
   },
 
   data() {
@@ -197,14 +204,15 @@ export default {
       currentSortDir: 'asc',
       desiredNodeID: 0,
       lastNodeID: 0,
-      loading: true,
+      loading: false,
       numPaths: 0,
       avgBasScore: 0,
       avgExpScore: 0,
       avgImpScore: 0,
       compTime: 0,
       paths: [],
-      selected: [],
+      selected: null,
+      toggled: false,
       topExpPaths: [],
       topImpPaths: [],
       pathShow: false,
@@ -224,6 +232,7 @@ export default {
         this.lastNodeID = Math.max.apply(Math, r.data.nodes.map(function(o) { return o.id; }));
       });
     },
+
     highlight(id) {
       document.getElementById(`node_${id}`).setAttribute('r', '20');
       document.getElementById(`node_${id}`).setAttribute('stroke', 'black');
@@ -234,27 +243,62 @@ export default {
       document.getElementById(`node_${id}`).setAttribute('stroke', 'white');
     },
 
-    highlightPath(a) {
-      a.forEach((x) => {this.highlight(x)});
-      this.highlight(0);
+    highlightEdge(id1, id2) {
+      document.getElementById(`edge_${id1}_${id2}`).setAttribute('stroke', 'black');
+      document.getElementById(`edge_${id1}_${id2}`).setAttribute('stroke-width', '1.5');
+      document.getElementById(`arrowtip_${id1}_${id2}`).setAttribute('fill', 'black');
     },
+
+    unhighlightEdge(id1, id2) {
+      document.getElementById(`edge_${id1}_${id2}`).setAttribute('stroke', 'grey');
+      document.getElementById(`edge_${id1}_${id2}`).setAttribute('stroke-width', '1');
+      document.getElementById(`arrowtip_${id1}_${id2}`).setAttribute('fill', 'grey');
+    },
+
+    highlightPath(a) {
+      if (!this.selected) {
+        a.forEach((x) => {this.highlight(x)});
+        this.highlight(0);
+        this.highlightEdge(0, a[0]);
+        for (let i = 0; i < a.length - 1; i++) {
+          this.highlightEdge(a[i], a[i+1]);
+        }
+      }
+    },
+
     unhighlightPath(a) {
-      if (a != this.selected) {
+      if (!this.toggled) {
         a.forEach((x) => {this.unhighlight(x)});
         this.unhighlight(0);
+        this.unhighlightEdge(0, a[0]);
+
+        for (let i = 0; i < a.length - 1; i++) {
+          this.unhighlightEdge(a[i], a[i+1]);
+        }
       }
     },
 
     toggleHighlightPath(a) {
-      if (this.selected != a) {
-        a.forEach((x) => { this.highlight(x);});
-        this.highlight(0);
+      if (!this.selected) {
+        this.highlightPath(a);
         this.selected = a;
-      } else {
-        var ids = [...Array(this.lastNodeID).keys()]
-        ids.forEach((x) => {this.unhighlight(x);});
+        this.toggled = true;
+      } else if (this.selected === a) {
+        this.unhighlightPath(a);
         this.selected = null;
+        this.toggled = false;
+      } else {
+        this.toggled = false;
+        this.unhighlightPath(this.selected);
+        this.selected = null;
+        this.highlightPath(a);
+        this.toggled = true;
+        this.selected = a;
       }
+    },
+
+    cssHighlightedRow(x) {
+      return x === this.selected ? 'table-primary' : '';
     },
 
     NotifyChange() {
@@ -280,7 +324,7 @@ export default {
     GetAttackPaths(ap) {
       this.loading = true;
       http.get(`/model_driven/attack_paths/${ap}`).then((r) => {
-        console.log(r);
+        // console.log(r);
 
         this.numPaths = r.data.number_attack_paths;
         this.avgBasScore = r.data.averge_length_attack_paths[0];
@@ -288,8 +332,11 @@ export default {
         this.avgImpScore = r.data.averge_length_attack_paths[2];
         this.compTime = Number(r.data.computation_time.toPrecision(3));
         this.paths = r.data.metrics_per_path;
+        this.paths.forEach((p) => {p.path.reverse()});
         this.topExpPaths = r.data.top_exploitable;
+        this.topExpPaths.forEach((p) => {p.nodes.reverse()});
         this.topImpPaths = r.data.top_impactful;
+        this.topImpPaths.forEach((p) => {p.nodes.reverse()});
         this.loading = false;
       }).catch((e) => {
         this.error = e;

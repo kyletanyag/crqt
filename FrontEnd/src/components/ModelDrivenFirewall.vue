@@ -2,7 +2,12 @@
 <div>
   <h4> {{ title }} Settings:</h4>
   <div class="pb-2"> 
-    Please select the vendor, product, quantity, and associated vulnerabilites for {{ title }}.
+    <p>
+      Please select the vendor, product, quantity, and associated vulnerabilites for {{ title }}.
+      <br>
+      You can select multiple vulnerabilities for your network firewall; however, if you do not select
+      any at all, it will default and select all of them.
+    </p>
   </div>
   <table class="table table-bordered" style="width: 80%">
       <tbody>
@@ -27,7 +32,7 @@
               <div class="text-center pt-1 pb-2">
                 <h5>Number of Firewalls</h5>                     
                 <input style="width: 50%" type="number" v-model="numfirewalls" placeholder="1" min="1"
-                  onkeyup="if(this.value < 0) this.value = 1;"/>
+                  onkeyup="if(this.value <= 0) this.value = 1;"/>
               </div>
             </td> 
             <td width="20%">
@@ -67,11 +72,16 @@ export default {
           id: i, 
           vendor: this.selectedVendor,
           product: this.selectedProduct, 
+          type: 'firewall',
           cve_ids: this.selectedVulnerabilities.length > 0 ? cve_list : JSON.parse(JSON.stringify(this.vulnerability_list))
         });
       }
       return nodes;
     },
+
+    checkSelection() {
+      return Boolean(this.selectedVendor && this.selectedProduct && this.numfirewalls);
+    }  
   },
   watch: {
     selectedVendor() { 

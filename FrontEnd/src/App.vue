@@ -104,16 +104,16 @@ export default {
     },
 
     checkforResults(){
-      http.get('data_driven/get_derived_scores').then((r) => {
+      http.get('/data_driven/get_network_title').then((r) => {
         
-        r.data.nodes.length > 0 ? this.dataDriven = true : this.dataDriven = false;
+        r.data.network_title !== "" ? this.dataDriven = true : this.dataDriven = false;
       }).catch((e) => {
         console.log(e);
         this.dataDriven = false;
       });
 
-      http.get('/model_driven/get_network_topology').then((r) => {
-        r.data.nodes.length > 0 ? this.modelDriven = true: this.modelDriven = false;
+      http.get('/model_driven/get_network_title').then((r) => {
+        r.data.network_title !== "" ? this.modelDriven = true: this.modelDriven = false;
       }).catch((e) => {
         console.log(e);
         this.modelDriven = false;

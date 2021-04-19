@@ -50,7 +50,7 @@ def query_by_type(input_type):
 # query with Products database to get vendor products by product name
 @product_bp.route('/product_query/<input_type>/<input_vendor>', methods=['GET'])
 def query_by_product(input_type, input_vendor):
-    filter = Products.query.filter(func.lower(Products.type) == func.lower(input_type), func.lower(Products.vendor) == func.lower(input_vendor))
+    filter = Products.query.filter(func.lower(Products.type) == func.lower(input_type), func.lower(Products.vendor) == func.lower(input_vendor)).order_by(Products.product)
     results = []
 
     for i in filter:

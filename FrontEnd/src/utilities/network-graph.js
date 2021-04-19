@@ -206,19 +206,24 @@ function generateModelDrivenNetworkDiagram(data) {
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle")
 
-  svg.append('defs').append('marker')
-        .attrs({'id':'arrowhead',
-            'viewBox':'-0 -5 10 10',
-            'refX':13,
-            'refY':0,
-            'orient':'auto',
-            'markerWidth':13,
-            'markerHeight':13,
-            'xoverflow':'visible'})
-        .append('svg:path')
-        .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
-        .attr('fill', '#999')
-        .style('stroke','none');
+  svg.append('defs')
+    .attr('class', 'arrowhead')
+    .selectAll('.arrowhead')
+    .data(data.edges)
+    .enter().append('marker')
+      .attr('id', function (d) {return `arrowhead_${d.source}_${d.target}`})
+      .attrs({'viewBox':'-0 -5 10 10',
+          'refX':13,
+          'refY':0,
+          'orient':'auto',
+          'markerWidth':13,
+          'markerHeight':13,
+          'xoverflow':'visible'})
+      .append('svg:path')
+      .attr('id', function (d) {return `arrowtip_${d.source}_${d.target}`})
+      .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+      .attr('fill', '#999')
+      .style('stroke','none');
     
     render(null, data);
   
@@ -265,16 +270,15 @@ function generateModelDrivenNetworkDiagram(data) {
       .append("path")
       .attr("class", "links")
       .attr("id", function(d) { return `edge_${d.source}_${d.target}`; })
-      .attr("stroke", "#999")
-      .attr("stroke-width", function() { return 0.75; })
-      .attr('color', 'black')
+      .attr("stroke", "grey")
+      .attr("stroke-width", function() { return 1; })
       .attr('fill', 'none')
-      .attr('marker-end', 'url(#arrowhead)')
-      .attr("x1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5; })
+      .attr('marker-end', function(d) {return `url(#arrowhead_${d.source}_${d.target})`; })
+      .attr("x1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cx")) + 7.5; })
       .attr("y1", function(d) { return Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d); })
-      .attr("x2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5; })
+      .attr("x2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cx")) - 7.5; })
       .attr("y2", function(d) { return Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d); })
-      .attr("d", function(d) { return curveLink(Number(d3.select(`#node_${d.source}`).attr("cx")) + 2.5,Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d),Number(d3.select(`#node_${d.target}`).attr("cx")) - 2.5, Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d) )})
+      .attr("d", function(d) { return curveLink(Number(d3.select(`#node_${d.source}`).attr("cx")) + 7.5,Number(d3.select(`#node_${d.source}`).attr("cy")) + getY1(d),Number(d3.select(`#node_${d.target}`).attr("cx")) - 7.5, Number(d3.select(`#node_${d.target}`).attr("cy")) + getY2(d) )})
 
     const tooltip = d3.select('#networkContainer')
       .append('div')
@@ -355,17 +359,12 @@ function generateModelDrivenNetworkDiagram(data) {
     }
 
     function getY1(d) {
-      return Number(d3.select(`#node_${d.source}`).attr("cy")) > Number(d3.select(`#node_${d.target}`).attr("cy")) ? -2.5 : 2.5;
+      return Number(d3.select(`#node_${d.source}`).attr("cy")) > Number(d3.select(`#node_${d.target}`).attr("cy")) ? -7.5 : 7.5;
     }
 
     function getY2(d) {
-      return Number(d3.select(`#node_${d.source}`).attr("cy")) < Number(d3.select(`#node_${d.target}`).attr("cy")) ? -2.5 : 2.5;
+      return Number(d3.select(`#node_${d.source}`).attr("cy")) < Number(d3.select(`#node_${d.target}`).attr("cy")) ? -7.5 : 7.5;
     }
-
-    function ticked() {
-      link.attr("d", positionLink);
-      node.attr("transform", positionNode);
-  }
 
   // links are drawn as curved paths between nodes
     function curveLink(x1, y1, x2, y2) {
@@ -379,8 +378,8 @@ function generateModelDrivenNetworkDiagram(data) {
 
         var normalise = Math.sqrt((dx * dx) + (dy * dy));
 
-        var offSetX = midpoint_x + offset*(dy/normalise);
-        var offSetY = midpoint_y - offset*(dx/normalise);
+        var offSetX = dx < 0 ? midpoint_x + offset*(dy/normalise) : midpoint_x - offset*(dy/normalise);
+        var offSetY = dx < 0 ?  midpoint_y - offset*(dx/normalise) : midpoint_y + offset*(dx/normalise);
 
         return "M" + x1+ "," + y1 +
             "S" + offSetX + "," + offSetY +

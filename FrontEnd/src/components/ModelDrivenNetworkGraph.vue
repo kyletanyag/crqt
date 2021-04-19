@@ -42,7 +42,7 @@ export default {
 
   mounted() {
     http.get('/model_driven/get_network_topology').then((r) => {
-      console.log(r);
+      // console.log(r);
       generateModelDrivenNetworkDiagram(r.data);
     }).catch((e) => {
         this.error = e;

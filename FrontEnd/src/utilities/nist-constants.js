@@ -37,13 +37,13 @@ const CSLanSystemServerTypes =
 const NISTLayerNames = 
   [
     "Corporate Firewall 1",
-    "Corporate DMZ Settings", 
+    "Corporate DMZ", 
     "Corporate Firewall 2", 
-    "Corporate LAN Settings", 
+    "Corporate LAN", 
     "Control Sytem Firewall 1", 
-    "Control System DMZ Settings", 
+    "Control System DMZ", 
     "Control System Firewall 2", 
-    "Control System LAN Settings"
+    "Control System LAN"
   ]
 
 const abbrNISTLayerNames = 

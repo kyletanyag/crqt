@@ -3,7 +3,7 @@
   <h4>{{layerName1}} to {{layerName2}} Connections:</h4>
   <div class="pb-2"> 
   <p>
-    Please define the network connections between nodes from {{layerName1}} to {{layerName2}}.
+    Please define the network connections between nodes from the {{layerName1}} layer to {{layerName2}} layer.
   </p>
   <table class="table table-bordered" style="width: 80%">
     <tbody>
@@ -17,7 +17,6 @@
         </td>
         <td>
           <h5>Possible Connecting Nodes:</h5>
-          <!-- <input type='checkbox' @click='checkAll()' v-model='isCheckAll' @change='updateCheckall()'> Check All -->
           <div v-for="(node2, index2) in layerNodes2" :key="index2" @change='updateCheckall()'>                         
             <input type="checkbox" v-model="selectedNodes[index1]" :value="node2.id" />
             {{node2.vendor}} {{node2.product}} (Node ID: {{node2.id}}) 
@@ -65,12 +64,19 @@ export default {
       for (let i = 0; i < this.layerNodes1.length; i++) {
         edges.push({
           currNode: this.layerNodes1[i].id,
-          nextNode: this.selectedNodes[i]
+          nextNode: this.selectedNodes[i].filter((n) => {return n !== 0;})
         })
       }
       return edges;
     }, 
 
+    checkSelection() {
+      if(!this.selectedNodes.length) return false;
+      for (let i = 0; i < this.selectedNodes.length; i++) {
+        if(!this.selectedNodes[i].filter((n) => {return n !== 0;}).length) return false;
+      }   
+      return true;
+    }
   },
 
   data() {
@@ -82,12 +88,11 @@ export default {
       for (let j = 0; j < this.layerNodes2.length; j++) {
         a.push(0);
       }
-      selectedNodes.push([]);
+      selectedNodes.push(a);
     }
 
     return {
       selectedNodes,
-      isCheckAll: false,
     };
   },
 }

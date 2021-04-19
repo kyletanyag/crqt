@@ -71,13 +71,13 @@ export default {
 
   methods: {
     GetData() {
-      http.get('get_network_title').then((r) => {
+      http.get('/data_driven/get_network_title').then((r) => {
         this.rawData.network_title = r.data.network_title;
       }).catch((e) => {
         this.error = e;
       });
 
-      http.get('get_input_date').then((r) => {
+      http.get('/data_driven/get_input_date').then((r) => {
         this.rawData.input_date = r.data.input_date;
       }).catch((e) => {
         this.error = e;

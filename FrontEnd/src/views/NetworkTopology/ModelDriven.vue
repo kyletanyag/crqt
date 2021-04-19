@@ -2,91 +2,137 @@
   <div class="text-left mx-5">
     <h1 class="text-center">Model-Driven Input</h1>
     <div class="my-4">
-      <h2>Background:</h2>
+      <h2>Instructions:</h2>
       <p>
 
       </p>
     </div>
     <hr>
     <div class="my-4">
-      <h3>JSON File Upload:</h3>
+      <h2>JSON File Upload:</h2>
       <p>
         If you would like to upload a previously built network topology, please upload the JSON file here: 
       </p>
       <input class="form-control-file pb-2" type="file" @change="selectFile" accept="application/JSON"> 
-      <button class="btn btn-primary" @click="Submit">Upload</button>
+      <button class="btn btn-primary" @click="edgesDone = true; Submit()">Upload</button>
+      <div class="progress my-4" style="width: 40%">
+        <div class="progress-bar progress-bar-info"
+          role="progressbar"
+          :style="{ width: progress + '%' }"
+          :aria-valuenow="progress"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          {{progress}}%
+        </div>
+      </div>
     </div>
     <hr>
     <div class="my-4">
-      <h3> Build Your Own Network Topology: </h3>
+      <h2> Build Your Own Network Topology: </h2>
       <div class="my-3">
-        <h4>Title of Network:</h4>
+        <h3>Title of Network:</h3>
         <p>
           Please type the name of your network topology that you are building. This will be useful
-          if you decide to save your network or network results later on.
+          if you decide to save your network or network results later on. If left blank, we will 
+          provide a network name for you.
         </p>
-        <input v-model="network_title" placeholder="Title of Network" type="text">
+        <input v-model="network_title" placeholder="Title of Network" type="text" onkeypress="return event.charCode != 32">
       </div>
-      <div class="my-3">
+      <hr>
+      <div id="network_input_top"></div>
+      <div class="my-3" v-show="!nodesDone">
         <h3>Select Network Nodes:</h3>
         <p>
           In this section, you will select the different network components for each layer that defines your network topology.
         </p>
         <model-driven-firewall class="pb-3" title="Corporate Firewall 1" :vendors="firewalls" layer="corp_fw_1" ref="1"/>
+        <hr>
         <model-driven-setting title="Corporate DMZ" :serverTypes="CorpDMZ" 
           :vendors="servers" layer="corp_dmz" ref="2"/>
+          <hr>
         <model-driven-firewall title="Corporate Firewall 2" :vendors="firewalls" layer="corp_fw_2" ref="3"/>
+        <hr>
         <model-driven-setting title="Corporate LAN" :serverTypes="CorpLAN" 
           :vendors="servers" layer="corp_lan" ref="4"/>
+          <hr>
         <model-driven-firewall title="Control System Firewall 1" :vendors="firewalls" layer="cs_fw_1" ref="5"/>
+        <hr>
         <model-driven-setting title="Control System DMZ" :serverTypes="CSDMZ" 
           :vendors="servers" layer="cs_dmz" ref="6"/>
+          <hr>
         <model-driven-firewall title="Control System Firewall 2" :vendors="firewalls" layer="cs_fw_2" ref="7"/>
+        <hr>
         <model-driven-setting title="Control System LAN" :serverTypes="CSLan" 
           :vendors="servers" layer="cs_lan" ref="8"/>
         <div style="padding-left:15px; margin-top:20px">
-          <input type="button" class="btn btn-primary btn-lg active" style="margin-bottom:15px;" @click="saveNodes()" value="Continue">
+          <button class="btn btn-primary btn-lg pb-2" @click="saveNodes()"> 
+            Continue &nbsp;<i class="fa fa-arrow-right"></i>
+          </button>
         </div>
+        <hr>          
       </div>
     </div>
-    <!-- <button type="button" class="btn btn-secondary mx-2" @click="preview = !preview">Preview</button> -->
-          
-    <div v-if="submit">
-      <h3>Define Network Connections:</h3>
-      <p>
-        In this section, you will define all different network connections between layers for each node.
+    <div  v-show="nodesDone">
+      <div class="pl-1 py-2">
+        <button class="btn btn-primary btn-lg" @click="nodesDone = !nodesDone"><i class="fa fa-arrow-left"></i>&nbsp;Back</button>
+      </div>
+      <h2>Define Network Connections:</h2>
+      <p style="width: 75%">
+        In this section, you will define all network connections between nodes at each layer. 
+        <strong>Note: Nodes can only connect to nodes at the next layer. </strong> 
         <br>
-        If you are unsure how to define to your network connections, you can select the checkbox below have
-        all nodes connected to each other.
+        For example, a node in the Corporate Firewall 1 layer can only connect to nodes
+        in the Corporate DMZ layer.
       </p>
-      <div class="mb-2 mx-5">
-        <input class="form-check-input" type='checkbox' @click='checkAll()' v-model='isCheckAll'> <strong> Check All</strong>
+      <div class="pb-4">
+        <p>
+          If you are unsure how to define to your network connections, you can select the checkbox below have
+          all nodes connected to each other. 
+          <br>
+          <strong>Note: By connecting all nodes together, you may
+          experience long computational times and delay in getting your results.</strong>
+        </p>
+        <tr>
+          <td class="pr-5">
+            <strong>Overall network connection options: </strong>
+          </td>
+          <td>
+            <input class="form-check-input" type='checkbox' @click='checkAll()' v-model='isCheckAll'> <strong> Connect All</strong>
+          </td>
+        </tr>
       </div>
       <model-driven-connection 
         :layerNodes1="filterNodes('corp_fw_1')" :layerNodes2="filterNodes('corp_dmz')" 
         :layerName1="layerNames[0]" :layerName2="layerNames[1]" ref="9" />
+        <hr>
       <model-driven-connection 
         :layerNodes1="filterNodes('corp_dmz')" :layerNodes2="filterNodes('corp_fw_2')" 
         :layerName1="layerNames[1]" :layerName2="layerNames[2]" ref="10" />
+        <hr>
       <model-driven-connection 
         :layerNodes1="filterNodes('corp_fw_2')" :layerNodes2="filterNodes('corp_lan')" 
         :layerName1="layerNames[2]" :layerName2="layerNames[3]" ref="11" />
+        <hr>
       <model-driven-connection 
         :layerNodes1="filterNodes('corp_lan')" :layerNodes2="filterNodes('cs_fw_1')" 
         :layerName1="layerNames[3]" :layerName2="layerNames[4]" ref="12" />
+        <hr>
       <model-driven-connection 
         :layerNodes1="filterNodes('cs_fw_1')" :layerNodes2="filterNodes('cs_dmz')" 
         :layerName1="layerNames[4]" :layerName2="layerNames[5]" ref="13" />
+        <hr>
       <model-driven-connection 
         :layerNodes1="filterNodes('cs_dmz')" :layerNodes2="filterNodes('cs_fw_2')" 
         :layerName1="layerNames[5]" :layerName2="layerNames[6]" ref="14" />
+        <hr>
       <model-driven-connection 
         :layerNodes1="filterNodes('cs_fw_2')" :layerNodes2="filterNodes('cs_lan')" 
         :layerName1="layerNames[6]" :layerName2="layerNames[7]" ref="15" />
       <div class="pl-2 pt-3">
-        <input type="button" class="btn btn-primary btn-lg mx-2" @click="saveEdges(); Submit()" value="Submit">
-        <button type="button" class="btn btn-secondary btn-lg mx-2" @click="preview = !preview">Preview</button>
-        <button type="button" class="btn btn-success btn-lg mx-2" @click="Save">Save</button>
+        <input type="button" class="btn btn-primary btn-lg mx-2" @click="saveEdges();Submit()" value="Submit">
+        <button type="button" class="btn btn-secondary btn-lg mx-2" @click="saveEdges();GetNetworkTitle(); preview = !preview">Preview</button>
+        <button type="button" class="btn btn-success btn-lg mx-2" @click="saveEdges(); Save()">Save</button>
         <a id="downloadAnchorElem" style="display:none"></a>
       </div>
       <div v-if="preview" class="card mx-2 mt-4 mb-2">
@@ -114,9 +160,7 @@
   </div>
 </template>
 
-
 <script>
-/* eslint-disable */ 
 import http from "../../http-common";
 import ModelDrivenFirewall from '@/components/ModelDrivenFirewall.vue';
 import ModelDrivenSetting from '@/components/ModelDrivenSetting.vue';
@@ -162,8 +206,8 @@ export default {
       servers: [],
       nodes:[],
       edges:[],
-      submit: false,
-      missingField: false,
+      nodesDone: false,
+      edgesDone: false,
       CorpDMZ: CorpDMZServerTypes,
       CorpLAN: CorpLANServerTypes,
       CSDMZ: CSDMZserverTypes,
@@ -192,37 +236,25 @@ export default {
     saveNodes() {
       var ID = 1;
       this.nodes = []
-      this.missingField = false;
+      let missingField = false;
       for (let layer = 1; layer <= 8; layer++) {
+        if (!this.$refs[`${layer}`].checkSelection) {
+          missingField = true;
+          break;
+        }
         for (let i = 0; i < this.$refs[`${layer}`].rowData.length; i++) {    
-
           this.$refs[`${layer}`].rowData[i].id = ID++;
           this.nodes.push(this.$refs[`${layer}`].rowData[i]);
-          if(this.$refs[`${layer}`].rowData[i].id % 2 ==0){
-            if(this.$refs[`${layer}`].rowData[i].vendor==null || this.$refs[`${layer}`].rowData[i].product==null ||
-              this.$refs[`${layer}`].rowData[i].type==null){
-                console.log(this.$refs[`${layer}`].rowData[i])
-              this.missingField = true;
-            }
-          }
-          else{
-            if(this.$refs[`${layer}`].rowData[i].vendor==null || this.$refs[`${layer}`].rowData[i].product==null){
-                console.log(this.$refs[`${layer}`].rowData[i])
-              this.missingField = true;
-            }
-          }
         }
       }
-      console.log(this.missingField)
-      if (this.missingField == false) {
-         this.submit = !this.submit
+
+      if (missingField) {
+        // this.nodesDone = !this.nodesDone  /// TAKE THIS OUT WHEN DONE TESTING
+        alert('Please make sure to fill out all fields'); /// UNCOMMENT WHEN DONE TESTING
       } else {
-        this.submit = !this.submit  /// TAKE THIS OUT WHEN DONE TESTING
-        // alert('Please make sure to fill out all fields'); // UNCOMMENT WHEN DONE TESTING
-        this.missingField = false;
-        console.log(this.missingField)
+        this.nodesDone = true;
       }
-      ///this.checkNodes()
+      this.Scroll();
     },
 
     filterNodes(layerName) {
@@ -233,16 +265,24 @@ export default {
 
     saveEdges() {
       this.edges = [];
-      // defines edges from remote attack to all 1st layer nodes
-      this.edges.push({
-        currNode: 0,
-        nextNode: this.filterNodes('corp_fw_1').map(n => n.id)
-      });
+      let missingField = false;
 
       for (let conn = 9; conn <= 15; conn++) {
+        if (!this.$refs[`${conn}`].checkSelection) {
+          missingField = true;
+          break;
+        }    
         for (let i = 0; i < this.$refs[`${conn}`].rowData.length; i++) {
           this.edges.push(this.$refs[`${conn}`].rowData[i])
         }
+      }
+
+      if (missingField) {
+        // this.edgesDone = !this.edgesDone  /// TAKE THIS OUT WHEN DONE TESTING
+        alert('Please make sure to check at least one box per section.'); /// UNCOMMENT WHEN DONE TESTING
+      } else {
+        this.edgesDone = true;
+        this.edges.filter((n) => { return n.nextNode.length > 0; });
       }
     },
 
@@ -268,42 +308,46 @@ export default {
       reader.readAsText(file);
     },
 
-    Submit() {
-      if (!this.networkTitle) {
+    GetNetworkTitle() {
+      if (this.network_title == "") {
         const d = new Date();
         var hr = d.getHours() < 10 ? `0${d.getHours()}` : d.getHours();
 
-        this.networkTitle = `Model-Driven_Network_${d.getFullYear()}${d.getMonth()+1}${d.getDate()}_${hr}${d.getMinutes()}`
+        this.network_title = `Model-Driven_Network_${d.getFullYear()}${d.getMonth()+1}${d.getDate()}_${hr}${d.getMinutes()}`
       }
-      
-      this.Upload(this.network, (event) => {
-        this.progress = Math.round(100 * event.loaded / event.total);
-      })
-      .then(() => {
-        this.$emit('uploadedData');
-      })
-      .catch(() => {
-        this.progress = 0;
-        console.log('Could not upload data!');
-      });
+    },
+
+    Submit() {
+      if (this.edgesDone) {
+        this.GetNetworkTitle();
+
+        this.Upload(this.network, (event) => {
+          this.progress = Math.round(100 * event.loaded / event.total);
+        })
+        .then(() => {
+          this.$emit('uploadedData');
+        })
+        .catch(() => {
+          this.progress = 0;
+          console.log('Could not upload data!');
+        });
+      }
     },
 
     Upload(data, onUploadProgress) {
       return http.post("/network_topology_model_driven_input", data , { onUploadProgress });
     }, 
     
-    GetCardSize() { // Needs to be fixed.
-      return {
-        'width' : 100,
-        'height' : 100
-      };
+    Scroll() {
+      document.getElementById('network_input_top').scrollIntoView({behavior: 'smooth'});
     },
 
     Save() {
+      this.GetNetworkTitle();
       var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.network, undefined, 2));
       var dlAnchorElem = document.getElementById('downloadAnchorElem');
       dlAnchorElem.setAttribute("href", dataStr);
-      dlAnchorElem.setAttribute("download", `${this.network.network_title.toLowerCase()}.json`);
+      dlAnchorElem.setAttribute("download", `${this.network_title.toLowerCase()}.json`);
       dlAnchorElem.click();
     },
   }

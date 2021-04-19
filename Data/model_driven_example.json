@@ -1,0 +1,792 @@
+{
+  "network_title": "Model_Driven_Example",
+  "date": "4/18/2021",
+  "vertices": [
+    {
+      "layer": "corp_fw_1",
+      "id": 1,
+      "vendor": "CISCO",
+      "product": "ASA_5500",
+      "cve_ids": [
+        "CVE-2013-0149",
+        "CVE-2010-0149",
+        "CVE-2010-0150",
+        "CVE-2011-0379",
+        "CVE-2011-0393",
+        "CVE-2011-0394",
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-0565",
+        "CVE-2010-0566"
+      ]
+    },
+    {
+      "layer": "corp_fw_1",
+      "id": 2,
+      "vendor": "CISCO",
+      "product": "ASA_5500",
+      "cve_ids": [
+        "CVE-2013-0149",
+        "CVE-2010-0149",
+        "CVE-2010-0150",
+        "CVE-2011-0379",
+        "CVE-2011-0393",
+        "CVE-2011-0394",
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-0565",
+        "CVE-2010-0566"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 3,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": "windows_server_2019",
+      "cve_ids": [
+        "CVE-2021-1638",
+        "CVE-2021-1642",
+        "CVE-2021-1650",
+        "CVE-2021-1651",
+        "CVE-2021-1649",
+        "CVE-2021-1659",
+        "CVE-2021-1660",
+        "CVE-2021-1661",
+        "CVE-2021-1696",
+        "CVE-2021-1697",
+        "CVE-2021-1695",
+        "CVE-2021-1694"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 4,
+      "type": "Web Server",
+      "vendor": "Microsoft",
+      "product": "windows_server_2016",
+      "cve_ids": [
+        "CVE-2021-1638",
+        "CVE-2021-1642",
+        "CVE-2021-1637",
+        "CVE-2021-1653",
+        "CVE-2021-1654",
+        "CVE-2021-1655",
+        "CVE-2021-1673",
+        "CVE-2021-1674",
+        "CVE-2021-1672",
+        "CVE-2021-1671",
+        "CVE-2021-1670",
+        "CVE-2021-1669"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 5,
+      "type": "FTP Server",
+      "vendor": "Oracle",
+      "product": "Solaris",
+      "cve_ids": [
+        "CVE-2004-0230",
+        "CVE-2014-0397",
+        "CVE-2011-0419",
+        "CVE-2016-0778",
+        "CVE-2016-0777",
+        "CVE-2016-0693",
+        "CVE-2014-1563",
+        "CVE-2011-2286",
+        "CVE-2011-2198",
+        "CVE-2011-2292",
+        "CVE-2011-2304",
+        "CVE-2010-2383"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 6,
+      "type": "DNS Server",
+      "vendor": "Oracle",
+      "product": "database_server",
+      "cve_ids": [
+        "CVE-2003-0095",
+        "CVE-2003-0096",
+        "CVE-2003-0222",
+        "CVE-2010-0071",
+        "CVE-2006-0267",
+        "CVE-2006-0266",
+        "CVE-2006-0265",
+        "CVE-2006-0285",
+        "CVE-2006-0286",
+        "CVE-2006-0287"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 7,
+      "type": "WAP Server",
+      "vendor": "Linux",
+      "product": "Linux_kernel",
+      "cve_ids": [
+        "CVE-2005-0001",
+        "CVE-2003-0018",
+        "CVE-2004-0001",
+        "CVE-2010-0008",
+        "CVE-1999-0128",
+        "CVE-1999-0138"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 8,
+      "type": "AUTHENTICATION Server",
+      "vendor": "Linux",
+      "product": "Linux_kernel",
+      "cve_ids": [
+        "CVE-2006-0558",
+        "CVE-2004-0427",
+        "CVE-2004-0424",
+        "CVE-2003-0462",
+        "CVE-2005-0449",
+        "CVE-2003-0465",
+        "CVE-2013-0268",
+        "CVE-2004-0495",
+        "CVE-2004-0496",
+        "CVE-2004-0497"
+      ]
+    },
+    {
+      "layer": "corp_fw_2",
+      "id": 9,
+      "vendor": "Juniper",
+      "product": "SRX240",
+      "cve_ids": [
+        "CVE-2014-0612",
+        "CVE-2014-0618",
+        "CVE-2014-0617",
+        "CVE-2014-3815",
+        "CVE-2014-3817",
+        "CVE-2014-3822",
+        "CVE-2014-3825",
+        "CVE-2013-4684",
+        "CVE-2013-4685",
+        "CVE-2013-4688",
+        "CVE-2013-4687"
+      ]
+    },
+    {
+      "layer": "corp_fw_2",
+      "id": 10,
+      "vendor": "Juniper",
+      "product": "SRX240",
+      "cve_ids": [
+        "CVE-2014-0612",
+        "CVE-2014-0618",
+        "CVE-2014-0617",
+        "CVE-2014-3815",
+        "CVE-2014-3817",
+        "CVE-2014-3822",
+        "CVE-2014-3825",
+        "CVE-2013-4684",
+        "CVE-2013-4685",
+        "CVE-2013-4688",
+        "CVE-2013-4687"
+      ]
+    },
+    {
+      "layer": "corp_fw_2",
+      "id": 11,
+      "vendor": "Juniper",
+      "product": "SRX240",
+      "cve_ids": [
+        "CVE-2014-0612",
+        "CVE-2014-0618",
+        "CVE-2014-0617",
+        "CVE-2014-3815",
+        "CVE-2014-3817",
+        "CVE-2014-3822",
+        "CVE-2014-3825",
+        "CVE-2013-4684",
+        "CVE-2013-4685",
+        "CVE-2013-4688",
+        "CVE-2013-4687"
+      ]
+    },
+    {
+      "layer": "corp_lan",
+      "id": 12,
+      "type": "Business Server",
+      "vendor": "Microsoft",
+      "product": "windows_server_2016",
+      "cve_ids": [
+        "CVE-2021-1637",
+        "CVE-2021-1638",
+        "CVE-2021-1642",
+        "CVE-2021-1657",
+        "CVE-2021-1655",
+        "CVE-2021-1656",
+        "CVE-2021-1668",
+        "CVE-2021-1669",
+        "CVE-2021-1673",
+        "CVE-2021-1674"
+      ]
+    },
+    {
+      "layer": "corp_lan",
+      "id": 13,
+      "type": "Business Workstation",
+      "vendor": "Microsoft",
+      "product": "windows_server_2019",
+      "cve_ids": [
+        "CVE-2021-1638",
+        "CVE-2021-1642",
+        "CVE-2021-1645",
+        "CVE-2021-1654",
+        "CVE-2021-1655",
+        "CVE-2021-1656",
+        "CVE-2021-1668",
+        "CVE-2021-1669",
+        "CVE-2021-1680",
+        "CVE-2021-1682"
+      ]
+    },
+    {
+      "layer": "corp_lan",
+      "id": 14,
+      "type": "Web Application Server",
+      "vendor": "Oracle",
+      "product": "Solaris",
+      "cve_ids": [
+        "CVE-2004-0230",
+        "CVE-2014-0397",
+        "CVE-2011-0419",
+        "CVE-2014-0420",
+        "CVE-2016-0406",
+        "CVE-2016-0403",
+        "CVE-2016-0431",
+        "CVE-2016-0458",
+        "CVE-2016-0428",
+        "CVE-2016-0493"
+      ]
+    },
+    {
+      "layer": "cs_fw_1",
+      "id": 15,
+      "vendor": "Microsoft",
+      "product": "windows_defender",
+      "cve_ids": [
+        "CVE-2013-0078",
+        "CVE-2011-0037",
+        "CVE-2021-1647",
+        "CVE-2008-1437",
+        "CVE-2020-1163",
+        "CVE-2020-1002",
+        "CVE-2020-1170",
+        "CVE-2017-8540",
+        "CVE-2017-8537",
+        "CVE-2017-8535",
+        "CVE-2017-8558",
+        "CVE-2017-8541"
+      ]
+    },
+    {
+      "layer": "cs_fw_1",
+      "id": 16,
+      "vendor": "Microsoft",
+      "product": "windows_defender",
+      "cve_ids": [
+        "CVE-2013-0078",
+        "CVE-2011-0037",
+        "CVE-2021-1647",
+        "CVE-2008-1437",
+        "CVE-2020-1163",
+        "CVE-2020-1002",
+        "CVE-2020-1170",
+        "CVE-2017-8540",
+        "CVE-2017-8537",
+        "CVE-2017-8535",
+        "CVE-2017-8558",
+        "CVE-2017-8541"
+      ]
+    },
+    {
+      "layer": "cs_dmz",
+      "id": 17,
+      "type": "Ext Business COMM Server",
+      "vendor": "Microsoft",
+      "product": "windows_xp",
+      "cve_ids": [
+        "CVE-2003-0003",
+        "CVE-2003-0004",
+        "CVE-2003-0009",
+        "CVE-2003-0010",
+        "CVE-2004-0206",
+        "CVE-2004-0207",
+        "CVE-2004-0209",
+        "CVE-2004-0208",
+        "CVE-2011-0089",
+        "CVE-2011-0088"
+      ]
+    },
+    {
+      "layer": "cs_dmz",
+      "id": 18,
+      "type": "WWW Server",
+      "vendor": "Microsoft",
+      "product": "windows_7",
+      "cve_ids": [
+        "CVE-2013-0007",
+        "CVE-2011-0029",
+        "CVE-2011-0031",
+        "CVE-2011-0091",
+        "CVE-2010-0250",
+        "CVE-2010-0232",
+        "CVE-2010-0231",
+        "CVE-2014-0316",
+        "CVE-2014-0318",
+        "CVE-2014-0315",
+        "CVE-2010-0492",
+        "CVE-2010-0494"
+      ]
+    },
+    {
+      "layer": "cs_dmz",
+      "id": 19,
+      "type": "Database Server",
+      "vendor": "Oracle",
+      "product": "Solaris",
+      "cve_ids": [
+        "CVE-2004-0230",
+        "CVE-2014-0397",
+        "CVE-2011-0419",
+        "CVE-2016-0426",
+        "CVE-2016-0440",
+        "CVE-2016-0428",
+        "CVE-2016-0600",
+        "CVE-2016-0598",
+        "CVE-2016-0606",
+        "CVE-2016-0608"
+      ]
+    },
+    {
+      "layer": "cs_dmz",
+      "id": 20,
+      "type": "Security Server",
+      "vendor": "Linux",
+      "product": "Linux_kernel",
+      "cve_ids": [
+        "CVE-2003-0001",
+        "CVE-2004-0001",
+        "CVE-2006-0039",
+        "CVE-2006-0038",
+        "CVE-1999-0061",
+        "CVE-2014-0038",
+        "CVE-1999-0317",
+        "CVE-2003-0187",
+        "CVE-1999-0257",
+        "CVE-2005-0179",
+        "CVE-2005-0178"
+      ]
+    },
+    {
+      "layer": "cs_dmz",
+      "id": 21,
+      "type": "Authentication Server",
+      "vendor": "Linux",
+      "product": "Linux_kernel",
+      "cve_ids": [
+        "CVE-2004-0001",
+        "CVE-2003-0001",
+        "CVE-2005-0001",
+        "CVE-2014-0038",
+        "CVE-1999-0317",
+        "CVE-2003-0187",
+        "CVE-1999-0257",
+        "CVE-2004-0177",
+        "CVE-2004-0178",
+        "CVE-1999-0628",
+        "CVE-1999-0590"
+      ]
+    },
+    {
+      "layer": "cs_fw_2",
+      "id": 22,
+      "vendor": "CISCO",
+      "product": "ASA_5580",
+      "cve_ids": [
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-2814",
+        "CVE-2010-2815",
+        "CVE-2010-2816",
+        "CVE-2010-2817",
+        "CVE-2009-4911",
+        "CVE-2008-7257",
+        "CVE-2011-2054",
+        "CVE-2019-15256",
+        "CVE-2020-3125",
+        "CVE-2020-3179",
+        "CVE-2020-3186",
+        "CVE-2020-3187",
+        "CVE-2020-3188",
+        "CVE-2020-3189",
+        "CVE-2020-3191",
+        "CVE-2020-3195",
+        "CVE-2020-3196",
+        "CVE-2020-3254",
+        "CVE-2020-3255",
+        "CVE-2020-3283"
+      ]
+    },
+    {
+      "layer": "cs_fw_2",
+      "id": 23,
+      "vendor": "CISCO",
+      "product": "ASA_5580",
+      "cve_ids": [
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-2814",
+        "CVE-2010-2815",
+        "CVE-2010-2816",
+        "CVE-2010-2817",
+        "CVE-2009-4911",
+        "CVE-2008-7257",
+        "CVE-2011-2054",
+        "CVE-2019-15256",
+        "CVE-2020-3125",
+        "CVE-2020-3179",
+        "CVE-2020-3186",
+        "CVE-2020-3187",
+        "CVE-2020-3188",
+        "CVE-2020-3189",
+        "CVE-2020-3191",
+        "CVE-2020-3195",
+        "CVE-2020-3196",
+        "CVE-2020-3254",
+        "CVE-2020-3255",
+        "CVE-2020-3283"
+      ]
+    },
+    {
+      "layer": "cs_fw_2",
+      "id": 24,
+      "vendor": "CISCO",
+      "product": "ASA_5580",
+      "cve_ids": [
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-2814",
+        "CVE-2010-2815",
+        "CVE-2010-2816",
+        "CVE-2010-2817",
+        "CVE-2009-4911",
+        "CVE-2008-7257",
+        "CVE-2011-2054",
+        "CVE-2019-15256",
+        "CVE-2020-3125",
+        "CVE-2020-3179",
+        "CVE-2020-3186",
+        "CVE-2020-3187",
+        "CVE-2020-3188",
+        "CVE-2020-3189",
+        "CVE-2020-3191",
+        "CVE-2020-3195",
+        "CVE-2020-3196",
+        "CVE-2020-3254",
+        "CVE-2020-3255",
+        "CVE-2020-3283"
+      ]
+    },
+    {
+      "layer": "cs_lan",
+      "id": 25,
+      "type": "Application Server",
+      "vendor": "Microsoft",
+      "product": "windows_server_2016",
+      "cve_ids": [
+        "CVE-2021-1637",
+        "CVE-2021-1638",
+        "CVE-2021-1642",
+        "CVE-2021-1645",
+        "CVE-2021-1648",
+        "CVE-2021-1649",
+        "CVE-2021-1650",
+        "CVE-2021-1651",
+        "CVE-2021-1655",
+        "CVE-2021-1656",
+        "CVE-2021-1657",
+        "CVE-2021-1658",
+        "CVE-2021-1659",
+        "CVE-2021-1660",
+        "CVE-2021-1661"
+      ]
+    },
+    {
+      "layer": "cs_lan",
+      "id": 26,
+      "type": "Historian",
+      "vendor": "Microsoft",
+      "product": "windows_server_2012",
+      "cve_ids": [
+        "CVE-2013-0006",
+        "CVE-2013-0007",
+        "CVE-2013-0008",
+        "CVE-2013-0013",
+        "CVE-2021-1654",
+        "CVE-2021-1653",
+        "CVE-2014-0256",
+        "CVE-2014-0254",
+        "CVE-2014-0263",
+        "CVE-2014-0255"
+      ]
+    },
+    {
+      "layer": "cs_lan",
+      "id": 27,
+      "type": "Database Server",
+      "vendor": "Oracle",
+      "product": "database_server",
+      "cve_ids": [
+        "CVE-2003-0095",
+        "CVE-2003-0096",
+        "CVE-2003-0222",
+        "CVE-2007-0269",
+        "CVE-2007-0268",
+        "CVE-2006-0552",
+        "CVE-2003-0727",
+        "CVE-2021-1993",
+        "CVE-2021-2000"
+      ]
+    },
+    {
+      "layer": "cs_lan",
+      "id": 28,
+      "type": "Configuration Server",
+      "vendor": "Oracle",
+      "product": "Solaris",
+      "cve_ids": [
+        "CVE-2004-0230",
+        "CVE-2014-0397",
+        "CVE-2011-0419",
+        "CVE-2016-0431",
+        "CVE-2016-0428",
+        "CVE-2016-0458",
+        "CVE-2016-0493"
+      ]
+    },
+    {
+      "layer": "cs_lan",
+      "id": 29,
+      "type": "HMI Computers",
+      "vendor": "Linux",
+      "product": "Linux_kernel",
+      "cve_ids": [
+        "CVE-2003-0001",
+        "CVE-2004-0001",
+        "CVE-2005-0001",
+        "CVE-2004-0109",
+        "CVE-2013-0160",
+        "CVE-2003-0244",
+        "CVE-2005-0449",
+        "CVE-2004-0427",
+        "CVE-2004-0424",
+        "CVE-2004-0535",
+        "CVE-2005-0489"
+      ]
+    },
+    {
+      "layer": "cs_lan",
+      "id": 30,
+      "type": "Engineering Workstation",
+      "vendor": "Linux",
+      "product": "Linux_kernel",
+      "cve_ids": [
+        "CVE-2005-0135",
+        "CVE-2005-0136",
+        "CVE-1999-0381",
+        "CVE-2004-0228",
+        "CVE-2004-0229",
+        "CVE-1999-0781",
+        "CVE-2005-0489",
+        "CVE-2009-0269",
+        "CVE-2005-0504",
+        "CVE-2004-0535",
+        "CVE-2013-0349"
+      ]
+    }
+  ],
+  "arcs": [
+    {
+      "currNode": 1,
+      "nextNode": [
+        3,
+        4,
+        5,
+        7
+      ]
+    },
+    {
+      "currNode": 2,
+      "nextNode": [
+        8,
+        7,
+        6,
+        3
+      ]
+    },
+    {
+      "currNode": 3,
+      "nextNode": [
+        9,
+        10
+      ]
+    },
+    {
+      "currNode": 4,
+      "nextNode": [
+        10,
+        11
+      ]
+    },
+    {
+      "currNode": 5,
+      "nextNode": [
+        9,
+        11
+      ]
+    },
+    {
+      "currNode": 6,
+      "nextNode": [
+        10
+      ]
+    },
+    {
+      "currNode": 7,
+      "nextNode": [
+        9
+      ]
+    },
+    {
+      "currNode": 8,
+      "nextNode": [
+        11
+      ]
+    },
+    {
+      "currNode": 9,
+      "nextNode": [
+        13,
+        12
+      ]
+    },
+    {
+      "currNode": 10,
+      "nextNode": [
+        14
+      ]
+    },
+    {
+      "currNode": 11,
+      "nextNode": [
+        12,
+        13,
+        14
+      ]
+    },
+    {
+      "currNode": 12,
+      "nextNode": [
+        15,
+        16
+      ]
+    },
+    {
+      "currNode": 13,
+      "nextNode": [
+        15
+      ]
+    },
+    {
+      "currNode": 14,
+      "nextNode": [
+        16
+      ]
+    },
+    {
+      "currNode": 15,
+      "nextNode": [
+        17,
+        18
+      ]
+    },
+    {
+      "currNode": 16,
+      "nextNode": [
+        19,
+        20,
+        21
+      ]
+    },
+    {
+      "currNode": 17,
+      "nextNode": [
+        22,
+        24
+      ]
+    },
+    {
+      "currNode": 18,
+      "nextNode": [
+        23
+      ]
+    },
+    {
+      "currNode": 19,
+      "nextNode": [
+        22,
+        23
+      ]
+    },
+    {
+      "currNode": 20,
+      "nextNode": [
+        23,
+        24
+      ]
+    },
+    {
+      "currNode": 21,
+      "nextNode": [
+        22,
+        24,
+        23
+      ]
+    },
+    {
+      "currNode": 22,
+      "nextNode": [
+        25,
+        26
+      ]
+    },
+    {
+      "currNode": 23,
+      "nextNode": [
+        27,
+        28,
+        25,
+        26,
+        29,
+        30
+      ]
+    },
+    {
+      "currNode": 24,
+      "nextNode": [
+        29,
+        30
+      ]
+    }
+  ]
+}
