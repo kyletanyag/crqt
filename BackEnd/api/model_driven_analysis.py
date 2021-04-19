@@ -55,10 +55,11 @@ class ModelDriven:
 
     # object for nodes
     class Node:
-        def __init__(self, product, vendor, layer, index, cve_ids):
+        def __init__(self, product, vendor, layer, index, cve_ids, product_type):
             self.out_edges = []             # array of outgoing edges
             self.in_edges = []              # array of incoming edges
             self.product = product          # node product
+            self.type = product_type
             self.vendor = vendor            # node vendor
             self.index = index              # node index/id
             self.weights = np.array([1.0,1.0,1.0])    # base, exploitability, impact scores
@@ -103,7 +104,8 @@ def get_network_topology():
             'id'        : node.index,
             'vendor'    : node.vendor,
             'product'   : node.product,
-            'layer'     : switch[node.layer]           
+            'layer'     : switch[node.layer],
+            'type'      : node.type           
         })
         for e in node.out_edges:
             edges.append({
@@ -246,12 +248,12 @@ def origin_to_node_metrics(node_index):
         score_sum += score
         
         metrics_per_path.append({
-                'path_id' : len(exploitability_list) + 1,
-                'path'    : [x.target.index for x in path],
-                'base_score' : round_sig(score[0],3),
-                'exploitability_score' : round_sig(score[1],3),
-                'impact_score' : round_sig(score[2],3)
-                })
+            'path_id' : len(exploitability_list) + 1,
+            'path'    : [x.target.index for x in path],
+            'base_score' : round_sig(score[0],3),
+            'exploitability_score' : round_sig(score[1],3),
+            'impact_score' : round_sig(score[2],3)
+        })
 
         exploitability_list.append([len(metrics_per_path) - 1,round_sig(score[1],3)])
         impact_list.append([len(metrics_per_path) - 1,round_sig(score[2],3)])
