@@ -160,7 +160,7 @@ def network_topology_model_driven_input():
             layer=node["layer"],
             index=node["id"],
             cve_ids=node["cve_ids"],
-            product_type=None # node["type"]
+            product_type=node["type"]
             ))
         
         # calculating load percentage
