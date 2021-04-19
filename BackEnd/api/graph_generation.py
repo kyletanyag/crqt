@@ -9,6 +9,7 @@ import enum
 from collections import deque
 from .data_driven_analysis import DataDriven, DerivedScore, DataDriven_init
 from .model_driven_analysis import ModelDriven, shortest_paths_gen, ModelDriven_init
+from .round_sig import round_sig
 import time
 
 # load percentage - percentage of loading file
@@ -24,19 +25,27 @@ graph_bp = Blueprint('graph_bp', __name__)
 @graph_bp.route('/file_load_percentage', methods=['GET'])
 def file_load_percentage():
     global load_percentage
-    return {"file_load_percentage" : load_percentage}
+    return {"file_load_percentage" : round_sig(load_percentage*100.0,4)}
 
 @graph_bp.route('/test_connection', methods=['GET'])
 def test_connection():
     return 'Good Connection', 200
 
 @graph_bp.route('/data_driven/get_network_title', methods=['GET'])
+<<<<<<< HEAD
 def get_data_driven_network_title():
+=======
+def data_get_network_title():
+>>>>>>> origin/back-end
     global title_data_driven
     return jsonify({"network_title" : title_data_driven})
 
 @graph_bp.route('/data_driven/get_input_date', methods=['GET'])
+<<<<<<< HEAD
 def get_data_driven_input_date():
+=======
+def data_get_input_date():
+>>>>>>> origin/back-end
     global input_date_data_driven
     return jsonify({"input_date" : input_date_data_driven})
 
@@ -121,13 +130,22 @@ def network_topology_data_driven_input():
 title_model_driven = ""                      # title/name of network
 input_date_model_driven = ""                 # date/time of network input into system
 
+<<<<<<< HEAD
 @graph_bp.route('/model_driven/get_network_title', methods=['GET'])
 def get_model_driven_network_title():
+=======
+@graph_bp.route('/model_drivenn/get_network_title', methods=['GET'])
+def model_get_network_title():
+>>>>>>> origin/back-end
     global title_model_driven
     return jsonify({"network_title" : title_model_driven})
 
 @graph_bp.route('/model_driven/get_input_date', methods=['GET'])
+<<<<<<< HEAD
 def get_model_driven_input_date():
+=======
+def model_get_input_date():
+>>>>>>> origin/back-end
     global input_date_model_driven
     return jsonify({"input_date" : input_date_model_driven})  
 
@@ -135,6 +153,7 @@ def get_model_driven_input_date():
 def network_topology_model_driven_input():
     global title_model_driven
     global input_date_model_driven 
+    global load_percentage
     from .model_driven_analysis import vulnerability_graph
 
     network = request.get_json()  # json network topology data driven
@@ -147,15 +166,18 @@ def network_topology_model_driven_input():
     ModelDriven_init() 
 
     # creating remote attacker node
-    vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0, None))
-
+    vulnerability_graph.append(ModelDriven.Node(None, None, "remote_attack", 0, None, None))
+    
+    load_percentage = 0.0
+    
     for node in network["vertices"]:
         vulnerability_graph.append(ModelDriven.Node(
             product=node["product"], 
             vendor=node["vendor"],
             layer=node["layer"],
             index=node["id"],
-            cve_ids=node["cve_ids"]
+            cve_ids=node["cve_ids"],
+            product_type=node["type"]
             ))
         
         # calculating load percentage
