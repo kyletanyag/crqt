@@ -101,7 +101,7 @@ def network_topology_data_driven_input():
                 LAG[-1].isExecCode = True
 
         # calculating load percentage
-        load_percentage += 0.5 / len(network["vertices"]) - 0.1       
+        load_percentage += 0.5 / len(network["vertices"])     
 
     # sorting LAG by id
     LAG.sort(key=lambda node: node.index)
@@ -112,6 +112,7 @@ def network_topology_data_driven_input():
         LAG[int(edge["currNode"]) - 1].next_node.append(LAG[targetNode]) 
         LAG[targetNode].calculations_remaining += 1         # increase number of nodes needed for calculation
     
+    # 90% completion
     load_percentage = 0.9
 
     parsing_time = time.time() - start_timer
@@ -119,6 +120,7 @@ def network_topology_data_driven_input():
     # calculates derived scores for all nodes
     DerivedScore(leaf_queue)
 
+    # 100% completion
     load_percentage = 1.0
 
     return {'parsing_time': round(parsing_time,4)}, 200
@@ -170,7 +172,7 @@ def network_topology_model_driven_input():
             ))
         
         # calculating load percentage
-        load_percentage += 0.5 / len(network["vertices"]) - 0.1
+        load_percentage += 0.5 / len(network["vertices"])
 
     # sorting vulnerability node list by index ascending order
     vulnerability_graph.sort(key=lambda node: node.index)
@@ -181,14 +183,15 @@ def network_topology_model_driven_input():
         for tar in edges["nextNode"]:
             ModelDriven.Edge(vulnerability_graph[curr], vulnerability_graph[tar])
         
-        load_percentage += 0.5 / len(network["vertices"]) - 0.1
+        load_percentage += 0.5 / len(network["vertices"])
     
     # connecting remote attacker
     for node in vulnerability_graph:
         if node.layer == ModelDriven.Layers.CORP_FW1:
             ModelDriven.Edge(vulnerability_graph[0], node)
     
-    load_percentage += 0.5 / len(network["vertices"]) - 0.1
+    # 90% completion
+    load_percentage = 0.9
 
     # start generating shorest paths
     shortest_paths_gen()
