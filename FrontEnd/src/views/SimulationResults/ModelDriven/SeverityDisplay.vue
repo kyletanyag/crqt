@@ -3,7 +3,7 @@
   <result-header 
     title="Severity Display"
     nextPage="Model Driven Results - Recommendations"
-    prevPage="Model Driven Results - Node Specific Metrics"
+    prevPage="Model Driven Results - Attack Path Metrics"
     defaultPage="Model Driven Results"
   />
   <div v-if="error" class="alert alert-danger">
@@ -13,6 +13,11 @@
     <div class="col text-left">
       <div>
         <h2>Edge Severity Score Breakdown</h2>
+        <p>
+          To the right contains a data table containing all the base, exploitability, and impact scores
+          for every edge/connection in your network. Additionally, the severity level is denoted as well beside
+          each score.
+        </p>
         <p>
           Your inputted network contains a total of <strong>{{ edges.length }}</strong> edges. 
           The severity breakdown of each edge weight from the computed vulnerability graph is below.
@@ -35,12 +40,17 @@
           <br><strong>{{ mediumImpact.length }}</strong> edges are marked as <strong>medium</strong> severity. (0.4 &#8804; Impact Score &lt; 0.7)
           <br><strong>{{ lowImpact.length }}</strong> edges are marked as <strong>low</strong> severity. (Impact Score &lt; 0.4)          
         </div>
+        <p class="pt-2"> 
+          Nodes marked as <strong>High Severity</strong> must be corrected with the highest priority.
+          <br>Nodes marked as <strong>Medium Severity</strong> must be corrected with high priority.
+          <br>Nodes marked as <strong>Low Severity</strong> are encouraged, but not required, to be corrected.
+        </p>
       </div>
     </div>
     <div class="col">
       <h2>Network Edge Severity Table</h2>
       <table v-if="!loading" class="table table-hover">
-        <div :style="`overflow-y: auto; height: 500px;`">
+        <div :style="`overflow-y: auto; height: 600px;`">
           <thead>
             <tr>
               <th @click="sort('source')" scope="col" style="width: 7.5%">Edge<i :class="sortDirection('source')"></i></th>

@@ -294,7 +294,7 @@ function generateModelDrivenNetworkDiagram(data) {
           .style('background-color', 'rgba(211, 211, 211, 0.8)')
         tooltip.html(getNodeHTML(d))
           .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 150) + "px")
-          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 200) + "px");
+          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 280) + "px");
       })
       .on("mouseleave", function() {
         tooltip.transition()
@@ -313,7 +313,7 @@ function generateModelDrivenNetworkDiagram(data) {
           .style('background-color', 'rgba(211, 211, 211, 0.8)')
         tooltip.html(getLinkHTML(d))
           .style("left", (d3.event.pageX - d3.select('.tooltip').node().offsetWidth + 150) + "px")
-          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 200) + "px");
+          .style("top", (d3.event.pageY - d3.select('.tooltip').node().offsetHeight - 280) + "px");
       })
       .on("mouseleave", function() {
         tooltip.transition()

@@ -11,7 +11,7 @@
   <div class="mx-5 text-left row">
     <div class="col">
       <div class="pb-2">
-        <h2>Network Breakdown</h2>
+        <h2>Network Metadata</h2>
         <p>
           You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ inputDate }}</strong>. 
           It took <strong>{{ compTime }}</strong> second(s) to compute the generated metrics. 
@@ -19,6 +19,7 @@
         <p>
           The computed metrics use NVD Vulnerability data updated as recent as <strong v-if="!loadingNVD">{{ NVDDate }}</strong>.
         </p>
+        <h2>Network Breakdown</h2>
         <p>
           Your inputted network contains a total of <strong>{{ nodes.length }}</strong> nodes and <strong>{{ edges.length }}</strong> edges.
         </p>
@@ -83,7 +84,7 @@
           'Corporate Firewall 1', 'Corporate DMZ', 'Corporate Firewall 2', 'Corporate LAN',
           'Control Sytem Firewall 1', 'Control Sytem DMZ', 'Control Sytem Firewall 2', 'Control Sytem LAN'
         ]"
-        style="width: 50%; height: 20%"
+        style="width: 70%;"
         class="container"        
       />
     </div>

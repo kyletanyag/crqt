@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="mb-5">
   <result-header 
     title="Network Visualization"
     nextPage="Model Driven Results - Graph Metrics"
@@ -8,6 +8,24 @@
   />
   <div v-if="error" class="alert alert-danger">
     {{ error }}
+  </div>
+  <div class="row mx-5 text-left">
+    <div>
+      <h2>Instructions</h2>
+      <p>
+        Below contains a graph representation of your network following the NIST's control
+        system security recommended architecture. Alongside the graph is a data table containing
+        all the network edge data such as node ID, layer, product, vendor, base, exploitability,
+        and impact scores. The scores in the table represent the CVSS score needed to access into 
+        that node and because all the incoming edges to a node have the same score, the data table
+        reflects only the nodes in the network.
+        <br><br>
+        On the network graph, you can hover over a node to get specific information about that node or 
+        you can hover an edge to get the scores associated to getting to that node. Futhermore, you
+        can hover over a row in the network table and the corresponding node in the network graph will
+        be highlighted.
+      </p>
+    </div>
   </div>
   <div class="row">
     <div class="col">
@@ -21,9 +39,9 @@
             <thead>
               <tr>
                 <th @click="sort('target.id')" scope="col" style="width: 7.5%">ID<i :class="sortDirection('id')"></i></th>
-                <th @click="sort('target.layer')" scope="col" style="width: 15%">Layer<i :class="sortDirection('layer')"></i></th>
-                <th @click="sort('target.vendor')" scope="col" style="width: 16.6%">Product<i :class="sortDirection('product')"></i></th>
-                <th @click="sort('target.product')" scope="col" style="width: 16.6%">Vendor<i :class="sortDirection('vendor')"></i></th>
+                <th @click="sort('layer')" scope="col" style="width: 15%">Layer<i :class="sortDirection('layer')"></i></th>
+                <th @click="sort('product')" scope="col" style="width: 16.6%">Product<i :class="sortDirection('product')"></i></th>
+                <th @click="sort('vendor')" scope="col" style="width: 16.6%">Vendor<i :class="sortDirection('vendor')"></i></th>
                 <th @click="sort('base_score')" scope="col" style="width: 16.6%">Base Score<i :class="sortDirection('base_score')"></i></th>
                 <th @click="sort('exploitability_score')" scope="col" style="width: 16.6%">Exploitability Score<i :class="sortDirection('exploitability_score')"></i></th>
                 <th @click="sort('impact_score')" scope="col" style="width: 16.6%">Impact Score<i :class="sortDirection('impact_score')"></i></th>

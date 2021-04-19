@@ -7,11 +7,6 @@
     configurations for the model-driven component of this tool.
   </p>
   <hr>
-  <!-- <div class="text-right">
-    <button class="btn btn-danger" @click="accountManagement = !accountManagement">
-      X
-    </button>
-  </div> -->
   <div v-show="accountManagement">
     <h2>Account Management</h2>
     <div v-if="!loadingUnregistered" class="row justify-content-center">
@@ -19,6 +14,7 @@
         title="Unregistered Users" 
         :users="unregisteredUsers"
         :happyError="true"
+        :info="false"
         ></user-data-table>
     </div>
     <div v-else>
@@ -28,7 +24,8 @@
       <user-data-table @delete="fetchRegistered"
         title="Registed Users" 
         :users="registeredUsers"
-        :approve="false"></user-data-table>
+        :approve="false"
+        :info="false"></user-data-table>
     </div>
     <div v-else>
       Loading ...
@@ -65,8 +62,7 @@ export default {
   },
   
   created() {
-    this.fetchUnregistered();
-    this.fetchRegistered();
+    this.fetchData();
   },
 
   methods: {

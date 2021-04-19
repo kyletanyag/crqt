@@ -5,6 +5,7 @@
     {
       "layer": "corp_fw_1",
       "id": 1,
+      "type": "firewall",
       "vendor": "CISCO",
       "product": "ASA_5500",
       "cve_ids": [
@@ -23,6 +24,7 @@
     {
       "layer": "corp_fw_1",
       "id": 2,
+      "type": "firewall",
       "vendor": "CISCO",
       "product": "ASA_5500",
       "cve_ids": [
@@ -157,6 +159,7 @@
     {
       "layer": "corp_fw_2",
       "id": 9,
+      "type": "firewall",
       "vendor": "Juniper",
       "product": "SRX240",
       "cve_ids": [
@@ -176,6 +179,7 @@
     {
       "layer": "corp_fw_2",
       "id": 10,
+      "type": "firewall",
       "vendor": "Juniper",
       "product": "SRX240",
       "cve_ids": [
@@ -195,6 +199,7 @@
     {
       "layer": "corp_fw_2",
       "id": 11,
+      "type": "firewall",
       "vendor": "Juniper",
       "product": "SRX240",
       "cve_ids": [
@@ -271,6 +276,7 @@
     {
       "layer": "cs_fw_1",
       "id": 15,
+      "type": "firewall",
       "vendor": "Microsoft",
       "product": "windows_defender",
       "cve_ids": [
@@ -291,6 +297,7 @@
     {
       "layer": "cs_fw_1",
       "id": 16,
+      "type": "firewall",
       "vendor": "Microsoft",
       "product": "windows_defender",
       "cve_ids": [
@@ -410,6 +417,7 @@
     {
       "layer": "cs_fw_2",
       "id": 22,
+      "type": "firewall",
       "vendor": "CISCO",
       "product": "ASA_5580",
       "cve_ids": [
@@ -440,6 +448,7 @@
     {
       "layer": "cs_fw_2",
       "id": 23,
+      "type": "firewall",
       "vendor": "CISCO",
       "product": "ASA_5580",
       "cve_ids": [
@@ -470,6 +479,7 @@
     {
       "layer": "cs_fw_2",
       "id": 24,
+      "type": "firewall",
       "vendor": "CISCO",
       "product": "ASA_5580",
       "cve_ids": [

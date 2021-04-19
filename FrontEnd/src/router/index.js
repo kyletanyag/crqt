@@ -123,9 +123,9 @@ const routes = [
         component: () => import(/* webpackChunkName: "Model Driven Results - Graph Metrics" */ '@/views/SimulationResults/ModelDriven/GraphMetrics.vue')
     },
     {
-        path: '/simulation-results/model-driven/node-specific-metrics',
-        name: 'Model Driven Results - Node Specific Metrics',
-        component: () => import(/* webpackChunkName: "Model Driven Results - Node Specific Metrics" */ '@/views/SimulationResults/ModelDriven/NodeSpecificMetrics.vue')
+        path: '/simulation-results/model-driven/attack-path-metrics',
+        name: 'Model Driven Results - Attack Path Metrics',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Node Specific Metrics" */ '@/views/SimulationResults/ModelDriven/AttackPathMetrics.vue')
     },
     {
         path: '/simulation-results/model-driven/severity-display',

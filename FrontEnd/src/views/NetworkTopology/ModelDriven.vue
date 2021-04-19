@@ -14,7 +14,7 @@
         If you would like to upload a previously built network topology, please upload the JSON file here: 
       </p>
       <input class="form-control-file pb-2" type="file" @change="selectFile" accept="application/JSON"> 
-      <button class="btn btn-primary" @click="edgesDone = true; Submit()">Upload</button>
+      <button class="btn btn-primary" @click="progress = 0; edgesDone = true; Submit()">Upload</button>
       <div class="progress my-4" style="width: 40%">
         <div class="progress-bar progress-bar-info"
           role="progressbar"
@@ -189,7 +189,7 @@ export default {
         if (r.data.error) console.log(r.data.error);
         this.firewalls.push(e)
       });
-    })
+    });
 
     http.get('/product_query_by_type/server').then((r) => {
       // console.log(r);
@@ -197,7 +197,7 @@ export default {
         if (r.data.error) console.log(r.data.error);
         this.servers.push(e)
       });
-    })
+    });
   },
 
   data() {
@@ -299,7 +299,7 @@ export default {
 
       reader.onload = ((event) => {
         var obj = JSON.parse(event.target.result);
-        console.log(obj)
+        // console.log(obj)
         this.nodes = obj.vertices;
         this.edges = obj.arcs;
         this.network_title = obj.network_title

@@ -54,14 +54,17 @@
                         </li>     
                     </ul>
                 </div>
+                <div v-if="admin" class="pr-4">
+                  <router-link v-if="authenticated" to="/Admin" replace>Admin</router-link>
+                </div>
                 <div id="log">
-                  <router-link v-if="authenticated" to="/Login" v-on:click="logout()" replace>Logout</router-link>
+                  <router-link v-if="authenticated" to="/Login" @click="logout()" replace>Logout</router-link>
                </div>
             </nav>
         </header>
     </div>
     <div>
-      <router-view @authenticated="setAuthenticated" @uploadedData="checkforResults" />
+      <router-view @authenticated="setAuthenticated" @uploadedData="checkforResults" @adminAccount="setAdmin" />
     </div>
 </div>
 </template>
@@ -73,9 +76,10 @@ export default {
 
   data() {
     return {
-      authenticated: true, // change to true when developing
+      authenticated: true, /// change to true when developing
       dataDriven: false,
       modelDriven: false,
+      admin: true  /// change to true to pretend to be admin account
     }
   },
 
@@ -94,9 +98,8 @@ export default {
       this.authenticated = status;
     },
 
-    setInputApproach(approach) {
-      console.log(approach);
-      this.inputApproach = approach;
+    setAdmin(status) {
+      this.admin = status;
     },
 
     logout() {
@@ -130,6 +133,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  /* font-size: 12pt; */
 }
 .button {
   border: none;

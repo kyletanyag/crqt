@@ -45,7 +45,8 @@ def verify_user():
             return {'message': 'Passwords Match.', 
                     'access' : True,
                     'dual_factor': user_db_entry.enabled_2fa,
-                    'id': user_db_entry.id}, 201
+                    'id': user_db_entry.id,
+                    'admin': user_db_entry.user_role}, 201
         else:
             print ("Password does not match.")
         return {'error': 'Email or password is invalid.'}, 200

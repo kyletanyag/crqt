@@ -2,11 +2,12 @@
 <div>
   <h1>Model Driven Results</h1>
   <div class="mx-5 row">
-    <div class="container">
+    <div class="col-2"></div>
+    <div class="col-8">
       <table>
         <tbody>
           <tr v-for="opt in options" :key="opt.title">
-            <td class="py-3 text-center">
+            <td class="py-3 text-center" style="width: 20%">
               <button class="btn btn-outline-primary" style="width: 100%;"
                 @click="this.$router.push({name: opt.routeName})">
                 {{ opt.title }}
@@ -28,7 +29,9 @@
             </td>
             <td class=" pl-3 text-left">
               <div>
-                Downloadable JSON file of the simulation results.
+                Downloadable JSON file of the simulation results except for attack path specific data. 
+                Unfortunately, we are unable to contain that in the JSON file due to the massive number
+                of possible attack paths.
                 <a id="downloadAnchorElem" style="display:none"></a>
               </div>
             </td>

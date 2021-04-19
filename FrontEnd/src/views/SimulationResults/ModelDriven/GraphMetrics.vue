@@ -1,8 +1,8 @@
 <template>
-<div>
+<div class="mb-5">
   <result-header 
     title="Graph Property Based Metrics"
-    nextPage="Model Driven Results - Node Specific Metrics"
+    nextPage="Model Driven Results - Attack Path Metrics"
     prevPage="Model Driven Results - Network Visualization"
     defaultPage="Model Driven Results"
   />
@@ -13,9 +13,37 @@
     <div class="col text-left">
       <h2>Centrality Meaures</h2>
       <div class="mx-1 row">
-        <p>
-          something goes here
-        </p>
+        <div>
+          <p>
+            Below are histograms containing the node values for different centrality metrics such as:
+          </p>
+          <ul>
+            <li class="pb-1">
+              <strong>Out-Degree Centrality:</strong> The number of outgoing edges for each node.
+            </li>
+            <li class="pb-1">
+              <strong>In-Degree Centrality:</strong> The number of incoming edges for each node. 
+            </li>
+            <li class="pb-1">
+              <strong>Degree Centrality:</strong> The total number of incoming and outgoing edges for each node.
+            </li>
+            <li class="pb-1">
+              <strong>Closeness Centrality:</strong> The average length of the shortest path between the node and all other nodes in the graph.
+            </li>
+            <li class="pb-1">
+              <strong>Betweenness Centrality:</strong> Quantifies the number of times a node acts as a bridge along the shortest path between two other nodes.
+            </li>
+            <li class="pb-1">
+              <strong>PageRank Centrality:</strong> Ranks nodes based on the number and quality of links to a node to give rough estimate of node importance.
+            </li>
+            <li class="pb-1">
+              <strong>Katz Centrality (KC):</strong>  Measures the number of all nodes that can be connected through a path, while contributions of distant nodes are penalized.
+            </li>
+          </ul>
+          <p>
+            The purpose of these metrics are to provide a visualization for possible trends that may occurs within network graph.
+          </p>
+        </div>
       </div>
       <div class="row py-2" v-if="degree.length && closeness.length && betweeness.length">
         <Histogram
@@ -81,11 +109,29 @@
           class="col-4"
         />
       </div>
+      <hr>
       <h2>Degree Distributions</h2>
       <div class="mx-1 row">
-        <p>
-          something goes here
-        </p>
+        <div>
+          <p>
+            Below are histograms containing the node values of the degree centrality metrics but converted into probabilities:
+          </p>
+          <ul>
+            <li class="pb-1">
+              <strong>Out-Degree Centrality:</strong> The number of outgoing edges for each node.
+            </li>
+            <li class="pb-1">
+              <strong>In-Degree Centrality:</strong> The number of incoming edges for each node. 
+            </li>
+            <li class="pb-1">
+              <strong>Degree Centrality:</strong> The total number of incoming and outgoing edges for each node.
+            </li>
+          </ul>
+          <p>
+            The purpose of these metrics are to provide a visualization for possible trends that may occurs within network graph 
+            when it comes to degree centrality probability distributions.
+          </p>
+        </div>
       </div>
       <div class="row py-2 justify-content-center" v-if="indegree.length && outdegree.length && degree.length">
         <Histogram
@@ -106,8 +152,8 @@
           barColor='#81DFA9'
           class="col-4"
         />
-      </div>
-      <div class="row py-2 justify-content-center" v-if="indegree.length && outdegree.length && degree.length">
+      <!-- </div> -->
+      <!-- <div class="row py-2 justify-content-center" v-if="indegree.length && outdegree.length && degree.length"> -->
         <Histogram
           :data="degreeProb"
           :numBins="10"

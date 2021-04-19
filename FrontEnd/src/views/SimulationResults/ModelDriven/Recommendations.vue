@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="mb-5">
   <result-header 
     title="Recommendations"
     prevPage="Model Driven Results - Severity Display"
@@ -11,7 +11,13 @@
   <div class="mx-5 row">
     <div class="col-6">
       <div class="text-left">
-        <h2 class="text-center">TOPSIS Recommendation</h2>
+        <h2 class="text-center">TOPSIS Recommendations</h2>
+        <p>
+          The recommendations computed were based on the Technique for Order of Preference by Similarity to Ideal Solution (TOPSIS) method.
+          The TOPSIS method assesses device criticality by building on the concept
+          that the chosen alternative should have the shortest geometric distance from the positive 
+          ideal solution and the largest geometric distance from the negative ideal solution.
+        </p>
         <p>
           Applying the TOPSIS method, we get the following rankings for 
           nodes that need to be reviewed.

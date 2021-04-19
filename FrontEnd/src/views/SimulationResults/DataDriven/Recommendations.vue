@@ -3,6 +3,7 @@
   <result-header 
     title="Recommendations"
     prevPage="Data Driven Results - Derived Node Exploitation"
+    nextPage="Data Driven Results - Printout"
     defaultPage="Data Driven Results"
   />
   <div v-if="error" class="alert alert-danger">
@@ -10,6 +11,13 @@
   </div>
   <div class="mx-5 row">
     <div class="col text-left">
+      <h2>Recommendations</h2>
+      <p>
+        The recommendations provided are based on derived fact nodes and vulnerabilities 
+        with the <strong>highest</strong> compued base scores. 
+        <br> They are ranked accordingly and the recommendations provide a guide on which 
+        nodes in your network need to be a priority to increase cyber-resiliency.
+      </p>
       How many recommendations would you like to see? 
       <input type="number" v-model.number="numRecommend" max="10" min="1" maxlength="2"
         onkeyup="if(this.value > 10) this.value = 10; else if(this.value < 0) this.value = 0;"
@@ -18,7 +26,7 @@
   </div>
   <div class=" mx-5 mb-2 row">
     <div class="col text-left pt-4">
-      <h2>Derived Fact Node Recommendations</h2>
+      <h2>Derived Fact Nodes</h2>
       <p>
         To the right is a table containing a sorted list of all the derived fact nodes from your network
         ranked from highest derived score to lowest derived score.
@@ -39,10 +47,12 @@
   <hr>
   <div class="mx-5 mb-2 row">
     <div class="col text-left pt-4">
-      <h2>Vulnerability Recommendations</h2>
+      <h2>Vulnerabilities</h2>
       <p>
         To the right is a table containing a sorted list of all the listed vulnerabilities from your network
         ranked from highest derived score probability to lowest derived score probability.
+        Additionally, you can click the CVE-ID link to be routed to learn more information about a certain 
+        vulnerability from the <a href="http://https://cve.circl.lu/" target="_blank">cve.circle.lu</a> website.
       </p>
       <div>
         Our top <strong>{{ Math.min(numRecommend, rankedVulExistsNodes.length) }}</strong> recommendations: 

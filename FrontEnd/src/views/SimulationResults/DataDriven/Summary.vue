@@ -10,6 +10,7 @@
   </div>
   <div class="mx-5 text-justify row">
     <div class="col">
+      <h2>Network Metadata</h2>
       <p>
         You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ inputDate }}</strong>. 
         It took <strong>{{ computationTime }}</strong> second(s) to compute the generated metrics. 
@@ -17,6 +18,7 @@
       <p>
         The computed metrics use NVD Vulnerability data updated as recent as <strong>{{ NVDDate }}</strong>.
       </p>
+      <h2>Network Breakdown</h2>
       <p>
         Your inputted network contains a total of <strong>{{ numNodes }}</strong> nodes and <strong>{{ numEdges }}</strong> edges.
       </p>
@@ -75,12 +77,12 @@ export default {
     GetData() {
       this.loadingDerivedScores = true;
 
-      http.get('get_network_title').then((r) => {
+      http.get('/data_driven/get_network_title').then((r) => {
         // console.log(r);
         this.title = r.data.network_title;
       });
 
-      http.get('get_input_date').then((r) => {
+      http.get('/data_driven/get_input_date').then((r) => {
         // console.log(r);
         this.inputDate = r.data.input_date;
       });
@@ -90,7 +92,7 @@ export default {
         this.NVDDate = r.data.date;
       })
 
-      http.get('data_driven/get_derived_scores').then((r) => {
+      http.get('/data_driven/get_derived_scores').then((r) => {
         console.log(r);
         this.computationTime = Number(r.data.computation_time.toPrecision(3));
 

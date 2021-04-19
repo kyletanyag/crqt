@@ -53,11 +53,12 @@ export default {
   methods: {
     login() {
       http.post('verify_user', this.credentials).then((r) => {
+        if(r.data.admin) this.$emit('adminAccount', true);
         if (r.data.dual_factor) {
           this.$router.replace({ name: "QR Login", params: {id: r.data.id} });
         } else if (r.data.access) {
           this.$emit("authenticated", true);
-          this.$router.replace({ name: "Secure" });
+          this.$router.replace({ name: "Home" });
         } else {
           this.error = r.data.error;
         }

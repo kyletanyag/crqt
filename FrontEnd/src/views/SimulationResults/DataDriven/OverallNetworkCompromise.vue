@@ -13,28 +13,43 @@
   <div class="mx-5 row">
     <!-- Overall network compromise/exploitation -->
     <div class="col text-left">
+      <h2>Network Node Scores</h2>
+      <p>
+        The graph to the right shows a histogram of all the computed probabilities of every node in the network by their computed scores.
+        You can change which type of score that you are interested in as well as the bin size for the histograms. 
+      </p>
+      <p>
+        The computed scores range from a scale from [0, 1] and represent the <strong>probability of access</strong>
+        (or derived probability) of a node. The higher the score, the higher probability an attacker can access a node.
+      </p>
       <h2>Network Entropy</h2>
       <p>
-        The graph to the right shows a histogram of all the computed probabilities of every node in the network by score.
+        Network entropy represents the <strong>uncertainty</strong> in a network and can be used to gauge network risk.
       </p>
       <p v-if="!loadingNetworkEntropy">
-        Your network's overall risk (uncertainty) or network entropy:
+        Your network's overall risk (uncertainty) or network entropy by score:
         <br>Base Score: <strong>{{networkEntropy.base }}</strong>
         <br>Impact Score: <strong>{{networkEntropy.impact }}</strong>
         <br>Exploitability Score: <strong>{{networkEntropy.exploitability }}</strong>
       </p>
       <h2>Network Severity Statistics</h2>
       <p>
-        Your total network severity breakdown:
-        <br><strong>{{ numHighSeverity }}</strong> nodes are marked as <strong>high</strong> severity. (Computed Score &#8805; 0.7)
-        <br><strong>{{ numMedSeverity }}</strong> nodes are marked as <strong>medium</strong> severity. (0.4 &#8804; Computed Score &lt; 0.7)
-        <br><strong>{{ numLowSeverity }}</strong> nodes are marked as <strong>low</strong> severity. (Computed Score &lt; 0.4)
+        Network severity provides a means to denote which nodes in a network are deemed as a highly 
+        vulnerable and exploitable nodes. The higher the severity, the more important it is for that nodes
+        be corrected.
       </p>
       <p>
         Nodes marked as <strong>High Severity</strong> must be corrected with the highest priority.
         <br>Nodes marked as <strong>Medium Severity</strong> must be corrected with high priority.
         <br>Nodes marked as <strong>Low Severity</strong> are encouraged, but not required, to be corrected.
       </p>
+      <p>
+        Your total network severity breakdown:
+        <br><strong>{{ numHighSeverity }}</strong> nodes are marked as <strong>high</strong> severity. (Computed Base Score &#8805; 0.7)
+        <br><strong>{{ numMedSeverity }}</strong> nodes are marked as <strong>medium</strong> severity. (0.4 &#8804; Computed Base Score &lt; 0.7)
+        <br><strong>{{ numLowSeverity }}</strong> nodes are marked as <strong>low</strong> severity. (Computed Base Score &lt; 0.4)
+      </p>
+
     </div>
     <div class="col" v-if="!loadingDerivedScores">
       <Histogram 

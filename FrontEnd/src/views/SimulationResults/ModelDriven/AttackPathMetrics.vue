@@ -1,13 +1,33 @@
 <template>
-<div>
+<div class="mb-5">
   <result-header 
-    title="Node Specific Metrics"
+    title="Attack Path Metrics"
     nextPage="Model Driven Results - Severity Display"
     prevPage="Model Driven Results - Graph Metrics"
     defaultPage="Model Driven Results"
   />
   <div v-if="error" class="alert alert-danger">
     {{ error }}
+  </div>
+  <div class="row mx-5 text-left">
+    <div>
+      <h2>Instructions</h2>
+      <p>
+        Below contains a graph representation of your network following the NIST's control
+        system security recommended architecture. Alongside is an interface that asks you to 
+        input a target node that are you are interesting in viewing metrics on. 
+        <br>
+        Based on your chosen node, you will be provided general attack path information,
+        a data table containing all the possible attack paths to that target node, histograms
+        containing the computed base, exploitability, and impact scores of all the paths, and
+        finally the top exploitable and top impactful attack paths to that target node.
+        <br><br>
+        On the network graph, you can hover over a node to get specific information about that node or 
+        you can hover an edge to get the scores associated to getting to that node. Futhermore, you
+        can hover over a row in the any of the data tables and the corresponding path in the network graph will
+        be highlighted. You can also click on any of the rows to keep the path highlighted.
+      </p>
+    </div>
   </div>
   <div class="row">
     <div class="col">
