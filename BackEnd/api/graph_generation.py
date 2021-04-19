@@ -48,6 +48,8 @@ def network_topology_data_driven_input():
     global load_percentage
     from .data_driven_analysis import LAG
 
+    load_percentage = 0.0
+
     network = request.get_json()  # json network topology data driven
 
     # timing 
@@ -99,7 +101,7 @@ def network_topology_data_driven_input():
                 LAG[-1].isExecCode = True
 
         # calculating load percentage
-        load_percentage = len(LAG) / len(network["vertices"])            
+        load_percentage += 0.5 / len(network["vertices"]) - 0.1       
 
     # sorting LAG by id
     LAG.sort(key=lambda node: node.index)
@@ -110,10 +112,14 @@ def network_topology_data_driven_input():
         LAG[int(edge["currNode"]) - 1].next_node.append(LAG[targetNode]) 
         LAG[targetNode].calculations_remaining += 1         # increase number of nodes needed for calculation
     
+    load_percentage = 0.9
+
     parsing_time = time.time() - start_timer
 
     # calculates derived scores for all nodes
     DerivedScore(leaf_queue)
+
+    load_percentage = 1.0
 
     return {'parsing_time': round(parsing_time,4)}, 200
 
@@ -164,7 +170,7 @@ def network_topology_model_driven_input():
             ))
         
         # calculating load percentage
-        load_percentage = len(vulnerability_graph) / len(network["vertices"])
+        load_percentage += 0.5 / len(network["vertices"]) - 0.1
 
     # sorting vulnerability node list by index ascending order
     vulnerability_graph.sort(key=lambda node: node.index)
@@ -174,12 +180,18 @@ def network_topology_model_driven_input():
         curr = edges["currNode"]
         for tar in edges["nextNode"]:
             ModelDriven.Edge(vulnerability_graph[curr], vulnerability_graph[tar])
+        
+        load_percentage += 0.5 / len(network["vertices"]) - 0.1
     
     # connecting remote attacker
     for node in vulnerability_graph:
         if node.layer == ModelDriven.Layers.CORP_FW1:
             ModelDriven.Edge(vulnerability_graph[0], node)
+    
+    load_percentage += 0.5 / len(network["vertices"]) - 0.1
 
     # start generating shorest paths
     shortest_paths_gen()
+
+    load_percentage = 1.0
     return 'Done', 201
