@@ -218,6 +218,7 @@ export default {
       preview: false,
       isCheckAll: false,
       selectedNodes:[],
+      intervalCounter: 0,
     };
   },  
   computed: {
@@ -321,16 +322,31 @@ export default {
       if (this.edgesDone) {
         this.GetNetworkTitle();
 
-        this.Upload(this.network, (event) => {
-          this.progress = Math.round(100 * event.loaded / event.total);
+        this.Upload(this.network, () => {
+          // this.progress = Math.round(100 * event.loaded / event.total);
         })
         .then(() => {
           this.$emit('uploadedData');
+          this.progress = 100;
+          clearInterval(uploadInterval);
         })
         .catch(() => {
           this.progress = 0;
           console.log('Could not upload data!');
         });
+
+        this.intervalCounter = 0;
+
+        var uploadInterval = setInterval(() => {
+          http.get('/file_load_percentage').then((r) => {
+            this.progress = r.data.file_load_percentage;
+          })
+          this.intervalCounter++;
+          if (this.intervalCounter > 5 && this.progress < 100) {
+            clearInterval(uploadInterval);
+            alert('Your network is still being computed on ... please be patient. :)');
+          }
+        }, 2000);
       }
     },
 

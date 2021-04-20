@@ -21,7 +21,7 @@ const DataDrivenResultOptions =
     {
       title: 'Derived Node Exploitation',
       description: "Contains specific data and statistics on derived nodes in a \
-        network such as a breakdown of what priviledges an attacker gains by reaching \
+        network such as a breakdown of what privileges an attacker gains by reaching \
         a specific derived node as well as the number of conditions and rules needed \
         to be satisfied before reaching a derived node.",
       routeName: 'Data Driven Results - Derived Node Exploitation'
@@ -58,7 +58,7 @@ const DataDrivenResultOptions =
     },
     {
       title: 'Graph Metrics',
-      description: "Produces metrics related to the network graph such as the degree\
+      description: "Produces metrics related to the network graph such as the degree,\
         closeness, betweeness, PageRank, and Katz centrality.",
       routeName: 'Model Driven Results - Graph Metrics'
     },
