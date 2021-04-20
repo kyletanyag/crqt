@@ -32,13 +32,14 @@
     </div>
     <hr>
     <div class="row mx-5">
-      <div class="col-6 text-left">             
+      <div class="col-6 text-left">  
+        <h3 class="subheading">Data-Driven Component</h3>
+        <p>
+           The data-driven component allows the user to upload 
+        </p>           
       </div>
       <div class="col-6 text-left">
-        <h3 class="subheading">Model-Driven Component</h3>
-        <p>
-          The model-driven component is a user generated network based on National Institute of Standards and Technology (NIST) Control Systems Security Program Recommended Architecture.
-        </p>
+
       </div>
     </div>
 </div>
