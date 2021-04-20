@@ -1,29 +1,45 @@
 <template>
 <div>
-  <img alt="CRQT logo" src="../assets/logo.png">
-  <h1 class="pt-2">Welcome to the Cyber Resilience Quantification Tool (CRQT)</h1>
+  <!-- <img alt="CRQT logo" src="../assets/logo.png"> -->
+  <h1 class="pt-2 , heading">Welcome to the Cyber Resilience Quantification Tool (CRQT)</h1>
     <div class="row mx-5">
       <div class="col-6 text-left">
-        <h3>Purpose</h3>
+        <h3 class="subheading">Purpose</h3>
         <p>
-          We are currently working on the development of a simulation platform which takes into account the guidelines 
-          as discussed in the NIST 800-82 recommended Defense-In-Depth architecture for Industrial Control System (ICS).  
-          The primary objective of the tool is to be able to perform Security audit of bulk power systems by providing 
-          measurable values for the cyber security metrics such as resilience, robustness, redundancy and risk. The tool 
-          considers various network components within different layers of a power system communication network and the 
-          associated vulnerabilities for those network elements as defined in the NVD (National Vulnerability Database). 
-          Primarily we are considering only the products (means vendor and product model) for each layer such as 
-          corporate DMZ, corporate LAN, control system DMZ and control system LAN layers to have the corresponding 
-          vulnerabilities in node level. Right now, we are considering the impacts in the physical layer by considering 
-          a IEEE 9-bus system as discussed in [2]. We are working on how to allocate physical impacts (MW power lost due to an attack)
-          by considering the power station nodes (such generation nodes and transmission nodes) connectivity.
+          As new technology emerges, cyber-criminals become more creative in penetrating vulnerable systems changing their attack methods for different security systems. 
+          The Cyber Resilience Quantification Tool (CRQT) helps to fortify a system's resiliency by taking in the customer's unique network topology, analyzing computation, 
+          networking, and physical vulnerabilities, and prescribing mitigation remedies to fortify customer systems and make them more resilient. Protecting cyber network 
+          infrastructures is essential, but it remains a balancing act between security versus cost. By developing a tool that will help stakeholders foresee possible attacks 
+          and prioritize vulnerabilities by criticality, stakeholders (cybersecurity professionals and decision-makers) will be able to conduct cost-benefit risk assessments 
+          of their CPS networks to address their organization's security thresholds and objectives. 
         </p>
       </div>
-      <div class="col-4">
-        <!-- 2 of 3 (wider) -->
+      <div class="col-6 text-center">
+          <img class="image" alt="Lock Image" src="../assets/lock.png"  height="300">
+
       </div>
-      <div class="col">
-        <!-- 3 of 3 -->
+    </div>
+    <hr>
+    <div class="row mx-5">
+      <div class="col-6 text-left">             
+      </div>
+      <div class="col-6 text-left">
+        <h3 class="subheading">Model-Driven Component</h3>
+        <p>
+          The model-driven component is a user generated network based on National Institute of Standards and Technology (NIST) Control Systems Security Program Recommended Architecture.
+        </p>
+      </div>
+    </div>
+    <hr>
+    <div class="row mx-5">
+      <div class="col-6 text-left">  
+        <h3 class="subheading">Data-Driven Component</h3>
+        <p>
+           The data-driven component allows the user to upload 
+        </p>           
+      </div>
+      <div class="col-6 text-left">
+
       </div>
     </div>
 </div>
@@ -35,4 +51,22 @@
 </script>
 
 <style>
+.heading {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-family:  Helvetica, sans-serif;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-decoration-color: rgb(141, 141, 141);
+  text-decoration-thickness: 2px;
+}
+.subheading{
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-family:  Helvetica, sans-serif;
+  text-decoration-line: underline;
+}
+.image{
+  margin-top:30px ;
+}
 </style>

@@ -4,7 +4,7 @@
     <div class="my-4">
       <h2>Instructions:</h2>
       <p>
-
+        To begin using our tool, you may either upload an existing network topology or build one using our tool.
       </p>
     </div>
     <hr>
