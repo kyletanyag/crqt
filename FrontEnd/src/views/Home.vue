@@ -1,7 +1,8 @@
 <template>
 <div>
-  <!-- <img alt="CRQT logo" src="../assets/logo.png"> -->
-  <h1 class="pt-2 , heading">Welcome to the Cyber Resilience Quantification Tool (CRQT)</h1>
+  <img alt="CRQT logo" src="../assets/CRQT.png" height="300" style="margin-bottom:50px">
+  <hr>
+  <h1 class="pt-2 , heading">Welcome to the Cyber Resilience Quantification Tool</h1>
     <div class="row mx-5">
       <div class="col-6 text-left">
         <h3 class="subheading">Purpose</h3>
@@ -15,19 +16,18 @@
         </p>
       </div>
       <div class="col-6 text-center">
-          <img class="image" alt="Lock Image" src="../assets/lock.png"  height="300">
-
+          <img class="image1" alt="Lock Image" src="../assets/lock.png"  height="300">
       </div>
     </div>
     <hr>
     <div class="row mx-5">
-      <div class="col-6 text-left">             
+      <div class="col-6 text-center">
+          <img class="image2" alt="Lock Image" src="../assets/ModelDriven.png"  >      
       </div>
       <div class="col-6 text-left">
         <h3 class="subheading">Model-Driven Component</h3>
         <p>
-          The model-driven component is a user generated network based on National Institute of Standards and Technology (NIST) Control Systems Security Program Recommended Architecture.
-        </p>
+The model-driven component is a user generated network based on the National Institute of Standards and Technology (NIST) Control Systems  Security Program Recommended Architecture. This input methodology will allow users to create a hypothetical network by selecting individual network components. In the model-driven approach, an end-user will select common network components of different models from various manufacturers. Combining all the chosen network components will create a generalized network graph, and that information is then sent to the CRQT simulation engine to conduct a cyber resiliency assessment.         </p>
       </div>
     </div>
     <hr>
@@ -35,11 +35,11 @@
       <div class="col-6 text-left">  
         <h3 class="subheading">Data-Driven Component</h3>
         <p>
-           The data-driven component allows the user to upload 
+           The network topology (data-driven) input UI is an interface that allows for a user to input a network topology from an existing network infrastructure. The customer defines the methodology that inputs LAGs as "data-driven" as the LAGs derive from an existing network probed via a scanner tool (Nessus/OpenVAS). The data is collected and then converted into a LAG using the Multi-host, Multi-stage Vulnerability Analysis Language (MulVAL). Lag’s represent all network paths and encodes the causality relationship among configuration settings and potential attacker privileges.
         </p>           
       </div>
       <div class="col-6 text-left">
-
+          <img class="image3" alt="Lock Image" src="../assets/Mulval.png"  height="300">
       </div>
     </div>
 </div>
@@ -55,10 +55,7 @@
   margin-top: 30px;
   margin-bottom: 30px;
   font-family:  Helvetica, sans-serif;
-  text-decoration-line: underline;
-  text-decoration-style: solid;
-  text-decoration-color: rgb(141, 141, 141);
-  text-decoration-thickness: 2px;
+
 }
 .subheading{
   margin-top: 30px;
@@ -66,7 +63,15 @@
   font-family:  Helvetica, sans-serif;
   text-decoration-line: underline;
 }
-.image{
+.image1{
   margin-top:30px ;
+}
+.image2 {
+  height: 700px;
+  object-fit: contain;
+}
+.image3 {
+  width: 600px;
+  object-fit: contain;
 }
 </style>
