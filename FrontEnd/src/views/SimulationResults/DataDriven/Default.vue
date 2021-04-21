@@ -7,7 +7,7 @@
       <table>
         <tbody>
           <tr v-for="opt in options" :key="opt.title">
-            <td class="py-4 text-center" style="width: 22%">
+            <td class="py-3 text-center" style="width: 22%">
               <button class="btn btn-outline-primary" style="width: 100%;"
                 @click="this.$router.push({name: opt.routeName})">
                 {{ opt.title }}
@@ -20,14 +20,14 @@
             </td>
           </tr>
           <tr>
-            <td class="py-4 text-center">
+            <td class="py-3 text-center">
               <button class="btn btn-outline-primary" style="width: 100%;"
                 @click="DownloadRawData"
                >
                 Raw Result Data Download
               </button>
             </td>
-            <td class=" pl-4 text-left">
+            <td class="pl-3 text-left">
               <div>
                 Downloadable JSON file of the simulation results.
                 <a id="downloadAnchorElem" style="display:none"></a>

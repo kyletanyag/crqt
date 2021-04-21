@@ -1,11 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-
-import ErrorComponent from '@/views/Error'
-
-// Testing page for Kyle
-import Sandbox from "../views/_Sandbox.vue";
-
 const routes = [
     {
       path: '/About',
@@ -30,7 +24,7 @@ const routes = [
     {
         path: '/error/:errorCode',
         name: 'Error',
-        component: ErrorComponent,
+        component: () => import(/* webpackChunkName: "Error" */ '@/views/Error'),
         props: true,
     },
     {
@@ -48,11 +42,6 @@ const routes = [
         path: '/register',
         name: "Register",
         component: () => import(/* webpackChunkName: "Registration" */ '@/views/Login/Register.vue'),
-    },
-    {
-        path: '/sandbox',
-        name: 'Sandbox',
-        component: Sandbox
     },
     {
         path: '/qr/:id',

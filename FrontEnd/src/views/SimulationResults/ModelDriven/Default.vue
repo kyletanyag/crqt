@@ -27,7 +27,7 @@
                 Raw Result Data Download
               </button>
             </td>
-            <td class=" pl-3 text-left">
+            <td class="pl-3 text-left">
               <div>
                 Downloadable JSON file of the simulation results except for attack path specific data. 
                 Unfortunately, we are unable to contain that in the JSON file due to the massive number

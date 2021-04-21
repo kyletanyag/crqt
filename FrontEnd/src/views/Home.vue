@@ -5,7 +5,7 @@
     <div class="row mx-5">
       <div class="col-6 text-left">
         <h3 class="subheading">Purpose</h3>
-        <p>
+        <p class="text-justify">
           As new technology emerges, cyber-criminals become more creative in penetrating vulnerable systems changing their attack methods for different security systems. 
           The Cyber Resilience Quantification Tool (CRQT) helps to fortify a system's resiliency by taking in the customer's unique network topology, analyzing computation, 
           networking, and physical vulnerabilities, and prescribing mitigation remedies to fortify customer systems and make them more resilient. Protecting cyber network 
@@ -15,7 +15,7 @@
         </p>
       </div>
       <div class="col-6 text-center">
-          <img class="image" alt="Lock Image" src="../assets/lock.png"  height="300">
+          <!-- <img class="image" alt="Lock Image" src="../assets/lock.png"  height="300"> -->
 
       </div>
     </div>
@@ -25,7 +25,7 @@
       </div>
       <div class="col-6 text-left">
         <h3 class="subheading">Model-Driven Component</h3>
-        <p>
+        <p class="text-justify">
           The model-driven component is a user generated network based on National Institute of Standards and Technology (NIST) Control Systems Security Program Recommended Architecture.
         </p>
       </div>
@@ -34,7 +34,7 @@
     <div class="row mx-5">
       <div class="col-6 text-left">  
         <h3 class="subheading">Data-Driven Component</h3>
-        <p>
+        <p class="text-justify">
            The data-driven component allows the user to upload 
         </p>           
       </div>
