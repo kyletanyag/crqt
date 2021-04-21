@@ -6,7 +6,7 @@
     <div class="row mx-5">
       <div class="col-6 text-left">
         <h3 class="subheading">Purpose</h3>
-        <p>
+        <p class="text-justify">
           As new technology emerges, cyber-criminals become more creative in penetrating vulnerable systems changing their attack methods for different security systems. 
           The Cyber Resilience Quantification Tool (CRQT) helps to fortify a system's resiliency by taking in the customer's unique network topology, analyzing computation, 
           networking, and physical vulnerabilities, and prescribing mitigation remedies to fortify customer systems and make them more resilient. Protecting cyber network 
@@ -27,7 +27,7 @@
       <div class="col-6 text-left">
         <h3 class="subheading">Model-Driven Component</h3>
         <p>
-The model-driven component is a user generated network based on the National Institute of Standards and Technology (NIST) Control Systems  Security Program Recommended Architecture. This input methodology will allow users to create a hypothetical network by selecting individual network components. In the model-driven approach, an end-user will select common network components of different models from various manufacturers. Combining all the chosen network components will create a generalized network graph, and that information is then sent to the CRQT simulation engine to conduct a cyber resiliency assessment.         </p>
+        The model-driven component is a user generated network based on the National Institute of Standards and Technology (NIST) Control Systems  Security Program Recommended Architecture. This input methodology will allow users to create a hypothetical network by selecting individual network components. In the model-driven approach, an end-user will select common network components of different models from various manufacturers. Combining all the chosen network components will create a generalized network graph, and that information is then sent to the CRQT simulation engine to conduct a cyber resiliency assessment.         </p>
       </div>
     </div>
     <hr>
