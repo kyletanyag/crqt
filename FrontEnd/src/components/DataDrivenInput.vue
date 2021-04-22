@@ -142,8 +142,9 @@ export default {
         .then(() => {
           this.$emit('uploadedData');
         })
-        .catch(() => {
+        .catch((e) => {
           this.progress = 0;
+          this.$emit('errorCode', e);
           console.log('Could not upload data!');
         })
       },

@@ -1,6 +1,6 @@
 <template>
 <div>
-  <h1>Data Driven Results</h1>
+  <h1>Data-Driven Results</h1>
   <div class="mx-5 row">
     <div class="col-2"></div>
     <div class="col-8">

@@ -1,10 +1,17 @@
 <template>
 <div>
   <div class="noprint">
-    <button class="btn btn-secondary" @click="PrintResults">
+    <result-header 
+      title="Printout"
+      prevPage="Data Driven Results - Recommendations"
+      defaultPage="Data Driven Results"
+    />
+    <button class="btn btn-secondary btn-lg" @click="PrintResults">
       Print
     </button>
+    <p class="pt-2">Note: Printout does not include network visualization.</p>
   </div>
+  <h1>Data-Driven Results Printout</h1>
   <div v-if="error" class="alert alert-danger noprint">
     {{ error }}
   </div>
@@ -13,10 +20,15 @@
     <h1>Summary</h1>
     <div class="mx-5 text-justify row">
       <div class="col">
+        <h2>Network Metadata</h2>
         <p>
           You have entered your network topology titled: <strong>{{ title }}</strong> on <strong>{{ inputDate }}</strong>. 
-          It took <strong>{{ computationTime }}</strong> second(s) to compute the generated metrics.
+          It took <strong>{{ computationTime }}</strong> second(s) to compute the generated metrics. 
         </p>
+        <p>
+          The computed metrics use NVD Vulnerability data updated as recent as <strong>{{ NVDDate }}</strong>.
+        </p>
+        <h2>Network Breakdown</h2>
         <p>
           Your inputted network contains a total of <strong>{{ numNodes }}</strong> nodes and <strong>{{ numEdges }}</strong> edges.
         </p>
@@ -41,27 +53,43 @@
     <h1>Overall Network Compromise / Exploitation Scenario</h1>
     <div class="mx-5 row">
       <!-- Overall network compromise/exploitation -->
-      <div class="text-left">
+      <div class="col-12 text-left">
+        <h2>Network Node Scores</h2>
         <p>
-          The graph to the right shows a histogram of all the computed probabilities of every node in the network by score.
+          The graph below shows a histogram of all the computed probabilities of every node in the network by their computed scores.
+        </p>
+        <p>
+          The computed scores range from a scale from [0, 1] and represent the <strong>probability of access</strong>
+          (or derived probability) of a node. The higher the score, the higher probability an attacker can access a node.
+        </p>
+        <h2>Network Entropy</h2>
+        <p>
+          Network entropy represents the <strong>uncertainty</strong> in a network and can be used to gauge network risk.
         </p>
         <p v-if="!loadingNetworkEntropy">
-          Your network's overall risk (uncertainty) or network entropy:
+          Your network's overall risk (uncertainty) or network entropy by score:
           <br>Base Score: <strong>{{networkEntropy.base }}</strong>
           <br>Impact Score: <strong>{{networkEntropy.impact }}</strong>
           <br>Exploitability Score: <strong>{{networkEntropy.exploitability }}</strong>
         </p>
+        <h2>Network Severity Statistics</h2>
         <p>
-          Your total network severity breakdown:
-          <br><strong>{{ numHighSeverity }}</strong> nodes are marked as <strong>high</strong> severity. (Computed Score &#8805; 0.7)
-          <br><strong>{{ numMedSeverity }}</strong> nodes are marked as <strong>medium</strong> severity. (0.4 &#8804; Computed Score &lt; 0.7)
-          <br><strong>{{ numLowSeverity }}</strong> nodes are marked as <strong>low</strong> severity. (Computed Score &lt; 0.4)
+          Network severity provides a means to denote which nodes in a network are deemed as a highly 
+          vulnerable and exploitable nodes. The higher the severity, the more important it is for that nodes
+          be corrected.
         </p>
         <p>
           Nodes marked as <strong>High Severity</strong> must be corrected with the highest priority.
           <br>Nodes marked as <strong>Medium Severity</strong> must be corrected with high priority.
           <br>Nodes marked as <strong>Low Severity</strong> are encouraged, but not required, to be corrected.
         </p>
+        <p>
+          Your total network severity breakdown:
+          <br><strong>{{ numHighSeverity }}</strong> nodes are marked as <strong>high</strong> severity. (Computed Base Score &#8805; 0.7)
+          <br><strong>{{ numMedSeverity }}</strong> nodes are marked as <strong>medium</strong> severity. (0.4 &#8804; Computed Base Score &lt; 0.7)
+          <br><strong>{{ numLowSeverity }}</strong> nodes are marked as <strong>low</strong> severity. (Computed Base Score &lt; 0.4)
+        </p>
+
       </div>
       <div class="row" v-if="!loadingDerivedScores">
         <Histogram
@@ -69,23 +97,27 @@
           :numBins="10" 
           name="Node Probability Histogram (Computed Base Scores)" 
           barColor='#f87979'
-          style="width: 60%"
-          class="col"
-        />
-        <Histogram
-          :data="impactScores" 
-          :numBins="10" 
-          name="Node Probability Histogram (Computed Impact Scores)" 
-          barColor='#f87979'
-          style="width: 60%"
+          yAxis="Frequency"
+          xAxis="Probability Score"
+          style="width: 100%"
           class="col"
         />
         <Histogram
           :data="exploitabilityScores" 
           :numBins="10" 
           name="Node Probability Histogram (Computed Exploitability Scores)" 
-          barColor='#f87979'
-          style="width: 60%"
+          barColor='#81DFA9'
+          yAxis="Frequency"
+          xAxis="Probability Score"
+          class="col"
+        />
+        <Histogram
+          :data="impactScores" 
+          :numBins="10" 
+          name="Node Probability Histogram (Computed Impact Scores)" 
+          barColor='#78BCFF'
+          yAxis="Frequency"
+          xAxis="Probability Score"
           class="col"
         />
       </div>
@@ -93,11 +125,11 @@
     <hr>
     <h1>Derived Node Exploitation Scenario</h1>
     <div class="mx-5 row">
-      <div class="text-left">
+      <div class="col-12 text-left">
+        <h2>Breakdown Statistics</h2>
         <p>
-          The graph to the right shows a histogram of all the computed probabilities of every <strong>derived fact</strong> node in the network.
-        </p>
-        <p>
+          Below is a breakdown of all the privileges in you network an attacker could gain if they satisfy the correct number of conditions.
+          <br>
           Your network has a total of <strong>{{ derivedFact.num }} </strong> derived fact nodes. The breakdown of the derived fact nodes are as followed:
           <br>
           <strong>{{ execCode.percentage }}%</strong> of derived fact nodes or
@@ -116,6 +148,11 @@
           <strong>{{ taskImpact.num }}</strong> nodes in your network if reached will <strong>impact node tasking</strong>: taskImpact().
           <br>
         </p>
+        <h2>Severity Statistics</h2>
+        <p>
+          The graph to the right shows a histogram of all the severity levels of every <strong>derived fact</strong> node in the network.
+          In addition, you have the ability to filter the histogram data to show only nodes that have code execution capabilities.
+        </p>
       </div>
       <div class="row" v-if="!loadingDerivedScores">
         <!-- Still need to be able to define bin size -->
@@ -126,7 +163,8 @@
           name="Node Severity Histogram (All Derived Fact Nodes)" 
           :binLimits="[0.4, 0.7, 1]"
           barColor='#f87979'
-          style="width: 60%"
+          yAxis="Frequency"
+          xAxis="Severity Level"
           class="col"
         />
         <Histogram
@@ -136,69 +174,113 @@
           name="Node Severity Histogram (Exec Code Nodes)" 
           :binLimits="[0.4, 0.7, 1]"
           barColor='#f87979'
-          style="width: 60%"
-          class="col"
-        />
-      </div>    
-    </div>
-    <hr>
-    <h1>Attack Path Details</h1>
-    <div class="mx-5 row">
-      <div class="col-12">
-        <div class="text-left">
-          <p>
-            Average number of conditions to reach a derived fact node: <strong>{{ avgNumConditions }}</strong>.
-            <br>
-            Average number of rules to reach a derived fact node: <strong>{{ avgNumRules }}</strong>.
-          </p>
-        </div>
-      </div>  
-      <div class="row" v-if="!loading">  
-        <Histogram 
-          :data="condVals"
-          :numBins="5"
-          name="Node Conditions Histogram (All Derived Fact Nodes)"
-          barColor='#f87979'
-          style="width: 50%"
-          class="col"
-        />
-        <Histogram 
-          :data="ruleVals"
-          :numBins="5"
-          name="Node Rules Histogram (All Derived Fact Nodes)"
-          barColor='#f87979'
-          style="width: 50%"
+          yAxis="Frequency"
+          xAxis="Severity Level"
           class="col"
         />
       </div>
-      <div class="row" v-if="!loading">
-        <Histogram 
-          :data="execCond"
+      <div class="col-12 text-left">
+        <h2>Conditions and Rules Statistics</h2>
+        <p>
+          To the right is a data table containing all the derived fact nodes in your network and the number of conditions 
+          and rules that must be satisfied to reach that node.
+          <br><br>
+          The average number of conditions and rules to reach a derived fact nodes in your network has been calculated below.
+          <br>
+          Average number of conditions to reach a derived fact node: <strong>{{ avgNumConditions }}</strong>.
+          <br>
+          Average number of rules to reach a derived fact node: <strong>{{ avgNumRules }}</strong>.
+          <br><br>
+          Below is a histogram containing the number of conditions and rules that must be met to access a specific derived fact node
+          or only nodes that have code execution capabilities.
+        </p>        
+      </div>
+      <div class="row pt-5">
+        <Histogram v-if="!loading"
+          :data="histogramCondData"
           :numBins="5"
+          :range="[Math.min(...histogramCondData), Math.max(...histogramCondData)]"
+          name="Node Conditions Histogram (All Derived Fact Nodes)"
+          yAxis="Frequency"
+          xAxis="Number of Conditions"
+          barColor='#f87979'
+          style="width: 50%"
+          class="col"
+        />
+        <Histogram v-if="!loading"
+          :data="histogramRuleData"
+          :numBins="5"
+          :range="[Math.min(...histogramRuleData), Math.max(...histogramRuleData)]"
+          name="Node Rules Histogram (All Derived Fact Nodes)"
+          yAxis="Frequency"
+          xAxis="Number of Rules"
+          barColor='#f87979'
+          style="width: 50%"
+          class="col"
+        />
+        <Histogram v-if="!loading"
+          :data="execCode.conds"
+          :numBins="5"
+          :range="[Math.min(...histogramCondData), Math.max(...histogramCondData)]"
           name="Node Conditions Histogram (Exec Code Nodes)"
+          yAxis="Frequency"
+          xAxis="Number of Conditions"
           barColor='#f87979'
           style="width: 50%"
           class="col"
         />
-        <Histogram 
-          :data="execRule"
+        <Histogram v-if="!loading"
+          :data="execCode.rules"
           :numBins="5"
+          :range="[Math.min(...histogramRuleData), Math.max(...histogramRuleData)]"
           name="Node Rules Histogram (Exec Code Nodes)"
+          yAxis="Frequency"
+          xAxis="Number of Rules"
           barColor='#f87979'
           style="width: 50%"
           class="col"
-        />
+        />        
+      </div>    
+      <div class="col-12">
+      <h3>Condition and Rule Data</h3>
+      <div>
+        <table v-if="data" class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Description</th>
+              <th scope="col"># Conditions</th>
+              <th scope="col"># Rules</th>
+            </tr>
+          </thead>
+            <tbody class="text-center">
+              <tr v-for="(node, index) in data" :key="index">
+                <td>{{ node.id }}</td>
+                <td>{{ node.description }}</td>
+                <td>{{ node.num_conditions }}</td>
+                <td>{{ node.num_rules }}</td>
+              </tr>
+            </tbody>
+        </table>
+      </div>
       </div>
     </div>
   </div>
   <hr>
   <h1>Recommendations</h1>
   <div class=" mx-5 mb-4 row">
-    <div class="col text-left">
-      <div class="pb-4"></div>
+    <div class="col-12 text-left">
+      <h2>Recommendations</h2>
       <p>
-        To the right is a table containing a sorted list of all the derived fact nodes from your network
-        ranked from highest derived score probability to lowest derived score probability.
+        The recommendations provided are based on derived fact nodes and vulnerabilities 
+        with the <strong>highest</strong> compued base scores. 
+        <br> They are ranked accordingly and the recommendations provide a guide on which 
+        nodes in your network need to be a priority to increase cyber-resiliency.
+      </p>
+      <h2>Derived Fact Nodes</h2>
+      <p>
+        Below is a table containing a sorted list of all the derived fact nodes from your network
+        ranked from highest derived score to lowest derived score.
       </p>
       <div>
         Our top <strong>{{ Math.min(numRecommend, rankedDerivedFactNodes.length) }}</strong> recommendations: 
@@ -209,22 +291,22 @@
         </ol>
       </div>
     </div>
-    <div class="col">
-      <network-data-table :data="rankedDerivedFactNodes" title="Derived Fact Nodes Data Table" :height="-1" />
-    </div>
+    <network-data-table :data="rankedDerivedFactNodes" title="Derived Fact Nodes Data Table" :height="-1" />
   </div>
   <div class="mx-5 mb-4 row">
-    <div class="col text-left">
-      <div class="pb-4"></div>
+    <div class="col-12 text-left">
+      <h2>Vulnerabilities</h2>
       <p>
         To the right is a table containing a sorted list of all the listed vulnerabilities from your network
         ranked from highest derived score probability to lowest derived score probability.
+        Additionally, you can click the CVE-ID link to be routed to learn more information about a certain 
+        vulnerability from the <a href="http://https://cve.circl.lu/" target="_blank">cve.circle.lu</a> website.
       </p>
       <div>
         Our top <strong>{{ Math.min(numRecommend, rankedVulExistsNodes.length) }}</strong> recommendations: 
         <ol v-if="!loading">
           <li v-for="(node, index) in rankedVulExistsNodes.slice(0,numRecommend)" :key="index">
-            Close vulnerabilty <strong>{{ getCVEID(node.description)}}</strong>
+            Close vulnerabilty <strong><a :href="`https://cve.circl.lu/cve/${getCVEID(node.description)}`" target="_blank">{{ getCVEID(node.description)}}</a></strong>
             at the host: <strong>{{getHost(node.description)}}</strong>
             found at node <strong>{{node.id}}</strong>. 
             <br>The severity level of this node is marked as <strong>{{getSeverityLevel(node.base_score)}}</strong>.
@@ -232,9 +314,7 @@
         </ol>
       </div>
     </div>
-    <div class="col">
-      <network-data-table :data="rankedVulExistsNodes" title="Vulnerability Nodes Data Table" :height="-1" />
-    </div>
+    <network-data-table :data="rankedVulExistsNodes" title="Vulnerability Nodes Data Table" :height="-1" />
   </div>
 </div>
 </template>
@@ -244,13 +324,15 @@ import http from '@/http-common.js';
 import DoughnutChart from '@/components/DoughnutChart.vue';
 import Histogram from '@/components/Histogram.vue';
 import NetworkDataTable from '@/components/NetworkDataTable.vue';
+import ResultHeader from '@/components/ResultHeader.vue';
 export default {
   name: 'Data Driven Results - Printout',
 
   components: {
     DoughnutChart,
     Histogram,
-    NetworkDataTable
+    NetworkDataTable,
+    ResultHeader
   },
 
   data() {
@@ -280,7 +362,7 @@ export default {
       numLowSeverity: 0,
       histogramNodeData: [],
       histogramNodeType: 'All',
-      execCode: {num: 0, percentage: 0, scores: []},
+      execCode: {num: 0, percentage: 0, scores: [], rules: [], conds: []},
       netAccess: {num: 0, percentage: 0, scores: []},
       canAccess: {num: 0, percentage: 0, scores: []},
       principalCompromised: {num: 0, percentage: 0, scores: []},
@@ -303,6 +385,7 @@ export default {
       numRecommend: 5,
       derivedFactNodes: [],
       vulExistsNodes: [],
+      NVDDate: undefined
     }
   },
 
@@ -320,12 +403,17 @@ export default {
       this.loadingNetworkEntropy = true;
       this.loading = true;
 
-      http.get('get_network_title').then((r) => {
+      http.get('/nvd/get_nvd_update_date').then((r) => {
+        // console.log(r);
+        this.NVDDate = r.data.date;
+      })
+
+      http.get('/data_driven/get_network_title').then((r) => {
         console.log(r);
         this.title = r.data.network_title;
       });
 
-      http.get('get_input_date').then((r) => {
+      http.get('/data_driven/get_input_date').then((r) => {
         console.log(r);
         this.inputDate = r.data.input_date;
       });
@@ -401,7 +489,7 @@ export default {
       });
 
       http.get('/data_driven/conditions_and_rules_per_node').then((r) => {
-        this.data = r.data.derived_data;
+         this.data = r.data.derived_data;
         
         this.data.forEach((n) => {
           this.condVals.push(n.num_conditions);
@@ -411,12 +499,13 @@ export default {
           this.ruleVals.push(n.num_rules);
         });
         
-        this.data
-            .filter((n) => {return n.description.includes('execCode')})
-            .forEach((n) => {
-              this.execCond.push(n.num_conditions);
-              this.execRule.push(n.num_rules);
-            });
+        this.data.filter((n) => { return n.description.includes('execCode')}).forEach((n) => {
+          this.execCode.rules.push(n.num_rules);
+          this.execCode.conds.push(n.num_conditions);
+        })
+
+        this.histogramCondData = this.condVals;
+        this.histogramRuleData = this.ruleVals;
 
         this.avgNumConditions = this.condVals.reduce((a, b) => a + b) / this.condVals.length;
         this.avgNumRules = this.ruleVals.reduce((a, b) => a + b) / this.ruleVals.length;
@@ -474,6 +563,7 @@ export default {
 @media print {
    .noprint {
       visibility: hidden;
+      display: none;
    }
 }
 </style>

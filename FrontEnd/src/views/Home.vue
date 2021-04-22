@@ -26,7 +26,7 @@
       </div>
       <div class="col-6 text-left">
         <h3 class="subheading">Model-Driven Component</h3>
-        <p>
+        <p class="text-justify">
         The model-driven component is a user generated network based on the National Institute of Standards and Technology (NIST) Control Systems  Security Program Recommended Architecture. This input methodology will allow users to create a hypothetical network by selecting individual network components. In the model-driven approach, an end-user will select common network components of different models from various manufacturers. Combining all the chosen network components will create a generalized network graph, and that information is then sent to the CRQT simulation engine to conduct a cyber resiliency assessment.         </p>
       </div>
     </div>
@@ -34,7 +34,7 @@
     <div class="row mx-5">
       <div class="col-6 text-left">  
         <h3 class="subheading">Data-Driven Component</h3>
-        <p>
+        <p class="text-justify">
            The network topology (data-driven) input UI is an interface that allows for a user to input a network topology from an existing network infrastructure. The customer defines the methodology that inputs LAGs as "data-driven" as the LAGs derive from an existing network probed via a scanner tool (Nessus/OpenVAS). The data is collected and then converted into a LAG using the Multi-host, Multi-stage Vulnerability Analysis Language (MulVAL). Lag’s represent all network paths and encodes the causality relationship among configuration settings and potential attacker privileges.
         </p>           
       </div>

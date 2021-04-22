@@ -1,6 +1,9 @@
 <template>
 <div>
   <h1>Data-Driven Input</h1>
+  <div v-if="error" class="alert alert-danger">
+    {{ error }}
+  </div>
   <div class="mx-5">
     <div>
       <p>
@@ -11,7 +14,7 @@
       </p>
     </div>
     <div>
-      <data-driven-input @uploadedData="emitEventUp"></data-driven-input>
+      <data-driven-input @uploadedData="emitEventUp" @errorCode="setError"></data-driven-input>
     </div>
   </div>  
 </div>
@@ -27,9 +30,19 @@ export default {
     DataDrivenInput,
   },
 
+  data() {
+    return {
+      error: undefined
+    }
+  },
+
   methods: {
     emitEventUp() {
       this.$emit('uploadedData');
+    },
+
+    setError(x) {
+      this.error = x;
     }
   },
 

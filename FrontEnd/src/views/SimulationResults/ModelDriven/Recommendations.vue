@@ -3,6 +3,7 @@
   <result-header 
     title="Recommendations"
     prevPage="Model Driven Results - Severity Display"
+    nextPage="Model Driven Results - Printout"
     defaultPage="Model Driven Results"
   />
   <div v-if="error" class="alert alert-danger">
