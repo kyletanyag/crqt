@@ -162,3 +162,5 @@ In Windows Powershell/CMD Terminal from root folder run the following commands:
 To use model-driven analysis modules, you must use correct model-driven topology format. 
 
 The input is formatted in a JSON file with two JSON objects: vertices and arcs. The vertices contains a list of nodes in network. Each node attribute will contain: node id, vendor, product, NIST Control Systems Security Program Recommended Architecture layer (corp_fw_1, corp_dmz, corp_fw_2, corp_lan, cs_fw_2, cs_lan - must use exect words when specifing layer), CVE IDs (can use CVE Search to find CVE IDs for product). The arcs contains a list of node edges. Each edge attribute contains: current node id, list of next nodes from current node. 
+
+Examples of model-driven inputs can be found in .\non_web\example\model_driven_input 
