@@ -69,7 +69,7 @@ $ sudo apt-get update
 $ sudo apt-get install python3
 $ sudo apt-get install python3-pip
 $ sudo apt-get install redis-server
-$ pip3 install -r requirements.txt
+$ pip3 install -r requirements.txt      # if not already done in Flask section
 $ sudo service redis-server start
 $ cd ./dms/cve_search/
 $ python3 ./sbin/db_mgmt_cpe_dictionary.py -p
@@ -85,7 +85,7 @@ $ sudo service redis-server start
 
 In **Windows CMD**:
 ```
-> cd <path_to_cqqt>\BackEnd\dms\cve_search
+> cd <path_to_crqt>\BackEnd\dms\cve_search
 > python .\web\index.py # this will start flask server on port 2000
 ```
 

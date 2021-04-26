@@ -1,6 +1,11 @@
 '''
 @author Thomas Laverghetta
-@brief This is the logical attack graph (LAG) generation module. It will accept csv files from front-end which contain vertices and edges for user provided network. 
+@brief Recieves data- or model-driven data to generate weighted LAG or weighted vulnerability graph, respectively. 
+It also calculates run-time statistics:
+- file load %
+- connection testing
+- network title
+- input date
 
 '''
 from flask import Blueprint, jsonify, request
@@ -22,25 +27,30 @@ input_date_data_driven = ""                 # date/time of network input into sy
 # route for LAG generation module
 graph_bp = Blueprint('graph_bp', __name__)
 
+# returns percentage file has loaded
 @graph_bp.route('/file_load_percentage', methods=['GET'])
 def file_load_percentage():
     global load_percentage
     return {"file_load_percentage" : round_sig(load_percentage*100.0,4)}
 
+# tests connection with front-end
 @graph_bp.route('/test_connection', methods=['GET'])
 def test_connection():
     return 'Good Connection', 200
 
+# get data-driven network topology
 @graph_bp.route('/data_driven/get_network_title', methods=['GET'])
 def get_data_driven_network_title():
     global title_data_driven
     return jsonify({"network_title" : title_data_driven})
 
+# get data-driven network input date (when data was inputted into the system)
 @graph_bp.route('/data_driven/get_input_date', methods=['GET'])
 def get_data_driven_input_date():
     global input_date_data_driven
     return jsonify({"input_date" : input_date_data_driven})
 
+# receives data-driven input and generates weighted LAG and computes derived score
 @graph_bp.route('/network_topology_data_driven_input', methods=['POST'])
 def network_topology_data_driven_input():
     global title_data_driven
@@ -126,20 +136,23 @@ def network_topology_data_driven_input():
     return {'parsing_time': round(parsing_time,4)}, 200
 
 
-
+# model-driven title and input date variables
 title_model_driven = ""                      # title/name of network
 input_date_model_driven = ""                 # date/time of network input into system
 
-@graph_bp.route('/model_driven/get_network_title', methods=['GET'])
-def get_model_driven_network_title():
+# gets model-driven network title
+@graph_bp.route('/model_drivenn/get_network_title', methods=['GET'])
+def model_get_network_title():
     global title_model_driven
     return jsonify({"network_title" : title_model_driven})
 
+# gets model-driven input date (when date was inputted into the system)
 @graph_bp.route('/model_driven/get_input_date', methods=['GET'])
 def get_model_driven_input_date():
     global input_date_model_driven
     return jsonify({"input_date" : input_date_model_driven})  
 
+# receives model-driven network topology and generates weighted vulnerability graph
 @graph_bp.route('/network_topology_model_driven_input', methods=['POST'])
 def network_topology_model_driven_input():
     global title_model_driven

@@ -10,8 +10,7 @@ These include:
 
 '''
 
-from flask import Blueprint, jsonify, request
-from .round_sig import round_sig
+from round_sig import round_sig
 from enum import Enum, auto
 from copy import deepcopy 
 from collections import deque
@@ -20,12 +19,11 @@ import requests
 import time
 import numpy as np
 
-# route for LAG generation module
-data_analysis_bp = Blueprint('data_analysis_bp', __name__)
-
-# global variables 
-LAG = []                                # holds logical attack graph (LAG) data for analysis
-derived_score_computation_time = 0.0    # holds the computation time for derived score calc
+# Global Var
+LAG = []                                # holds network topology
+derived_score_computation_time = 0.0    # computation time for derived score calculation
+HAS_DERIVED_SCORE_CALC = False          # bool for whether derived score has been computed
+LEAF_QUEUE = deque()                    # queue for leaf nodes in network for derived score computation
 
 # namespace for data-driven objects
 class DataDriven:
@@ -66,11 +64,15 @@ class DataDriven:
         def printFunc(self):
             print(self.derived_score, self.description, self.node_type, self.node_logic, self.next_node, self.calculations_remaining, self.isExecCode)
 
-# resets global variables
+# resetting global variables
 def DataDriven_init():
     global LAG
     global derived_score_computation_time
+    global HAS_DERIVED_SCORE_CALC
+    global LEAF_QUEUE
 
+    HAS_DERIVED_SCORE_CALC = False
+    LEAF_QUEUE = deque()
     LAG.clear()
     derived_score_computation_time = 0.0
 
@@ -121,29 +123,27 @@ def Depth_First_Alg(scores, tolNumConditions, tolNumRules, node):
 
 # computes derived scores for all nodes using exploitability, impact, and base scores
 # leaf_queue is queue of leaf nodes found in graph generation module
-def DerivedScore(leaf_queue):
+def DerivedScore():
     global LAG
     global derived_score_computation_time
-    
-    # starting timer for computation time
-    start_time = time.time()
-    
-    # modifying derived scores
-    while len(leaf_queue) > 0:
-        node = leaf_queue.pop()
-        for next_node in node.next_node:
-            # derived score, #conditions, #rules, next_nodes[]
-            Depth_First_Alg(node.derived_score, 1, 0, next_node)
-    
-    # calculating computation time
-    derived_score_computation_time = time.time() - start_time
-            
+    global HAS_DERIVED_SCORE_CALC
+    global LEAF_QUEUE
 
-# returns network topology with derived score calculations 
-@data_analysis_bp.route('/data_driven/get_derived_scores', methods=['GET'])
-def getDerivedScores():
-    global LAG
-    global derived_score_computation_time
+    if (not HAS_DERIVED_SCORE_CALC):
+        # starting timer for computation time
+        start_time = time.time()
+        
+        # modifying derived scores
+        while len(LEAF_QUEUE) > 0:
+            node = LEAF_QUEUE.pop()
+            for next_node in node.next_node:
+                # derived score, #conditions, #rules, next_nodes[]
+                Depth_First_Alg(node.derived_score, 1, 0, next_node)
+        
+        # calculating computation time
+        derived_score_computation_time = time.time() - start_time
+
+        HAS_DERIVED_SCORE_CALC = True
 
     # converting to JSON
     node_type_to_str = {
@@ -163,21 +163,17 @@ def getDerivedScores():
             'exploitability_score' : round_sig(node.derived_score[1],3),
             'impact_score' : round_sig(node.derived_score[2],3)
         })
-        for e in node.next_node:
-            edges.append({'source' : node.index, 'target' : e.index})
     
-    return jsonify({'nodes': vertices, 'edges' : edges, "computation_time" : derived_score_computation_time})
+    return {'nodes': vertices, "computation_time" : derived_score_computation_time}
 
 #################### DATA-DRIVEN LAG Metrics ########################
 # returns percentage of execCode nodes
-@data_analysis_bp.route('/data_driven/percentage_execCode_nodes', methods=['GET'])
 def percentage_execCode_nodes():
     global LAG
     result = float(sum(node.isExecCode for node in LAG)) / float(len(LAG)) * 100.0
-    return jsonify({'percentage_execCode_nodes': round_sig(result,3)})
+    return {'percentage_execCode_nodes': round_sig(result,3)}
 
 # returns the execCode nodes with their probabilities
-@data_analysis_bp.route('/data_driven/execCode_node_probabilities', methods=['GET'])
 def execCode_node_probabilities():
     global LAG
 
@@ -193,10 +189,9 @@ def execCode_node_probabilities():
                 'impact_score' : round_sig(node.derived_score[2],3)
             })
     
-    return jsonify({'nodes': vertices})
+    return {'nodes': vertices}
 
 # returns the derived nodes with their probabilities
-@data_analysis_bp.route('/data_driven/derived_node_probabilities', methods=['GET'])
 def derived_node_probabilities():
     global LAG
 
@@ -212,30 +207,27 @@ def derived_node_probabilities():
                 'impact_score' : round_sig(node.derived_score[2],3)
             })
     
-    return jsonify({'nodes': vertices})
+    return {'nodes': vertices}
 
 # returns percentage of rule nodes
-@data_analysis_bp.route('/data_driven/percentage_rule_nodes', methods=['GET'])
 def percentage_rule_nodes():
     global LAG
     result = float(sum(node.node_type == DataDriven.Node_Type.DERIVATION for node in LAG)) / float(len(LAG)) * 100.0
-    return jsonify({'percentage_rule_nodes': round_sig(result,3)})
+    return {'percentage_rule_nodes': round_sig(result,3)}
 
 # returns percentage of derived nodes
-@data_analysis_bp.route('/data_driven/percentage_derived_nodes', methods=['GET'])
 def percentage_derived_nodes():
     global LAG
     result=(float(sum(node.node_type == DataDriven.Node_Type.DERIVED for node in LAG)) / float(len(LAG)) * 100.0)  
-    return jsonify({'percentage_derived_nodes': round_sig(result,3)})
+    return ({'percentage_derived_nodes': round_sig(result,3)})
 
 # returns network entropy calculation
-@data_analysis_bp.route('/data_driven/network_entropy', methods=['GET'])
 def network_entropy():
     global LAG
     net_entropy = np.sum([node.derived_score * np.log2(node.derived_score) for node in LAG], axis=0)
     net_entropy *= -1.0
     
-    return jsonify({
+    return ({
         'network_entropy': [
                 {'base' : round_sig(net_entropy[0],3)},
                 {'exploitability' : round_sig(net_entropy[1],3)},
@@ -244,7 +236,6 @@ def network_entropy():
         })
 
 # returns the number of conditions per derived node
-@data_analysis_bp.route('/data_driven/conditions_per_derived_node', methods=['GET'])
 def conditions_per_derived_nodes():
     global LAG
 
@@ -260,7 +251,6 @@ def conditions_per_derived_nodes():
     return {"conditions_per_derived_node" : conditions_derived}, 200
 
 # returns the number of conditions per execCode node
-@data_analysis_bp.route('/data_driven/conditions_per_execCode_node', methods=['GET'])
 def conditions_per_execCode_node():
     global LAG
 
@@ -276,7 +266,6 @@ def conditions_per_execCode_node():
     return {"conditions_per_execCode_node" : conditions_derived}, 200
 
 # returns the number of rules per derived node
-@data_analysis_bp.route('/data_driven/rules_per_derived_node', methods=['GET'])
 def rules_per_derived_nodes():
     global LAG
 
@@ -292,7 +281,6 @@ def rules_per_derived_nodes():
     return {"rules_per_derived_node" : rules_derived}, 200
 
 # returns the number of rules per execCode node
-@data_analysis_bp.route('/data_driven/rules_per_execCode_node', methods=['GET'])
 def rules_per_execCode_node():
     global LAG
 
@@ -308,7 +296,6 @@ def rules_per_execCode_node():
     return {"rules_per_execCode_node" : rules_derived}, 200
 
 # returns the number of conditions and rules per node
-@data_analysis_bp.route('/data_driven/conditions_and_rules_per_node', methods=['GET'])
 def conditions_and_rules_per_nodde():
     global LAG
 

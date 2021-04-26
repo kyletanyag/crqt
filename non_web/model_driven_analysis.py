@@ -9,9 +9,8 @@ These include:
 
 '''
 
-from flask import Blueprint, jsonify
-from .nvd import model_driven_cvss_query 
-from .round_sig import round_sig
+from nvd import model_driven_cvss_query 
+from round_sig import round_sig
 from enum import IntEnum, auto
 from copy import deepcopy 
 from collections import deque
@@ -19,9 +18,6 @@ import math
 import scipy.linalg as la
 import numpy as np
 import time
-
-# route for model driven analysis component
-model_analysis_bp = Blueprint('model_analysis_bp', __name__)
 
 ################## MODEL DRIVEN ##############################
 # calculating variables
@@ -91,7 +87,6 @@ class ModelDriven:
             self.source.out_edges.append(self)      # adding out edges to source
 
 # will send graph topology to front-end
-@model_analysis_bp.route('/model_driven/get_network_topology', methods=['GET'])
 def get_network_topology():
     global vulnerability_graph
 
@@ -127,7 +122,7 @@ def get_network_topology():
                 'impact_score'          : round_sig(e.target.weights[2],3)
             })
     
-    return {'nodes': vertices, 'edges' : edges}, 200
+    return {'nodes': vertices, 'edges' : edges}
 
 # initializing all global variables
 def ModelDriven_init():
@@ -223,13 +218,11 @@ def shortest_paths_gen():
     # calc process time
     shortest_path_time = time.time() - start_timer
 
-@model_analysis_bp.route('/model_driven/attack_paths/get_shortest_path_computation_time', methods=['GET'])
 def shortest_path_comp_time():
     global shortest_path_time
-    return jsonify({'shortest_path_computation_time' : round(shortest_path_time,4)}), 200
+    return {'shortest_path_computation_time' : round_sig(shortest_path_time,4)}
 
 # find exploitability, impact, and base scoes from origin to node
-@model_analysis_bp.route('/model_driven/attack_paths/<node_index>', methods=['GET'])
 def origin_to_node_metrics(node_index):
     global Solution_Path
     global vulnerability_graph
@@ -282,7 +275,7 @@ def origin_to_node_metrics(node_index):
         for edge in Solution_Path[ex[0]]:
             path.append(edge.target.index)
         
-        top_exploitable.append({"path" :ex[0]+1, "nodes": path}) 
+        top_exploitable.append({ex[0]+1 : path}) 
     
     # impactful paths
     top_impactful = []
@@ -291,12 +284,12 @@ def origin_to_node_metrics(node_index):
         for edge in Solution_Path[im[0]]:
             path.append(edge.target.index)
         
-        top_impactful.append({"path" :im[0]+1, "nodes": path})
+        top_impactful.append({im[0] + 1 : path})
     
     # calculating processing time
     processing_time = time.time() - start_timer
     
-    return jsonify({
+    return {
         'metrics_per_path': metrics_per_path,
         'number_attack_paths' : len(Solution_Path),
         'averge_length_attack_paths' : [
@@ -306,11 +299,10 @@ def origin_to_node_metrics(node_index):
             ],
         'top_exploitable': top_exploitable, 
         'top_impactful': top_impactful,
-        'computation_time' : round(processing_time,4)
-        }), 200
+        'computation_time' : round_sig(processing_time,4)
+        }
 
 ## Vulnerable Host Percentage Metrics
-@model_analysis_bp.route('/model_driven/vulnerable_host_percentage', methods=['GET'])
 def vulnerable_host_percentage():
     global vulnerability_graph
 
@@ -329,13 +321,13 @@ def vulnerable_host_percentage():
     # processing time calc
     processing_time = time.time() - start_timer
 
-    return jsonify({
-        'number_vulnerable_hosts': round(number_vulnerable_hosts,3),
-        'number_hosts': round(number_hosts,3),
-        'vulnerable_host_percentage': round(vulnerable_host_percentage,3),
-        'non_vulnerable_host_percentage': round(non_vulnerable_host_percentage,3),
-        'computation_time' : round(processing_time,4)
-        }), 200
+    return {
+        'number_vulnerable_hosts': round_sig(number_vulnerable_hosts,3),
+        'number_hosts': round_sig(number_hosts,3),
+        'vulnerable_host_percentage': round_sig(vulnerable_host_percentage,3),
+        'non_vulnerable_host_percentage': round_sig(non_vulnerable_host_percentage,3),
+        'computation_time' : round_sig(processing_time,4)
+        }
 
 ## Centrality Metrics
 # Reference: http://www.uvm.edu/pdodds/research/papers/others/2001/brandes2001a.pdf
@@ -482,7 +474,6 @@ def pagerank_centrality(d=0.85):
 
     return pagerank
 
-@model_analysis_bp.route('/model_driven/centrality', methods=['GET'])   
 def centrality():
     global centrality_metrics # holds the centrality metrics (betweeness, indegree, outdegree, degree, closeness, katz, pagerank)
     global vulnerability_graph
@@ -506,7 +497,7 @@ def centrality():
 
         centrality_time = time.time() - start_timer
     
-    return jsonify({
+    return {
         "betweeness": [round_sig(x,3) for x in centrality_metrics[0]],
         "indegree"  : [round_sig(x,3) for x in centrality_metrics[1]],
         "outdegree" : [round_sig(x,3) for x in centrality_metrics[2]],
@@ -516,13 +507,12 @@ def centrality():
         "katz"      : [round_sig(x[0],3) for x in centrality_metrics[6]],
         "shortest_path_computation_time" : round_sig(shortest_path_time,4),
         "centrality_computation_time" : round_sig(centrality_time,4)
-    }), 200
+    }
     
 
 # ref: Modeling Cyber Resilience for Energy Delivery Systems using critical system functionality      
-@model_analysis_bp.route('/model_driven/topsis', methods=['GET'])
 def TOPSIS():
-    from .topsis import topsis
+    from topsis import topsis
     global centrality_metrics
     global vulnerability_graph
     global topsis_metrics
@@ -565,7 +555,7 @@ def TOPSIS():
             topsis_metrics.append({"node_id" : i + 1, "topsis_score": round_sig(n[i],3)})
 
         topsis_time = time.time() - start_timer
-    return jsonify({
+    return {
         "topsis" : topsis_metrics,
         "topsis_computation_time" : round_sig(topsis_time,4)
-    }), 200
+    }

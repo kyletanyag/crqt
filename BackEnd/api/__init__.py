@@ -20,10 +20,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../dms/users.db' # setting database location for user-database
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # for multiple databases
+    # for multiple databases (product and user databases)
     app.config['SQLALCHEMY_BINDS'] = {
         'users':     app.config['SQLALCHEMY_DATABASE_URI'],
-        'nvd':      'sqlite:///../dms/nvd.db',
         'products': 'sqlite:///../dms/products.db'
     }
 
