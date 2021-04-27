@@ -1,57 +1,58 @@
-
 <template>
-<div class="pt-5 mt-5">
-  <div class="pt-5">
-    <img alt="CRQT logo" src="../assets/logo.png">
-    <h2>Developed by: </h2>
-      <ul class="list-unstyled">
-        
-        <li v-for="member in team" :key="member">
-        
-          <h4>
-            {{ member }}
-          </h4>
-        </li>
-      </ul>
-  </div>
+<div>
+  <h1 class="pt-2 , heading">About the Cyber Resilience Quantification Tool</h1>
+    <div class="row mx-5">
+      <div class="col-6 text-left">
+        <h3 class="subheading"></h3>
+        <p class="text-justify">
+          The CRQT was developed by a team from the Computational Modeling and Simulation Engineering department of Old Dominion University in Spring 2021. The main project team includes:
+          <ul>
+            <li>Kyle Tanyag</li>
+            <li>Holden Strong</li>
+            <li>Gul Ayaz</li>
+            <li>Thomas Laverghetta</li>
+            <li>Alex Soliza</li>
+            <li>Cierra Hall</li>
+          </ul>
+          Development was supported by Dr. Sachin Shetty and Md Ariful Haque. The calculations performed by the tool are based on research by Shetty and Haque.
+          <ul>
+            <li>Shetty: sshetty@odu.edu</li>
+            <li>Haque:  mhaqu001@odu.edu</li>
+          </ul>
+        </p>
+      </div>
+      <div class="col-6 text-center">
+          <img class="image1" alt="Lock Image" src="../assets/peopleChatting.png"  height="300">
+      </div>
+    </div>
 </div>
 </template>
 
 <script>
-import axios from 'axios';
-export default {
-  name: 'About',
-
-  data() {
-    return {
-      team: [
-        'Gul Ayaz',
-        'Cierra Hall',
-        'Thomas Laverghetta',
-        'Alex Soliza',
-        'Kyle Tanyag'
-      ]
-    }
-  },
-
-  created() {
-    axios.get('http://localhost:5000/test_connection')
-      .then((r) => {
-        console.log(r);
-        axios.get('http://localhost:2000/api/browse/microsoft')
-          .then((r) => {
-            console.log(r);
-          })
-          .catch(() => {
-            this.$router.push({name: 'Error', params: {errorCode: 'CVE-Search'}})
-          })
-      })
-      .catch(() => {
-        this.$router.push({name: 'Error', params: {errorCode: 'Flask'}})
-      });
-  },
-}
 </script>
 
 <style>
+.heading {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-family:  Helvetica, sans-serif;
+
+}
+.subheading{
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-family:  Helvetica, sans-serif;
+  text-decoration-line: underline;
+}
+.image1{
+  margin-top:30px ;
+}
+.image2 {
+  height: 700px;
+  object-fit: contain;
+}
+.image3 {
+  width: 600px;
+  object-fit: contain;
+}
 </style>
