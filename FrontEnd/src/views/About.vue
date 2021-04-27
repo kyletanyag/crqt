@@ -1,6 +1,5 @@
 <template>
 <div>
-  <hr>
   <h1 class="pt-2 , heading">About the Cyber Resilience Quantification Tool</h1>
     <div class="row mx-5">
       <div class="col-6 text-left">
