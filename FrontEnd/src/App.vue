@@ -55,7 +55,7 @@
                     </ul>
                 </div>
                 <div v-if="admin" class="pr-4">
-                  <router-link v-if="authenticated" to="/Admin" replace>Admin</router-link>
+                  <router-link v-if="admin" to="/Admin" replace>Admin</router-link>
                 </div>
                 <div id="log">
                   <router-link v-if="authenticated" to="/Login" @click="logout()" replace>Logout</router-link>
