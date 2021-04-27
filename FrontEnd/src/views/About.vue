@@ -6,7 +6,7 @@
       <div class="col-6 text-left">
         <h3 class="subheading"></h3>
         <p class="text-justify">
-          The CRQT was developed by a team from Old Dominion University in Spring 2021. The main project team includes:
+          The CRQT was developed by a team from the Computational Modeling and Simulation Engineering department of Old Dominion University in Spring 2021. The main project team includes:
           <ul>
             <li>Kyle Tanyag</li>
             <li>Holden Strong</li>
@@ -16,8 +16,11 @@
             <li>Cierra Hall</li>
           </ul>
           Development was supported by Dr. Sachin Shetty and Md Ariful Haque. The calculations performed by the tool are based on research by Shetty and Haque.
-          </p>
-          <p><i>S. S. a. B. K. Md Ariful Haque, "Cyber-Physical System Resilience: Frameworks, Metrics, Complexities, Challenges, and Future Directions</i></p>
+          <ul>
+            <li>Shetty: sshetty@odu.edu</li>
+            <li>Haque:  mhaqu001@odu.edu</li>
+          </ul>
+        </p>
       </div>
       <div class="col-6 text-center">
           <img class="image1" alt="Lock Image" src="../assets/peopleChatting.png"  height="300">
