@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
     {
-      path: '/About',
+      path: '/about',
       name: 'About',
       component: () => import(/* webpackChunkName: "ContactUs" */ '../views/About.vue')
     },
@@ -130,6 +130,11 @@ const routes = [
         path: '/simulation-results/model-driven/printout',
         name: 'Model Driven Results - Printout',
         component: () => import(/* webpackChunkName: "Model Driven Results - Printout" */ '@/views/SimulationResults/ModelDriven/Printout.vue')
+    },
+    {
+        path: '/faq',
+        name: 'Frequently Asked Questions',
+        component: () => import(/* webpackChunkName: "Model Driven Results - Printout" */ '@/views/FAQ.vue')
     },
 ]
 

@@ -51,7 +51,12 @@
                             <router-link class="nav-link"
                                          active-class="active"
                                          to="/About">About</router-link>
-                        </li>     
+                        </li>
+                        <li class="nav-item">
+                            <router-link class="nav-link"
+                                         active-class="active"
+                                         to="/FAQ">FAQ</router-link>
+                        </li>                             
                     </ul>
                 </div>
                 <div v-if="admin" class="pr-4">

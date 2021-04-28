@@ -1,0 +1,660 @@
+{
+  "network_title": "Model-Driven_Network_2021427_145",
+  "date": "4/27/2021",
+  "vertices": [
+    {
+      "layer": "corp_fw_1",
+      "id": 1,
+      "vendor": "CISCO",
+      "product": "ASA_5500",
+      "type": "firewall",
+      "cve_ids": [
+        "CVE-2013-0149",
+        "CVE-2010-0149",
+        "CVE-2010-0150",
+        "CVE-2011-0379",
+        "CVE-2011-0393",
+        "CVE-2011-0394",
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-0565",
+        "CVE-2010-0566",
+        "CVE-2010-0567",
+        "CVE-2010-0568",
+        "CVE-2010-0569",
+        "CVE-2007-0960",
+        "CVE-2007-0961",
+        "CVE-2007-0962",
+        "CVE-2007-0959",
+        "CVE-2013-1215",
+        "CVE-2006-3073",
+        "CVE-2010-2814",
+        "CVE-2010-2815",
+        "CVE-2010-2816",
+        "CVE-2010-2817",
+        "CVE-2011-3298",
+        "CVE-2011-3299",
+        "CVE-2011-3300",
+        "CVE-2011-3301",
+        "CVE-2011-3302",
+        "CVE-2011-3303",
+        "CVE-2011-3304",
+        "CVE-2008-3815",
+        "CVE-2010-4354",
+        "CVE-2009-5037",
+        "CVE-2010-4670",
+        "CVE-2010-4675",
+        "CVE-2010-4672",
+        "CVE-2010-4673",
+        "CVE-2010-4674",
+        "CVE-2010-4676",
+        "CVE-2010-4677",
+        "CVE-2010-4678",
+        "CVE-2010-4679",
+        "CVE-2010-4680",
+        "CVE-2010-4681",
+        "CVE-2010-4682",
+        "CVE-2010-4688",
+        "CVE-2010-4689",
+        "CVE-2010-4690",
+        "CVE-2010-4691",
+        "CVE-2010-4692",
+        "CVE-2012-5717",
+        "CVE-2012-6395",
+        "CVE-2013-1218",
+        "CVE-2013-1243",
+        "CVE-2016-1312",
+        "CVE-2011-2054"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 2,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 3,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 4,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 5,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 6,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 7,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 8,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 9,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 10,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 11,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 12,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 13,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 14,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 15,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 16,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 17,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 18,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 19,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 20,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_dmz",
+      "id": 21,
+      "type": "Email Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "corp_fw_2",
+      "id": 22,
+      "vendor": "CISCO",
+      "product": "ASA_5510",
+      "type": "firewall",
+      "cve_ids": [
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-2814",
+        "CVE-2010-2815",
+        "CVE-2010-2816",
+        "CVE-2010-2817",
+        "CVE-2011-2054",
+        "CVE-2019-15256",
+        "CVE-2020-3125",
+        "CVE-2020-3179",
+        "CVE-2020-3186",
+        "CVE-2020-3187",
+        "CVE-2020-3188",
+        "CVE-2020-3189",
+        "CVE-2020-3191",
+        "CVE-2020-3195",
+        "CVE-2020-3196",
+        "CVE-2020-3254",
+        "CVE-2020-3255",
+        "CVE-2020-3283"
+      ]
+    },
+    {
+      "layer": "corp_lan",
+      "id": 23,
+      "type": "Business Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "cs_fw_1",
+      "id": 24,
+      "vendor": "CISCO",
+      "product": "ASA_5500",
+      "type": "firewall",
+      "cve_ids": [
+        "CVE-2013-0149",
+        "CVE-2010-0149",
+        "CVE-2010-0150",
+        "CVE-2011-0379",
+        "CVE-2011-0393",
+        "CVE-2011-0394",
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-0565",
+        "CVE-2010-0566",
+        "CVE-2010-0567",
+        "CVE-2010-0568",
+        "CVE-2010-0569",
+        "CVE-2007-0960",
+        "CVE-2007-0961",
+        "CVE-2007-0962",
+        "CVE-2007-0959",
+        "CVE-2013-1215",
+        "CVE-2006-3073",
+        "CVE-2010-2814",
+        "CVE-2010-2815",
+        "CVE-2010-2816",
+        "CVE-2010-2817",
+        "CVE-2011-3298",
+        "CVE-2011-3299",
+        "CVE-2011-3300",
+        "CVE-2011-3301",
+        "CVE-2011-3302",
+        "CVE-2011-3303",
+        "CVE-2011-3304",
+        "CVE-2008-3815",
+        "CVE-2010-4354",
+        "CVE-2009-5037",
+        "CVE-2010-4670",
+        "CVE-2010-4675",
+        "CVE-2010-4672",
+        "CVE-2010-4673",
+        "CVE-2010-4674",
+        "CVE-2010-4676",
+        "CVE-2010-4677",
+        "CVE-2010-4678",
+        "CVE-2010-4679",
+        "CVE-2010-4680",
+        "CVE-2010-4681",
+        "CVE-2010-4682",
+        "CVE-2010-4688",
+        "CVE-2010-4689",
+        "CVE-2010-4690",
+        "CVE-2010-4691",
+        "CVE-2010-4692",
+        "CVE-2012-5717",
+        "CVE-2012-6395",
+        "CVE-2013-1218",
+        "CVE-2013-1243",
+        "CVE-2016-1312",
+        "CVE-2011-2054"
+      ]
+    },
+    {
+      "layer": "cs_dmz",
+      "id": 25,
+      "type": "Ext Business COMM Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    },
+    {
+      "layer": "cs_fw_2",
+      "id": 26,
+      "vendor": "CISCO",
+      "product": "ASA_5500",
+      "type": "firewall",
+      "cve_ids": [
+        "CVE-2013-0149",
+        "CVE-2010-0149",
+        "CVE-2010-0150",
+        "CVE-2011-0379",
+        "CVE-2011-0393",
+        "CVE-2011-0394",
+        "CVE-2011-0395",
+        "CVE-2011-0396",
+        "CVE-2010-0565",
+        "CVE-2010-0566",
+        "CVE-2010-0567",
+        "CVE-2010-0568",
+        "CVE-2010-0569",
+        "CVE-2007-0960",
+        "CVE-2007-0961",
+        "CVE-2007-0962",
+        "CVE-2007-0959",
+        "CVE-2013-1215",
+        "CVE-2006-3073",
+        "CVE-2010-2814",
+        "CVE-2010-2815",
+        "CVE-2010-2816",
+        "CVE-2010-2817",
+        "CVE-2011-3298",
+        "CVE-2011-3299",
+        "CVE-2011-3300",
+        "CVE-2011-3301",
+        "CVE-2011-3302",
+        "CVE-2011-3303",
+        "CVE-2011-3304",
+        "CVE-2008-3815",
+        "CVE-2010-4354",
+        "CVE-2009-5037",
+        "CVE-2010-4670",
+        "CVE-2010-4675",
+        "CVE-2010-4672",
+        "CVE-2010-4673",
+        "CVE-2010-4674",
+        "CVE-2010-4676",
+        "CVE-2010-4677",
+        "CVE-2010-4678",
+        "CVE-2010-4679",
+        "CVE-2010-4680",
+        "CVE-2010-4681",
+        "CVE-2010-4682",
+        "CVE-2010-4688",
+        "CVE-2010-4689",
+        "CVE-2010-4690",
+        "CVE-2010-4691",
+        "CVE-2010-4692",
+        "CVE-2012-5717",
+        "CVE-2012-6395",
+        "CVE-2013-1218",
+        "CVE-2013-1243",
+        "CVE-2016-1312",
+        "CVE-2011-2054"
+      ]
+    },
+    {
+      "layer": "cs_lan",
+      "id": 27,
+      "type": "Application Server",
+      "vendor": "Microsoft",
+      "product": ".net_windows_server",
+      "cve_ids": [
+        "CVE-2002-0863",
+        "CVE-2002-0864"
+      ]
+    }
+  ],
+  "arcs": [
+    {
+      "currNode": 1,
+      "nextNode": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ]
+    },
+    {
+      "currNode": 2,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 3,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 4,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 5,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 6,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 7,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 8,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 9,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 10,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 11,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 12,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 13,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 14,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 15,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 16,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 17,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 18,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 19,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 20,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 21,
+      "nextNode": [
+        22
+      ]
+    },
+    {
+      "currNode": 22,
+      "nextNode": [
+        23
+      ]
+    },
+    {
+      "currNode": 23,
+      "nextNode": [
+        24
+      ]
+    },
+    {
+      "currNode": 24,
+      "nextNode": [
+        25
+      ]
+    },
+    {
+      "currNode": 25,
+      "nextNode": [
+        26
+      ]
+    },
+    {
+      "currNode": 26,
+      "nextNode": [
+        27
+      ]
+    }
+  ]
+}

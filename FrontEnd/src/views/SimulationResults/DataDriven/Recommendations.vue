@@ -17,6 +17,9 @@
         with the <strong>highest</strong> compued base scores. 
         <br> They are ranked accordingly and the recommendations provide a guide on which 
         nodes in your network need to be a priority to increase cyber-resiliency.
+        <br>
+        We recommend resolving each node in order by addressing each vulnerability in order
+        or by reordering your network configuration.
       </p>
       How many recommendations would you like to see? 
       <input type="number" v-model.number="numRecommend" max="10" min="1" maxlength="2"

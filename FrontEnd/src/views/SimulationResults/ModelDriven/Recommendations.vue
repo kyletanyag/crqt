@@ -14,7 +14,10 @@
       <div class="text-left">
         <h2 class="text-center">TOPSIS Recommendations</h2>
         <p>
-          The recommendations computed were based on the Technique for Order of Preference by Similarity to Ideal Solution (TOPSIS) method.
+          The recommendations computed were based on the 
+          <a href="https://en.wikipedia.org/wiki/TOPSIS" target="_blank">
+            Technique for Order of Preference by Similarity to Ideal Solution (TOPSIS) method
+          </a>. 
           The TOPSIS method assesses device criticality by building on the concept
           that the chosen alternative should have the shortest geometric distance from the positive 
           ideal solution and the largest geometric distance from the negative ideal solution.
@@ -22,6 +25,10 @@
         <p>
           Applying the TOPSIS method, we get the following rankings for 
           nodes that need to be reviewed.
+        </p>
+        <p>
+          We recommend to address each node in order and then reinput your new network topology into the tool
+          to see the improvements and enhanced security. 
         </p>
         <div>
           How many recommendations would you like to see? 
