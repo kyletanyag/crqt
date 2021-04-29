@@ -96,7 +96,7 @@ def network_topology_model_driven_input(json_file):
             layer=node["layer"],
             index=node["id"],
             cve_ids=node["cve_ids"],
-            product_type=node["type"]
+            product_type=""  
         ))
         
     # sorting vulnerability node list by index ascending order
