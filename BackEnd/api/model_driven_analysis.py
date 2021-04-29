@@ -27,7 +27,7 @@ model_analysis_bp = Blueprint('model_analysis_bp', __name__)
 # calculating variables
 vulnerability_graph = []        # dictionary of nodes
 shortest_paths = {}             # matrix where each entry as shortest path value and multiplicity
-Solution_Path = []              # used for depth-first traversal, gives solution paths from target to goal (source)
+Solution_Path = deque()         # used for depth-first traversal, gives solution paths from target to goal (source)
 GoalNode = None                 # goal (source) node for depth-first traversal
 centrality_metrics = []         # holds the centrality metrics (betweeness, indegree, outdegree, degree, closeness, pagerank, katz)
 topsis_metrics = []             # holds the topsis method metrics
@@ -151,22 +151,21 @@ def ModelDriven_init():
 ## depth first traversal
 # Will find all paths from target to source (goal node) 
 # starts at target node and traverses backwords through network (i.e., target to source)
-def Depth_First_Traversal(node, path):
+MAX_NUM_PATHS=100
+def Depth_First_Traversal(node, path, score):
     # if reached attacker node, stop
     if GoalNode.index == node.index:
         global Solution_Path
-        Solution_Path.append(deepcopy(path))
+        Solution_Path.append((deepcopy(path),deepcopy(score)))
     elif node.layer > GoalNode.layer:
-        # determining if deepcopy is needed
-        if len(node.in_edges) > 1:
-            for n in node.in_edges:
-                tmpPath = deepcopy(path)
-                tmpPath.append(n)
-                Depth_First_Traversal(n.source, tmpPath)
-                del tmpPath
-        elif len(node.in_edges) == 1:
-            path.append(node.in_edges[0])
-            Depth_First_Traversal(node.in_edges[0].source, path)
+        score += node.weights
+        path.append(node.index)
+        
+        for n in node.in_edges:
+            Depth_First_Traversal(n.source, path, score)
+        
+        path.pop()
+        score -= node.weights
 
 # used for shortest path generation (takes into account score that standard does not)
 MAX_SCORE = 1000                    # max score used to init shortest_score
@@ -211,11 +210,11 @@ def shortest_paths_gen():
         GoalNode = source
         for target in vulnerability_graph[(source.index+1):]:
             # no path exists if source is target or source is on same or greater layer than target
-            if source.layer < target.layer:
+            if source.layer < target.layer:              
                 shortest_path_counter = 0
                 shortest_score = MAX_SCORE
                 Short_Path_Depth_First_Traversal(target, 0.0)
-
+                
                 if shortest_path_counter > 0:                    
                     # adding shortest path
                     shortest_paths[(source.index,target.index)] = (shortest_score, shortest_path_counter)
@@ -243,66 +242,74 @@ def origin_to_node_metrics(node_index):
     GoalNode = vulnerability_graph[0] # romote attacker node
 
     # generates solution paths    
-    Depth_First_Traversal(vulnerability_graph[int(node_index)], [])
+    Depth_First_Traversal(vulnerability_graph[int(node_index)], deque(), np.array([0.0,0.0,0.0]))
 
     # calculating metrics
     metrics_per_path = []           # scores from each solution path
-    exploitability_list = []
-    impact_list = []
+    exploitability_list = [(0, 0.0) for x in range(5)] # top 5 most exploitable paths
+    impact_list = [(0, 0.0) for x in range(5)]         # top 5 most impactful paths
     score_sum = np.array([0.0,0.0,0.0]) # used for average length of attack paths
     
-    score = np.array([0.0,0.0,0.0])     # tuple for base, exploitability, impact
-    for path in Solution_Path:
-        score = np.sum([edge.target.weights for edge in path], axis=0)
+    # score = np.array([0.0,0.0,0.0])     # tuple for base, exploitability, impact
+    count = 0
+    number_paths = len(Solution_Path)
+    while len(Solution_Path):
+        path = Solution_Path.pop()
+        score = path[1]
+        # score = np.sum([edge.target.weights for edge in path], axis=0)
         
         # adding score to cumulative sum
         score_sum += score
         
         metrics_per_path.append({
-            'path_id' : len(exploitability_list) + 1,
-            'path'    : [x.target.index for x in path],
+            'path_id' : count + 1,
+            'path'    : [x for x in path[0]],
             'base_score' : round_sig(score[0],3),
             'exploitability_score' : round_sig(score[1],3),
             'impact_score' : round_sig(score[2],3)
         })
 
-        exploitability_list.append([len(metrics_per_path) - 1,round_sig(score[1],3)])
-        impact_list.append([len(metrics_per_path) - 1,round_sig(score[2],3)])
+        # sorted insert for top exploitable/impactful paths
+        if exploitability_list[4][1] < score[1]:   # if last most exploitable is less than current path
+            # check each exploitable path saved and compare with curr path
+            for i in range(5):
+                # if curr is less exploitable than next exploitable, replace curr exploitable with curr path and del last element
+                if i == 0 or exploitability_list[i-1][1] > score[1]:
+                    exploitability_list.insert(i, (count,round_sig(score[1],3)))
+                    del exploitability_list[-1]
 
-    
-    ## finding top 5 most vulnerable paths
-    # sorting lists in decending order
-    exploitability_list.sort(key=lambda vul: vul[1],reverse=True)
-    impact_list.sort(key=lambda vul: vul[1],reverse=True)
+        if impact_list[4][1] < score[2]:
+            for i in range(5):
+                if i == 0 or impact_list[i-1][1] > score[2]:
+                    impact_list.insert(i, (count,round_sig(score[2],3)))
+                    del impact_list[-1]
 
     # exploitable paths
     top_exploitable = []
     for ex in exploitability_list[:5]:
-        path = []
-        for edge in Solution_Path[ex[0]]:
-            path.append(edge.target.index)
-        
-        top_exploitable.append({ex[0]+1 : path}) 
+        if ex[1] == 0.0:
+            break
+
+        top_exploitable.append({ex[0]+1 : metrics_per_path[ex[0]]['path'], "exploitability" : ex[1]}) 
     
     # impactful paths
     top_impactful = []
     for im in impact_list[:5]:
-        path = []
-        for edge in Solution_Path[im[0]]:
-            path.append(edge.target.index)
+        if im[1] == 0.0:
+            break
         
-        top_impactful.append({im[0] + 1 : path})
+        top_impactful.append({im[0] + 1 : metrics_per_path[im[0]]['path'], "impact" : im[1]})
     
     # calculating processing time
     processing_time = time.time() - start_timer
     
     return jsonify({
         'metrics_per_path': metrics_per_path,
-        'number_attack_paths' : len(Solution_Path),
+        'number_attack_paths' : number_paths,
         'averge_length_attack_paths' : [
-            round_sig(score_sum[0] / len(Solution_Path),3), 
-            round_sig(score_sum[1] / len(Solution_Path),3), 
-            round_sig(score_sum[2] / len(Solution_Path),3)
+            round_sig(score_sum[0] / number_paths,3), 
+            round_sig(score_sum[1] / number_paths,3), 
+            round_sig(score_sum[2] / number_paths,3)
             ],
         'top_exploitable': top_exploitable, 
         'top_impactful': top_impactful,
