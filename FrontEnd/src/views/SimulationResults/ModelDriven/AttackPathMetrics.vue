@@ -115,7 +115,8 @@
                   <thead>
                     <tr>
                       <th scope="col" style="width: 20%">Path #</th>
-                      <th scope="col" style="width: 60%">Path</th>
+                      <th scope="col" style="width: 40%">Path</th>
+                      <th scope="col" style="width: 20%">Score</th>
                       <th scope="col" style="width: 20%">Ranking</th>
                     </tr>
                   </thead> 
@@ -127,7 +128,8 @@
                       :class="cssHighlightedRow(p.nodes)"
                     >
                       <td style="width: 20%">{{ p.path }}</td>
-                      <td style="width: 60%">{{ p.nodes }}</td>
+                      <td style="width: 40%">{{ p.nodes }}</td>
+                      <td style="width: 20%">{{p.exploitability }}</td>
                       <td style="width: 20%">{{ idx + 1 }}</td>
                     </tr> 
                   </tbody>
@@ -141,7 +143,8 @@
                   <thead>
                     <tr>
                       <th scope="col" style="width: 20%">Path #</th>
-                      <th scope="col" style="width: 60%">Path</th>
+                      <th scope="col" style="width: 40%">Path</th>
+                      <th scope="col" style="width: 20%">Score</th>
                       <th scope="col" style="width: 20%">Ranking</th>
                     </tr>
                   </thead> 
@@ -154,6 +157,7 @@
                     >
                       <td style="width: 20%">{{ p.path }}</td>
                       <td style="width: 60%">{{ p.nodes }}</td>
+                      <td style="width: 20%">{{p.impact }}</td>
                       <td style="width: 20%">{{ idx + 1 }}</td>
                     </tr> 
                   </tbody>
@@ -353,9 +357,9 @@ export default {
         this.compTime = Number(r.data.computation_time.toPrecision(3));
         this.paths = r.data.metrics_per_path;
         this.paths.forEach((p) => {p.path.reverse()});
-        this.topExpPaths = r.data.top_exploitable;
+        this.topExpPaths = r.data.top_exploitable.slice(0).sort((a,b) => { return a.exploitability < b.exploitability ? 1 : -1; });
         this.topExpPaths.forEach((p) => {p.nodes.reverse()});
-        this.topImpPaths = r.data.top_impactful;
+        this.topImpPaths = r.data.top_impactful.slice(0).sort((a,b) => {return a.impact < b.impact ? 1 : -1; });
         this.topImpPaths.forEach((p) => {p.nodes.reverse()});
         this.loading = false;
       }).catch((e) => {

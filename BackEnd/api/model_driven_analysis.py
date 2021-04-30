@@ -294,7 +294,7 @@ def origin_to_node_metrics(node_index):
         if ex[1] == 0.0:
             break
 
-        top_exploitable.append({str(ex[0]+1) : metrics_per_path[ex[0]]['path'], "exploitability" : ex[1]}) 
+        top_exploitable.append({"path": str(ex[0]+1), "nodes" : metrics_per_path[ex[0]]['path'], "exploitability" : ex[1]}) 
     
     # impactful paths
     top_impactful = []
@@ -302,7 +302,7 @@ def origin_to_node_metrics(node_index):
         if im[1] == 0.0:
             break
         
-        top_impactful.append({str(im[0] + 1) : metrics_per_path[im[0]]['path'], "impact" : im[1]})
+        top_impactful.append({"path": str(im[0] + 1), "nodes" : metrics_per_path[im[0]]['path'], "impact" : im[1]})
     
     # calculating processing time
     processing_time = time.time() - start_timer
