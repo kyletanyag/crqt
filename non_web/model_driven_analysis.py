@@ -270,12 +270,16 @@ def origin_to_node_metrics(node_index):
                 if i == 0 or exploitability_list[i-1][1] > score[1]:
                     exploitability_list.insert(i, (count,round_sig(score[1],3)))
                     del exploitability_list[-1]
+                    break
 
         if impact_list[4][1] < score[2]:
             for i in range(5):
                 if i == 0 or impact_list[i-1][1] > score[2]:
                     impact_list.insert(i, (count,round_sig(score[2],3)))
                     del impact_list[-1]
+                    break
+
+        count += 1
 
     # exploitable paths
     top_exploitable = []

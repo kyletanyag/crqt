@@ -274,15 +274,19 @@ def origin_to_node_metrics(node_index):
             # check each exploitable path saved and compare with curr path
             for i in range(5):
                 # if curr is less exploitable than next exploitable, replace curr exploitable with curr path and del last element
-                if i == 0 or exploitability_list[i-1][1] > score[1]:
+                if i == 0 or exploitability_list[i-1][1] >= score[1]:
                     exploitability_list.insert(i, (count,round_sig(score[1],3)))
                     del exploitability_list[-1]
+                    break
 
         if impact_list[4][1] < score[2]:
             for i in range(5):
-                if i == 0 or impact_list[i-1][1] > score[2]:
+                if i == 0 or impact_list[i-1][1] >= score[2]:
                     impact_list.insert(i, (count,round_sig(score[2],3)))
                     del impact_list[-1]
+                    break
+        
+        count += 1
 
     # exploitable paths
     top_exploitable = []
@@ -290,7 +294,7 @@ def origin_to_node_metrics(node_index):
         if ex[1] == 0.0:
             break
 
-        top_exploitable.append({ex[0]+1 : metrics_per_path[ex[0]]['path'], "exploitability" : ex[1]}) 
+        top_exploitable.append({str(ex[0]+1) : metrics_per_path[ex[0]]['path'], "exploitability" : ex[1]}) 
     
     # impactful paths
     top_impactful = []
@@ -298,12 +302,12 @@ def origin_to_node_metrics(node_index):
         if im[1] == 0.0:
             break
         
-        top_impactful.append({im[0] + 1 : metrics_per_path[im[0]]['path'], "impact" : im[1]})
+        top_impactful.append({str(im[0] + 1) : metrics_per_path[im[0]]['path'], "impact" : im[1]})
     
     # calculating processing time
     processing_time = time.time() - start_timer
     
-    return jsonify({
+    return {
         'metrics_per_path': metrics_per_path,
         'number_attack_paths' : number_paths,
         'averge_length_attack_paths' : [
@@ -313,8 +317,8 @@ def origin_to_node_metrics(node_index):
             ],
         'top_exploitable': top_exploitable, 
         'top_impactful': top_impactful,
-        'computation_time' : round(processing_time,4)
-        }), 200
+        'computation_time' : round_sig(processing_time,4)
+        }, 200
 
 ## Vulnerable Host Percentage Metrics
 @model_analysis_bp.route('/model_driven/vulnerable_host_percentage', methods=['GET'])
