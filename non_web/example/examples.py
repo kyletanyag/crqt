@@ -97,7 +97,7 @@ class model_driven_examples:
         }
 
         path = "./example/model_driven_input/"
-        for json_file in ["load_test", "large_load_test"]:
+        for json_file in ["large_load_test"]:
             print(json_file)
             outfile = open(json_file + "_output_data.csv", "w")
             outfile.write(json_file + "\n")
@@ -105,26 +105,29 @@ class model_driven_examples:
             model_driven_examples.custom_gen(path + json_file + ".json")
 
             # print("processing shortest path")
-            # outfile.write("shortest_path_comp,")
-            # shortest_paths_gen()
+            # # outfile.write("shortest_path_comp,")
+            shortest_paths_gen()
+            # print('=======')
+            print(shortest_path_comp_time())
+
             # outfile.write(str(shortest_path_comp_time()) + "\n")
 
-            for node in vulnerability_graph[1:]:
-                if node.layer == ModelDriven.Layers.CS_LAN and (json_file != "load_test"):
-                    break
+            # for node in vulnerability_graph[1:]:
+            #     if node.layer == ModelDriven.Layers.CS_LAN and (json_file != "load_test"):
+            #         break
 
-                outfile.write(str(node.index) + ",")
-                outfile.write(switch[node.layer] + ",")
+            #     outfile.write(str(node.index) + ",")
+            #     outfile.write(switch[node.layer] + ",")
 
-                # tracemalloc.start()
-                data = origin_to_node_metrics(node.index)
-                t = data['computation_time']
-                num_paths = data['number_attack_paths']
-                # current, peak = tracemalloc.get_traced_memory()
-                # tracemalloc.stop()
+            #     # tracemalloc.start()
+            #     data = origin_to_node_metrics(node.index)
+            #     t = data['computation_time']
+            #     num_paths = data['number_attack_paths']
+            #     # current, peak = tracemalloc.get_traced_memory()
+            #     # tracemalloc.stop()
 
-                outfile.write(str(num_paths) + "," + str(t) + "\n")
-                print(node.index, ",", num_paths, ",", t)
+            #     outfile.write(str(num_paths) + "," + str(t) + "\n")
+            #     print(node.index, ",", num_paths, ",", t)
             
             outfile.close()
 

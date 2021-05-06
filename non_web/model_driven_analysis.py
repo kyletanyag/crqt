@@ -162,40 +162,83 @@ def Depth_First_Traversal(node, path, score):
         path.pop()
         score -= node.weights
 
-# used for shortest path generation (takes into account score that standard does not)
-MAX_SCORE = 1000                    # max score used to init shortest_score
-shortest_score = MAX_SCORE          # score for shortest path
-shortest_path_counter = 0
-def Short_Path_Depth_First_Traversal(node, score):
-    global shortest_score
+# def Depth_First_Traversal_It(InitNode, GoalNode):
+#     global vulnerability_graph
+#     queue = deque()
+#     queue.append(InitNode)
 
-    # if reached goal node node, stop
-    if GoalNode.index == node.index and shortest_score >= score:
-        global shortest_path_counter
-        # if the score calculated smaller than current smallest, set score to smallest and reset number of paths found with that score 
-        if score < shortest_score:
-            shortest_score = score
-            shortest_path_counter = 1
-        # else, increase number of paths with this score
-        else:
-            shortest_path_counter += 1
+#     solutions = deque()
+
+#     path = deque()
+#     score = np.array([0.0,0.0,0.0])
+#     while len(queue):
+#         node = queue.pop()
+
+#         while len(path) and node.layer >= vulnerability_graph[path[-1]].layer:
+#             score -= vulnerability_graph[path.pop()].weights
+
+#         # if reached attacker node, stop
+#         if GoalNode.index == node.index:
+#             solutions.append((deepcopy(path),deepcopy(score)))
+#         elif len(node.in_edges) and node.layer > GoalNode.layer:
+#             score += node.weights
+#             path.append(node.index)
+            
+#             for n in node.in_edges:
+#                 queue.append(n.source)
+#         else:
+#             score -= vulnerability_graph[path.pop()].weights
     
-    elif shortest_score >= score and node.layer > GoalNode.layer:
-        # accumulating score from this node (edge weight)
-        score += (1 - node.weights[0])          # 1 - CVSS/10
+#     return solutions
 
-        for n in node.in_edges:
-            Short_Path_Depth_First_Traversal(n.source, deepcopy(score))
+
+# used for shortest path generation (takes into account score that standard does not)
+def Short_Path_Depth_First_Traversal(InitNode, goal):
+    global vulnerability_graph
+    extended = dict()   # set of extended nodes and their scores
+    queue = list()      # queue of nodes and their scores
+    shortest = np.array([50.0,0]) # shortest score and multiplicity
+
+    queue.append((InitNode,0.0))
+    currLayer = InitNode.layer
+    while len(queue):
+        node, score = queue.pop(0)
+        
+        if currLayer > node.layer:
+            extended.clear()
+            currLayer = node.layer
+
+        # if reached goal node node, stop
+        if goal.index == node.index and shortest[0] >= score:
+            # if the score calculated smaller than current smallest, set score to smallest and reset number of paths found with that score 
+            if score < shortest[0]:
+                shortest[0] = score
+                shortest[1] = 1
+            # else, increase number of paths with this score
+            else:
+                shortest[1] += 1
+        
+        elif shortest[0] >= score and node.layer > goal.layer:
+            # accumulating score from this node (edge weight)
+            score += (1 - node.weights[0])          # 1 - CVSS/10
+
+            for n in node.in_edges:
+                if n.source.index not in extended:
+                    queue.append((n.source, deepcopy(score)))
+                    extended[n.source.index] = score
+                elif extended[n.source.index] > score:
+                    i = queue.index((n.source,extended[n.source.index]))
+                    del queue[i]
+                    queue.append((n.source, deepcopy(score)))
+                    extended[n.source] = score
+    
+    return shortest[0], shortest[1]
 
 # will generate shortest paths
 def shortest_paths_gen():
     global shortest_paths
     global vulnerability_graph
-    global GoalNode
     global shortest_path_time
-    global shortest_score
-    global MAX_SCORE
-    global shortest_path_counter
 
     # starting timer for process time calc
     start_timer = time.time()
@@ -206,13 +249,11 @@ def shortest_paths_gen():
         for target in vulnerability_graph[(source.index+1):]:
             # no path exists if source is target or source is on same or greater layer than target
             if source.layer < target.layer:              
-                shortest_path_counter = 0
-                shortest_score = MAX_SCORE
-                Short_Path_Depth_First_Traversal(target, 0.0)
-                
-                if shortest_path_counter > 0:                    
+                score, multiplicity = Short_Path_Depth_First_Traversal(target, source)
+
+                if multiplicity > 0:                    
                     # adding shortest path
-                    shortest_paths[(source.index,target.index)] = (shortest_score, shortest_path_counter)
+                    shortest_paths[(source.index,target.index)] = (score, multiplicity)
 
     # calc process time
     shortest_path_time = time.time() - start_timer
@@ -236,6 +277,8 @@ def origin_to_node_metrics(node_index):
 
     # generates solution paths    
     Depth_First_Traversal(vulnerability_graph[int(node_index)], deque(), np.array([0.0,0.0,0.0]))
+
+    # Solution_Path = Depth_First_Traversal_It(vulnerability_graph[int(node_index)], vulnerability_graph[0])
 
     # calculating metrics
     metrics_per_path = []           # scores from each solution path
